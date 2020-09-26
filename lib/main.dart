@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:share_ute/views/home_page.dart';
+import 'views/login_page.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(
+  MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: LoginPage(),)
+);
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
