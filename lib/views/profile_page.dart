@@ -1,199 +1,287 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:share_ute/views/edit_profile_page.dart';
+import 'package:share_ute/utils/responsive.dart';
+
+class MyProfile extends StatelessWidget {
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return OrientationBuilder(
+          builder: (context, orientation) {
+            Responsive().init(constraints, orientation);
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'UTEShare',
+              home: ProfilePage(),
+            );
+          },
+        );
+      },
+    );
+  }
+}
 
 class ProfilePage extends StatefulWidget {
-  /// Controller
-  final TextEditingController fullNameController;
-  final TextEditingController emailController;
-  final TextEditingController passwordController;
-  final TextEditingController addressController;
+  ProfilePage({Key key, this.title}) : super(key: key);
 
-  /// Sự kiện thay đổi text
-  final ValueChanged<String> onFullNameChanged;
-  final ValueChanged<String> onEmailChanged;
-  final ValueChanged<String> onPasswordChanged;
-  final ValueChanged<String> onAddressChanged;
-
-  /// Functions callback
-  final Function changeCoverCallback;
-  final Function cancelCallback;
-  final Function saveCallback;
-
-  const ProfilePage(
-      {Key key,
-      this.fullNameController,
-      this.emailController,
-      this.passwordController,
-      this.addressController,
-      this.onFullNameChanged,
-      this.onEmailChanged,
-      this.onPasswordChanged,
-      this.onAddressChanged,
-      this.changeCoverCallback,
-      this.cancelCallback,
-      this.saveCallback})
-      : super(key: key);
+  final String title;
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  bool showPassword = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        padding: EdgeInsets.only(left: 16, top: 25, right: 16),
-        child: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).unfocus();
-          },
-          child: ListView(
-            children: [
-              SizedBox(
-                height: 15,
-              ),
-              Center(
-                child: Stack(
-                  children: [
-                    Container(
-                      width: 130,
-                      height: 130,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              width: 4,
-                              color: Theme.of(context).scaffoldBackgroundColor),
-                          boxShadow: [
-                            BoxShadow(
-                                spreadRadius: 2,
-                                blurRadius: 10,
-                                color: Colors.black.withOpacity(0.1),
-                                offset: Offset(0, 10))
-                          ],
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(
-                                "https://i.pinimg.com/originals/bc/27/2f/bc272f93e93f60e25923b342fcf92ba2.jpg",
-                              ))),
-                    ),
-                    Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: Container(
-                            height: 40,
-                            width: 40,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                width: 4,
-                                color:
-                                    Theme.of(context).scaffoldBackgroundColor,
-                              ),
-                              color: Color.fromRGBO(49, 39, 79, 1),
-                            ),
-                            child: GestureDetector(
-                              child: Icon(
-                                Icons.edit,
+      backgroundColor: Color(0xffF8F8FA),
+      body: Stack(
+        overflow: Overflow.visible,
+        children: <Widget>[
+          Container(
+            //color: Colors.blue[600],
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Color(0xff2980B9), Color(0xff6DD5FA)]),
+            ),
+            height: 40 * Responsive.heightMultiplier,
+            child: Padding(
+              padding: EdgeInsets.only(
+                  left: 30.0,
+                  right: 30.0,
+                  top: 10 * Responsive.heightMultiplier),
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        height: 11 * Responsive.heightMultiplier,
+                        width: 11 * Responsive.heightMultiplier, //22 * Responsive.widthMultiplier,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: AssetImage("assets/images/HCMUTE.png"))),
+                      ),
+                      SizedBox(
+                        width: 5 * Responsive.widthMultiplier,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            "Luu Zan Quan",
+                            style: TextStyle(
                                 color: Colors.white,
+                                fontSize: 3 * Responsive.textMultiplier,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(
+                            height: 1 * Responsive.heightMultiplier,
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Image.asset(
+                                    "assets/icons/facebook.png",
+                                    height: 3 * Responsive.heightMultiplier,
+                                    width: 3 * Responsive.widthMultiplier,
+                                  ),
+                                  SizedBox(
+                                    width: 2 * Responsive.widthMultiplier,
+                                  ),
+                                  Text(
+                                    "Facebook",
+                                    style: TextStyle(
+                                      color: Colors.white60,
+                                      fontSize: 1.5 * Responsive.textMultiplier,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              onTap: () {
-                                widget.changeCoverCallback();
-                              },
-                            ))),
+                              SizedBox(
+                                width: 7 * Responsive.widthMultiplier,
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Image.asset(
+                                    "assets/icons/instagram.png",
+                                    height: 3 * Responsive.heightMultiplier,
+                                    width: 3 * Responsive.widthMultiplier,
+                                  ),
+                                  SizedBox(
+                                    width: 2 * Responsive.widthMultiplier,
+                                  ),
+                                  Text(
+                                    "Instagram",
+                                    style: TextStyle(
+                                      color: Colors.white60,
+                                      fontSize: 1.5 * Responsive.textMultiplier,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 3 * Responsive.heightMultiplier,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Column(
+                        children: <Widget>[
+                          Text(
+                            "10.2K",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 3 * Responsive.textMultiplier,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            "Uy Tín",
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 1.7 * Responsive.textMultiplier,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: <Widget>[
+                          Text(
+                            "696",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 3 * Responsive.textMultiplier,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            "Bài Đăng",
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 1.7 * Responsive.textMultiplier,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white),
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => EditProfilePage()));
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                "EDIT PROFILE",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 1.8 * Responsive.textMultiplier),
+                              ),
+                            ),
+                          )),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 35 * Responsive.heightMultiplier),
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(30.0),
+                    topLeft: Radius.circular(30.0),
+                  )),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                        padding: EdgeInsets.only(
+                            top: 3 * Responsive.heightMultiplier),
+                        child: Center(
+                          child: Text(
+                            "Posts",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 2.2 * Responsive.textMultiplier),
+                          ),
+                        )),
+                    SizedBox(
+                      height: 2 * Responsive.heightMultiplier,
+                    ),
+                    Container(
+                      height: 58 * Responsive.heightMultiplier,
+                      child: ListView(
+                        scrollDirection: Axis.vertical,
+                        children: <Widget>[
+                          /// Đặt post tại đây
+                          MyPost(),
+                          MyPost(),
+                          MyPost(),
+                          MyPost(),
+                          MyPost(),
+                          MyPost(),
+                          MyPost(),
+                          MyPost(),
+                          MyPost(),
+                          MyPost(),
+                          MyPost(),
+                          MyPost(),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 2 * Responsive.heightMultiplier,
+                    ),
                   ],
                 ),
               ),
-              SizedBox(
-                height: 35,
-              ),
-              buildTextField("Full Name", "LUU VAN QUAN", false,
-                  widget.fullNameController, widget.onFullNameChanged),
-              buildTextField("E-mail", "LVQ@GMAIL.COM", false,
-                  widget.emailController, widget.onEmailChanged),
-              buildTextField("Password", "*******", true,
-                  widget.passwordController, widget.onPasswordChanged),
-              buildTextField("Address", "HO CHI MINH CITY", false,
-                  widget.addressController, widget.onAddressChanged),
-              SizedBox(
-                height: 35,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  OutlineButton(
-                    padding: EdgeInsets.symmetric(horizontal: 50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    onPressed: () {
-                      widget.cancelCallback();
-                    },
-                    child: Text("CANCEL",
-                        style: TextStyle(
-                            fontSize: 14,
-                            letterSpacing: 2.2,
-                            color: Colors.black)),
-                  ),
-                  RaisedButton(
-                    onPressed: () {
-                      widget.saveCallback();
-                    },
-                    color: Color.fromRGBO(49, 39, 79, 1),
-                    padding: EdgeInsets.symmetric(horizontal: 50),
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    child: Text(
-                      "SAVE",
-                      style: TextStyle(
-                          fontSize: 14,
-                          letterSpacing: 2.2,
-                          color: Colors.white),
-                    ),
-                  )
-                ],
-              )
-            ],
-          ),
-        ),
+            ),
+          )
+        ],
       ),
     );
   }
+}
 
-  Widget buildTextField(
-    String labelText,
-    String placeholder,
-    bool isPasswordTextField,
-    TextEditingController controller,
-    ValueChanged<String> onChanged,
-  ) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 35.0),
-      child: TextField(
-        controller: controller,
-        onChanged: onChanged,
-        obscureText: isPasswordTextField ? !showPassword : false,
-        decoration: InputDecoration(
-            suffixIcon: isPasswordTextField
-                ? IconButton(
-                    onPressed: () {
-                      setState(() {
-                        showPassword = !showPassword;
-                      });
-                    },
-                    icon: Icon(
-                      showPassword ? Icons.visibility : Icons.visibility_off,
-                      color: Colors.grey,
-                    ),
-                  )
-                : null,
-            contentPadding: EdgeInsets.only(bottom: 3),
-            labelText: labelText,
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            hintText: placeholder,
-            hintStyle: TextStyle(color: Colors.grey)),
-      ),
+class MyPost extends StatelessWidget {
+  final String fileType;
+  final String fileName;
+  final String fileImage;
+  DateTime dateCreated;
+  MyPost({this.fileType, this.fileName, this.fileImage, this.dateCreated});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 100,
+      margin: EdgeInsets.only(bottom: 10, left: 30, right: 30),
+      decoration: BoxDecoration(
+          color: Colors.blue,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15), bottomRight: Radius.circular(15))),
     );
   }
 }

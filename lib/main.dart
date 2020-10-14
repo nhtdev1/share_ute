@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:share_ute/views/home_page.dart';
+import 'package:share_ute/views/profile_page.dart';
 import 'views/login_page.dart';
-import 'views/profile_page.dart';
-
+import 'views/edit_profile_page.dart';
+import 'views/signup_page.dart';
+import 'views/storage_page.dart';
 
 void main() => runApp(
   MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: ProfilePage(),)
+    home: MySignUp())
 );
 
 class MyApp extends StatelessWidget {
