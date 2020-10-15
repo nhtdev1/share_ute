@@ -1,20 +1,10 @@
-///
-/// Trang được gọi khi bắt đầu ứng dụng (nếu chưa có sự đăng nhập trước đó)
-/// Hoặc khi người dùng đăng xuất khỏi ứng dụng
-///
-
 import 'package:flutter/material.dart';
+import 'package:share_ute/views/login_page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:share_ute/views/signup_page.dart';
 import 'package:share_ute/widgets/textfield_container.dart';
 import 'package:share_ute/utils/responsive.dart';
 
-///
-/// Sử dụng tạm lớp này để gọi trang đăng nhập
-/// Sau khi đồng bộ code với trang chủ thì hàm này sẽ được đưa ra dùng chung
-/// (Tương tự cho các page khác: profile, edit_profile, storage, sign up)
-///
-class MyLogin extends StatelessWidget {
+class MySignUp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -35,8 +25,7 @@ class MyLogin extends StatelessWidget {
   }
 }
 
-
-class LoginPage extends StatefulWidget {
+class SignUpPage extends StatefulWidget {
   /// Text field controllers
   final TextEditingController userFieldController;
   final TextEditingController pwdFieldController;
@@ -46,35 +35,33 @@ class LoginPage extends StatefulWidget {
   final ValueChanged<String> pwdFieldChanged;
 
   /// Callback functions
-  final Function signInCallback;
+  final Function signUpCallback;
   final Function googleSignUpCallback;
 
-  const LoginPage({
+  const SignUpPage({
     Key key,
     this.userFieldController,
     this.userFieldChanged,
     this.pwdFieldChanged,
     this.pwdFieldController,
-    this.signInCallback,
+    this.signUpCallback,
     this.googleSignUpCallback,
   }) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  State<StatefulWidget> createState() => _SignUpPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  /// Biến sử dụng hiển thị hoặc ẩn mật khẩu
-  bool _isShowPassword = false;
-
+class _SignUpPageState extends State<SignUpPage> {
+  var _isShowPassword = false;
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.white,
-      body:  Container(
+      body: Container(
         height: size.height,
         width: double.infinity,
+        // Here i can use size.width but use double.infinity because both work as a same
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[
@@ -83,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
               left: 0,
               child: Image.asset(
                 "assets/images/signup_top.png",
-                width: size.width * 0.35,
+                width: 25 * Responsive.imageSizeMultiplier,
               ),
             ),
             Positioned(
@@ -102,10 +89,10 @@ class _LoginPageState extends State<LoginPage> {
                     height: 3 * Responsive.heightMultiplier,
                   ),
                   Container(
-                    height: 35  * Responsive.heightMultiplier,
+                    height: 35 * Responsive.heightMultiplier,
                     child: Image.asset("assets/images/HCMUTE.png"),
                   ),
-                  SizedBox(height: 5 * Responsive.heightMultiplier,),
+                  SizedBox(height: 5 * Responsive.heightMultiplier),
 
                   /// Text box Email
                   TextFieldContainer(
@@ -123,7 +110,9 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 1 * Responsive.heightMultiplier,),
+                  SizedBox(
+                    height: 1 * Responsive.heightMultiplier,
+                  ),
 
                   /// Text box Password
                   TextFieldContainer(
@@ -155,9 +144,11 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 3 * Responsive.heightMultiplier,),
+                  SizedBox(
+                    height: 3 * Responsive.heightMultiplier,
+                  ),
 
-                  /// Button Sign In
+                  /// Button Sign Up
                   Container(
                     margin: EdgeInsets.symmetric(vertical: 10),
                     width: size.width * 0.8,
@@ -165,37 +156,39 @@ class _LoginPageState extends State<LoginPage> {
                       borderRadius: BorderRadius.circular(29),
                       child: FlatButton(
                         padding:
-                        EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+                            EdgeInsets.symmetric(vertical: 20, horizontal: 40),
                         color: Colors.lightBlue,
                         onPressed: () {
-                          widget.signInCallback();
+                          widget.signUpCallback();
                         },
                         child: Text(
-                          "Sign In",
+                          "Sign Up",
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(height: 3 * Responsive.heightMultiplier),
+                  SizedBox(
+                    height: 3 * Responsive.heightMultiplier,
+                  ),
 
                   /// Link redirect Sign in
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        "Create new Account ? ",
+                        "Already have an Account ? ",
                         style: TextStyle(color: Colors.lightBlue),
                       ),
                       GestureDetector(
                         onTap: () {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
-                                return SignUpPage();
-                              }));
+                            return LoginPage();
+                          }));
                         },
                         child: Text(
-                          "Sign Up",
+                          "Sign In",
                           style: TextStyle(
                             color: Colors.lightBlue,
                             fontWeight: FontWeight.bold,
@@ -255,10 +248,10 @@ class _LoginPageState extends State<LoginPage> {
                               },
                               child: Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceEvenly,
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Text(
-                                    "Sign in with",
+                                    "Sign up with",
                                     style: TextStyle(color: Colors.white),
                                   ),
                                   SvgPicture.asset(

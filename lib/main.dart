@@ -2,13 +2,25 @@
 import 'package:path_provider/path_provider.dart';
 import 'package:share_ute/app.dart';
 import 'package:share_ute/views/home_page.dart';
+import 'package:share_ute/views/profile_page.dart';
 import 'views/login_page.dart';
+import 'views/edit_profile_page.dart';
+import 'views/signup_page.dart';
+import 'views/storage_page.dart';
 
+<<<<<<< HEAD
 // void main() => runApp(
 //   MaterialApp(
 //     debugShowCheckedModeBanner: false,
 //     home: LoginPage(),)
 // );
+=======
+void main() => runApp(
+  MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: MySignUp())
+);
+>>>>>>> 5df57216cc80546629dc6bf2ceed35f661e4bcfd
 
 //void main() => runApp(App());
 
