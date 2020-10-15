@@ -1,9 +1,10 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_newsfeed/news_feed/news_feed.dart';
 import 'package:flutter_tags/flutter_tags.dart';
+import 'package:share_ute/news_feed/news_feed.dart';
 
 class TagPage extends StatefulWidget {
   TagPage({Key key, this.title}) : super(key: key);
@@ -13,8 +14,7 @@ class TagPage extends StatefulWidget {
   _TagPageState createState() => _TagPageState();
 }
 
-class _TagPageState extends State<TagPage>
-    with SingleTickerProviderStateMixin {
+class _TagPageState extends State<TagPage> with SingleTickerProviderStateMixin {
   bool _symmetry = false;
   bool _startDirection = false;
   bool _horizontalScroll = false;
@@ -41,8 +41,7 @@ class _TagPageState extends State<TagPage>
           Container(
             decoration: BoxDecoration(
                 border: Border(
-                    bottom: BorderSide(
-                        color: Colors.grey[300], width: 0.5))),
+                    bottom: BorderSide(color: Colors.white, width: 0.5))),
             child: ExpansionTile(
               title: Text("Tags"),
               children: <Widget>[
@@ -51,13 +50,13 @@ class _TagPageState extends State<TagPage>
                   children: <Widget>[
                     GestureDetector(
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Checkbox(
                               value: _withSuggesttions,
                               onChanged: (a) {
                                 setState(() {
-                                  _withSuggesttions =
-                                  !_withSuggesttions;
+                                  _withSuggesttions = !_withSuggesttions;
                                 });
                               }),
                           Text('Suggestions')
@@ -70,7 +69,7 @@ class _TagPageState extends State<TagPage>
                       },
                     ),
                     Padding(
-                      padding: EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(10),
                     ),
                     DropdownButton(
                       hint: Text(_itemCombine),
@@ -93,8 +92,7 @@ class _TagPageState extends State<TagPage>
                               value: _horizontalScroll,
                               onChanged: (a) {
                                 setState(() {
-                                  _horizontalScroll =
-                                  !_horizontalScroll;
+                                  _horizontalScroll = !_horizontalScroll;
                                 });
                               }),
                           Text('Horizontal scroll')
@@ -129,11 +127,11 @@ class _TagPageState extends State<TagPage>
                 ),
                 Column(
                   children: <Widget>[
-                    Text('Font Size'),
+                    Text('Tags Size'),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Slider(
+                        CupertinoSlider(
                           value: _fontSize,
                           min: 6,
                           max: 30,
@@ -152,7 +150,7 @@ class _TagPageState extends State<TagPage>
             ),
           ),
           Padding(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.only(top: 5, bottom: 5),
           ),
           _tags2,
         ],
@@ -199,7 +197,7 @@ class _TagPageState extends State<TagPage>
       columns: _column,
       horizontalScroll: _horizontalScroll,
       verticalDirection:
-      _startDirection ? VerticalDirection.up : VerticalDirection.down,
+          _startDirection ? VerticalDirection.up : VerticalDirection.down,
       textDirection: _startDirection ? TextDirection.rtl : TextDirection.ltr,
       heightHorizontalScroll: 60 * (_fontSize / 14),
       textField: _textField,
@@ -212,23 +210,23 @@ class _TagPageState extends State<TagPage>
             key: Key(index.toString()),
             index: index,
             title: item,
-            pressEnabled: false,
-            activeColor: Colors.green[400],
+            pressEnabled: true,
+            activeColor: Colors.grey[350],
             combine: combine,
             image: index > 0 && index < 5
                 ? ItemTagsImage(image: AssetImage("img/p$index.jpg"))
                 : (1 == 1
-                ? ItemTagsImage(
-                image: NetworkImage(
-                    "https://image.flaticon.com/icons/png/512/44/44948.png"))
-                : null),
+                    ? ItemTagsImage(
+                        image: NetworkImage(
+                            "https://image.flaticon.com/icons/png/512/44/44948.png"))
+                    : null),
             icon: (item == '0' || item == '1' || item == '2')
                 ? ItemTagsIcon(
-              icon: _icon[int.parse(item)],
-            )
+                    icon: _icon[int.parse(item)],
+                  )
                 : null,
             removeButton: ItemTagsRemoveButton(
-              backgroundColor: Colors.green[900],
+              backgroundColor: Colors.white.withOpacity(0.5),
               onRemoved: () {
                 setState(() {
                   _items.removeAt(index);
@@ -237,7 +235,7 @@ class _TagPageState extends State<TagPage>
               },
             ),
             textScaleFactor:
-            utf8.encode(item.substring(0, 1)).length > 2 ? 0.8 : 1,
+                utf8.encode(item.substring(0, 1)).length > 2 ? 0.8 : 1,
             textStyle: TextStyle(
               fontSize: _fontSize,
             ),
@@ -245,8 +243,8 @@ class _TagPageState extends State<TagPage>
           onTapDown: (details) => _tapPosition = details.globalPosition,
           onLongPress: () {
             showMenu(
-              //semanticLabel: item,
-                items: <PopupMenuEntry>[
+                    //semanticLabel: item,
+                    items: <PopupMenuEntry>[
                   PopupMenuItem(
                     child: Text(item, style: TextStyle(color: Colors.blueGrey)),
                     enabled: false,
@@ -262,13 +260,13 @@ class _TagPageState extends State<TagPage>
                     ),
                   ),
                 ],
-                context: context,
-                position: RelativeRect.fromRect(
-                    _tapPosition & Size(40, 40),
-                    Offset.zero &
-                    overlay
-                        .size) // & RelativeRect.fromLTRB(65.0, 40.0, 0.0, 0.0),
-            )
+                    context: context,
+                    position: RelativeRect.fromRect(
+                        _tapPosition & Size(40, 40),
+                        Offset.zero &
+                            overlay
+                                .size) // & RelativeRect.fromLTRB(65.0, 40.0, 0.0, 0.0),
+                    )
                 .then((value) {
               if (value == 1) Clipboard.setData(ClipboardData(text: item));
             });
@@ -291,23 +289,23 @@ class _TagPageState extends State<TagPage>
       constraintSuggestion: true,
       suggestions: _withSuggesttions
           ? [
-        "One",
-        "two",
-        "android",
-        "Dart",
-        "flutter",
-        "test",
-        "tests",
-        "androids",
-        "androidsaaa",
-        "Test",
-        "suggest",
-        "suggestions",
-        "互联网",
-        "last",
-        "lest",
-        "炫舞时代"
-      ]
+              "One",
+              "two",
+              "android",
+              "Dart",
+              "flutter",
+              "test",
+              "tests",
+              "androids",
+              "androidsaaa",
+              "Test",
+              "suggest",
+              "suggestions",
+              "互联网",
+              "last",
+              "lest",
+              "炫舞时代"
+            ]
           : null,
       onSubmitted: (String str) {
         setState(() {

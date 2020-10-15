@@ -7,11 +7,8 @@ class RawData {
     '2020',
     'Toan A1',
     'HK2',
-    'CKM',
     'CDT',
-    '9',
     'CLC',
-    'Middle',
     'TLCN',
   ];
 }

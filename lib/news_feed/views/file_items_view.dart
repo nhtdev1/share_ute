@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_newsfeed/news_feed/news_feed.dart';
+import 'package:share_ute/news_feed/news_feed.dart';
 
 class FileItemsView extends StatelessWidget {
   const FileItemsView(

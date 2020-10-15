@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:share_ute/drawer/drawer.dart';
+import 'package:share_ute/main_screen/main_screen.dart';
 import 'package:share_ute/theme.dart';
 
-// HomeView nới chứa drawer và màn hình chính
-class HomeView extends StatefulWidget {
+// HomeNavigate nới điều hướng tới các màn hình chứa trong drawer và màn hình chính
+class HomeNavigate extends StatefulWidget {
   @override
-  _HomeViewState createState() => _HomeViewState();
+  _HomeNavigateState createState() => _HomeNavigateState();
 }
 
-class _HomeViewState extends State<HomeView> {
-  // Màn hình chính
-  Widget mainView;
+class _HomeNavigateState extends State<HomeNavigate> {
+  // Lưu giữ trạng thái màn hình chính
+  Widget homeScreen;
 
-  DrawerItems drawerItems;
+  DrawerItemIndex drawerItemIndex;
 
   @override
   void initState() {
-    drawerItems = DrawerItems.HOME;
-    mainView = Container(child: Text('Màn hình chính'),);
+    drawerItemIndex = DrawerItemIndex.HOME;
+    homeScreen = const MainPage();
     super.initState();
   }
 
@@ -29,10 +31,29 @@ class _HomeViewState extends State<HomeView> {
         bottom: false,
         child: Scaffold(
           backgroundColor: AppTheme.nearlyWhite,
+          body: DrawerPage(
+            drawerWidth: MediaQuery.of(context).size.width * (3 / 4),
+            homeScreen: homeScreen,
+            listener: (DrawerItemIndex index) {
+              navigateToScreenOf(index);
+            },
+          ),
         ),
       ),
     );
   }
+
+  void navigateToScreenOf(DrawerItemIndex index) {
+    if (drawerItemIndex != index) {
+      drawerItemIndex = index;
+      if (drawerItemIndex == DrawerItemIndex.HOME) {
+        setState(() {
+          homeScreen = const MainPage();
+        });
+      }
+    }
+  }
+
 }
 
-enum DrawerItems { HOME, RATE, ABOUT, SETTINGS }
+enum DrawerItemIndex { HOME, RATE, ABOUT, SETTINGS }

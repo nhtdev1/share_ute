@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_newsfeed/main.dart';
+import 'package:share_ute/news_feed/news_feed.dart';
 
 class FileAppTheme {
   static TextTheme _buildTextTheme(TextTheme base) {
