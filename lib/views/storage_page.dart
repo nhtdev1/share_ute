@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_circular_chart/flutter_circular_chart.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:share_ute/views/folder_page.dart';
 import 'package:share_ute/utils/responsive.dart';
 
@@ -157,7 +158,7 @@ class _StoragePageState extends State<StoragePage> {
                         );
                       },
                       child: _mediaStack(
-                        "assets/images/HCMUTE.png",
+                        "assets/icons/private_folder.svg",
                         Colors.red[100],
                         "Private",
                         "682 items",
@@ -181,7 +182,7 @@ class _StoragePageState extends State<StoragePage> {
                       );
                     },
                     child: _mediaStack(
-                        "assets/images/HCMUTE.png",
+                        "assets/icons/collection_folder.svg",
                         Colors.yellow[100],
                         "Collection",
                         "78 items",
@@ -203,7 +204,7 @@ class _StoragePageState extends State<StoragePage> {
                       );
                     },
                     child: _mediaStack(
-                        "assets/images/HCMUTE.png",
+                        "assets/icons/normal_folder.svg",
                         Colors.green[100],
                         "My Folders",
                         "78 items",
@@ -350,9 +351,10 @@ class _StoragePageState extends State<StoragePage> {
             ]),
             child: Opacity(
               opacity: 0.6,
-              child: Image.asset(
+              child: SvgPicture.asset(
                 image,
-                height: 12 * Responsive.imageSizeMultiplier,
+                height: 30 * Responsive.imageSizeMultiplier,
+                width: 30 * Responsive.imageSizeMultiplier,
               ),
             ),
           ),

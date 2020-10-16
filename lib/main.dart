@@ -9,7 +9,7 @@ import 'views/storage_page.dart';
 void main() => runApp(
   MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: MySignUp())
+    home: MyStorage())
 );
 
 class MyApp extends StatelessWidget {
