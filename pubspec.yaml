@@ -69,16 +69,13 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/images/
-<<<<<<< HEAD
     - img/p1.jpg
     - img/p2.jpg
     - img/p3.jpg
     - img/p4.jpg
     - assets/map.jpg
     - assets/file/
-=======
     - assets/icons/
->>>>>>> 5df57216cc80546629dc6bf2ceed35f661e4bcfd
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
