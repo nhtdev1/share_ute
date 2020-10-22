@@ -30,7 +30,6 @@ class _TagPageState extends State<TagPage> with SingleTickerProviderStateMixin {
     super.initState();
     _items = RawData.list.toList();
   }
-
   List _items;
 
   @override
@@ -197,7 +196,7 @@ class _TagPageState extends State<TagPage> with SingleTickerProviderStateMixin {
       columns: _column,
       horizontalScroll: _horizontalScroll,
       verticalDirection:
-          _startDirection ? VerticalDirection.up : VerticalDirection.down,
+      _startDirection ? VerticalDirection.up : VerticalDirection.down,
       textDirection: _startDirection ? TextDirection.rtl : TextDirection.ltr,
       heightHorizontalScroll: 60 * (_fontSize / 14),
       textField: _textField,
@@ -216,14 +215,14 @@ class _TagPageState extends State<TagPage> with SingleTickerProviderStateMixin {
             image: index > 0 && index < 5
                 ? ItemTagsImage(image: AssetImage("img/p$index.jpg"))
                 : (1 == 1
-                    ? ItemTagsImage(
-                        image: NetworkImage(
-                            "https://image.flaticon.com/icons/png/512/44/44948.png"))
-                    : null),
+                ? ItemTagsImage(
+                image: NetworkImage(
+                    "https://image.flaticon.com/icons/png/512/44/44948.png"))
+                : null),
             icon: (item == '0' || item == '1' || item == '2')
                 ? ItemTagsIcon(
-                    icon: _icon[int.parse(item)],
-                  )
+              icon: _icon[int.parse(item)],
+            )
                 : null,
             removeButton: ItemTagsRemoveButton(
               backgroundColor: Colors.white.withOpacity(0.5),
@@ -235,7 +234,7 @@ class _TagPageState extends State<TagPage> with SingleTickerProviderStateMixin {
               },
             ),
             textScaleFactor:
-                utf8.encode(item.substring(0, 1)).length > 2 ? 0.8 : 1,
+            utf8.encode(item.substring(0, 1)).length > 2 ? 0.8 : 1,
             textStyle: TextStyle(
               fontSize: _fontSize,
             ),
@@ -243,8 +242,8 @@ class _TagPageState extends State<TagPage> with SingleTickerProviderStateMixin {
           onTapDown: (details) => _tapPosition = details.globalPosition,
           onLongPress: () {
             showMenu(
-                    //semanticLabel: item,
-                    items: <PopupMenuEntry>[
+              //semanticLabel: item,
+                items: <PopupMenuEntry>[
                   PopupMenuItem(
                     child: Text(item, style: TextStyle(color: Colors.blueGrey)),
                     enabled: false,
@@ -260,13 +259,13 @@ class _TagPageState extends State<TagPage> with SingleTickerProviderStateMixin {
                     ),
                   ),
                 ],
-                    context: context,
-                    position: RelativeRect.fromRect(
-                        _tapPosition & Size(40, 40),
-                        Offset.zero &
-                            overlay
-                                .size) // & RelativeRect.fromLTRB(65.0, 40.0, 0.0, 0.0),
-                    )
+                context: context,
+                position: RelativeRect.fromRect(
+                    _tapPosition & Size(40, 40),
+                    Offset.zero &
+                    overlay
+                        .size) // & RelativeRect.fromLTRB(65.0, 40.0, 0.0, 0.0),
+            )
                 .then((value) {
               if (value == 1) Clipboard.setData(ClipboardData(text: item));
             });
@@ -289,23 +288,23 @@ class _TagPageState extends State<TagPage> with SingleTickerProviderStateMixin {
       constraintSuggestion: true,
       suggestions: _withSuggestions
           ? [
-              "One",
-              "two",
-              "android",
-              "Dart",
-              "flutter",
-              "test",
-              "tests",
-              "androids",
-              "androidsaaa",
-              "Test",
-              "suggest",
-              "suggestions",
-              "互联网",
-              "last",
-              "lest",
-              "炫舞时代"
-            ]
+        "One",
+        "two",
+        "android",
+        "Dart",
+        "flutter",
+        "test",
+        "tests",
+        "androids",
+        "androidsaaa",
+        "Test",
+        "suggest",
+        "suggestions",
+        "互联网",
+        "last",
+        "lest",
+        "炫舞时代"
+      ]
           : null,
       onSubmitted: (String str) {
         setState(() {
