@@ -14,6 +14,7 @@ class Responsive {
   static bool isMobilePortrait = false;
 
   void init(BoxConstraints constraints, Orientation orientation) {
+
     if (orientation == Orientation.portrait) {
       _screenWidth = constraints.maxWidth;
       _screenHeight = constraints.maxHeight;
