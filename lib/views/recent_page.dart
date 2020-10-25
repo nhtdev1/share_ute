@@ -6,32 +6,83 @@ import 'package:share_ute/widgets/folder_create_bottom_sheet.dart';
 import 'package:share_ute/widgets/folder_sortby_bottom_sheet.dart';
 import 'package:share_ute/models/file.dart';
 
-class MyFolderPage extends StatelessWidget {
+class RecentPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<File> data = new List<File>();
     File file = new File(
-        isFolder: true,
-        fileName: "Hệ CLC",
-        fileType: "folder",
+        isFolder: false,
+        fileName: "Đề thi kỹ thuật lập trình 2020",
+        fileType: "pdf",
         dateCreated: DateTime.now());
     data.add(file);
 
     file = new File(
-        isFolder: true,
-        fileName: "Hệ Đại Trà",
-        fileType: "folder",
+        isFolder: false,
+        fileName: "Đề thi toán A1",
+        fileType: "pdf",
         dateCreated: DateTime.now());
     data.add(file);
 
-    return FolderPage(
+    file = new File(
+        isFolder: false,
+        fileName: "Đề thi Vật lý 1",
+        fileType: "pdf",
+        dateCreated: DateTime.now());
+    data.add(file);
+
+    file = new File(
+        isFolder: false,
+        fileName: "Đề thi Vật lý 2",
+        fileType: "pdf",
+        dateCreated: DateTime.now());
+    data.add(file);
+
+    file = new File(
+        isFolder: false,
+        fileName: "Đề thi xác suất thống kế",
+        fileType: "pdf",
+        dateCreated: DateTime.now());
+    data.add(file);
+    file = new File(
+        isFolder: false,
+        fileName: "Đề thi cơ sở dữ liệu",
+        fileType: "pdf",
+        dateCreated: DateTime.now());
+    data.add(file);
+
+    file = new File(
+        isFolder: false,
+        fileName: "Đề thi OOP",
+        fileType: "pdf",
+        dateCreated: DateTime.now());
+    data.add(file);
+    file = new File(
+        isFolder: false,
+        fileName: "Đề thi mạng máy tính",
+        fileType: "pdf",
+        dateCreated: DateTime.now());
+    data.add(file);
+    file = new File(
+        isFolder: false,
+        fileName: "Đề thi anh văn 1",
+        fileType: "pdf",
+        dateCreated: DateTime.now());
+    file = new File(
+        isFolder: false,
+        fileName: "Đề thi anh văn 2",
+        fileType: "pdf",
+        dateCreated: DateTime.now());
+    data.add(file);
+
+    return RecentView(
       isChild: false,
       data: data,
     );
   }
 }
 
-class FolderPage extends StatefulWidget {
+class RecentView extends StatefulWidget {
   /// False nếu đây là folder ban đầu
   final bool isChild;
 
@@ -39,14 +90,14 @@ class FolderPage extends StatefulWidget {
   final String folderTitle;
   final List<File> data;
 
-  const FolderPage({Key key, this.isChild = false, this.folderTitle, this.data})
+  const RecentView({Key key, this.isChild = false, this.folderTitle, this.data})
       : super(key: key);
 
   @override
-  _FolderPageState createState() => _FolderPageState();
+  _RecentViewState createState() => _RecentViewState();
 }
 
-class _FolderPageState extends State<FolderPage> {
+class _RecentViewState extends State<RecentView> {
   bool isListView = false;
   bool sortIncrement = true;
   bool expandableFolder = true;
@@ -86,52 +137,7 @@ class _FolderPageState extends State<FolderPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        GestureDetector(
-                          child: Text(
-                            "name",
-                            style: TextStyle(fontSize: 14),
-                          ),
-                          onTap: () {
-                            showModalBottomSheet(
-                                context: context,
-                                builder: (builderContext) =>
-                                    FolderSortByBottomSheet(
-                                        curSelection: curSelection,
-                                        dataIcon: sortIncrement
-                                            ? const IconData(0xf366,
-                                                fontFamily:
-                                                    CupertinoIcons.iconFont,
-                                                fontPackage: CupertinoIcons
-                                                    .iconFontPackage)
-                                            : const IconData(0xf35d,
-                                                fontFamily:
-                                                    CupertinoIcons.iconFont,
-                                                fontPackage: CupertinoIcons
-                                                    .iconFontPackage)));
-                          },
-                        ),
-                        GestureDetector(
-                          child: Icon(
-                            sortIncrement
-                                ? const IconData(0xf366,
-                                    fontFamily: CupertinoIcons.iconFont,
-                                    fontPackage: CupertinoIcons.iconFontPackage)
-                                : const IconData(0xf35d,
-                                    fontFamily: CupertinoIcons.iconFont,
-                                    fontPackage:
-                                        CupertinoIcons.iconFontPackage),
-                            size: 14,
-                          ),
-                          onTap: () {
-                            setState(() {
-                              sortIncrement = !sortIncrement;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
+                    Spacer(),
                     GestureDetector(
                       child: isListView
                           ? Icon(
@@ -176,14 +182,16 @@ class _FolderPageState extends State<FolderPage> {
                     widget.data[index].fileName,
                     widget.data[index].isFolder
                         ? CupertinoColors.systemGrey
-                        : CupertinoColors.activeBlue,
+                        : CupertinoColors.activeGreen,
                     Colors.transparent,
                     widget.data[index].dateCreated.toString().split(' ')[0],
                     widget.data[index].isFolder
-                        ? const IconData(0xf435,
+                        ? const IconData(0xf8d2,
                             fontFamily: CupertinoIcons.iconFont,
                             fontPackage: CupertinoIcons.iconFontPackage)
-                        : Icons.insert_drive_file,
+                        : const IconData(0xf8d2,
+                            fontFamily: CupertinoIcons.iconFont,
+                            fontPackage: CupertinoIcons.iconFontPackage),
                     isFolder: widget.data[index].isFolder)
                 : const SizedBox(
                     height: 15,
@@ -204,14 +212,16 @@ class _FolderPageState extends State<FolderPage> {
                 widget.data[index].fileName,
                 widget.data[index].isFolder
                     ? CupertinoColors.systemGrey
-                    : CupertinoColors.activeBlue,
+                    : CupertinoColors.activeGreen,
                 Colors.transparent,
                 widget.data[index].dateCreated.toString(),
                 widget.data[index].isFolder
-                    ? const IconData(0xf435,
+                    ? const IconData(0xf8d2,
                         fontFamily: CupertinoIcons.iconFont,
                         fontPackage: CupertinoIcons.iconFontPackage)
-                    : Icons.insert_drive_file,
+                    : const IconData(0xf8d2,
+                        fontFamily: CupertinoIcons.iconFont,
+                        fontPackage: CupertinoIcons.iconFontPackage),
                 isFolder: widget.data[index].isFolder);
           }),
     );
@@ -281,7 +291,7 @@ class _FolderPageState extends State<FolderPage> {
                     height: 0.005 * size.height,
                   ),
                   Text(
-                    meta,
+                    "Opened by me " + meta,
                     style: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontSize: 12,
@@ -403,15 +413,5 @@ class _FolderPageState extends State<FolderPage> {
         ));
   }
 
-  void _goToChild(title, data, isListViewMode) async {
-    isListView = await Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => ExpandFolderPage(
-                folderTitle: title,
-                data: data,
-                isListView: isListViewMode,
-              )),
-    );
-  }
+  void _goToChild(title, data, isListViewMode) {}
 }

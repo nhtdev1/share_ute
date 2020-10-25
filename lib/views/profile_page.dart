@@ -36,231 +36,248 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xffF8F8FA),
-      body: Stack(
-        overflow: Overflow.visible,
-        children: <Widget>[
-          Container(
-            //color: Colors.blue[600],
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [Color(0xff2980B9), Color(0xff6DD5FA)]),
+    return MaterialApp(
+      home: SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: CupertinoColors.white,
+            leading: CupertinoButton(
+              child: Icon(
+                const IconData(0xf4fd,
+                    fontFamily: CupertinoIcons.iconFont,
+                    fontPackage: CupertinoIcons.iconFontPackage),
+                color: CupertinoColors.systemGrey,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
             ),
-            height: 40 * Responsive.heightMultiplier,
-            child: Padding(
-              padding: EdgeInsets.only(
-                  left: 30.0,
-                  right: 30.0,
-                  top: 10 * Responsive.heightMultiplier),
-              child: Column(
-                children: <Widget>[
-                  Row(
+          ),
+          backgroundColor: CupertinoColors.white,
+          body: Stack(
+            overflow: Overflow.visible,
+            children: <Widget>[
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [Color(0xff2980B9), Color(0xff6DD5FA)]),
+                ),
+                height: 40 * Responsive.heightMultiplier,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      left: 30.0,
+                      right: 30.0,
+                      top: 10 * Responsive.heightMultiplier),
+                  child: Column(
                     children: <Widget>[
-                      Container(
-                        height: 11 * Responsive.heightMultiplier,
-                        width: 11 * Responsive.heightMultiplier, //22 * Responsive.widthMultiplier,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: AssetImage("assets/images/HCMUTE.png"))),
-                      ),
-                      SizedBox(
-                        width: 5 * Responsive.widthMultiplier,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Row(
                         children: <Widget>[
-                          Text(
-                            "Luu Zan Quan",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 3 * Responsive.textMultiplier,
-                                fontWeight: FontWeight.bold),
+                          Container(
+                            height: 11 * Responsive.heightMultiplier,
+                            width: 11 * Responsive.heightMultiplier, //22 * Responsive.widthMultiplier,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: AssetImage("assets/images/HCMUTE.png"))),
                           ),
                           SizedBox(
-                            height: 1 * Responsive.heightMultiplier,
+                            width: 5 * Responsive.widthMultiplier,
                           ),
-                          Row(
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Row(
-                                children: <Widget>[
-                                  Image.asset(
-                                    "assets/icons/facebook.png",
-                                    height: 3 * Responsive.heightMultiplier,
-                                    width: 3 * Responsive.widthMultiplier,
-                                  ),
-                                  SizedBox(
-                                    width: 2 * Responsive.widthMultiplier,
-                                  ),
-                                  Text(
-                                    "Facebook",
-                                    style: TextStyle(
-                                      color: Colors.white60,
-                                      fontSize: 1.5 * Responsive.textMultiplier,
-                                    ),
-                                  ),
-                                ],
+                              Text(
+                                "Hoang Thinh",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 3 * Responsive.textMultiplier,
+                                    fontWeight: FontWeight.bold),
                               ),
                               SizedBox(
-                                width: 7 * Responsive.widthMultiplier,
+                                height: 1 * Responsive.heightMultiplier,
                               ),
                               Row(
                                 children: <Widget>[
-                                  Image.asset(
-                                    "assets/icons/instagram.png",
-                                    height: 3 * Responsive.heightMultiplier,
-                                    width: 3 * Responsive.widthMultiplier,
+                                  Row(
+                                    children: <Widget>[
+                                      Image.asset(
+                                        "assets/icons/facebook.png",
+                                        height: 3 * Responsive.heightMultiplier,
+                                        width: 3 * Responsive.widthMultiplier,
+                                      ),
+                                      SizedBox(
+                                        width: 2 * Responsive.widthMultiplier,
+                                      ),
+                                      Text(
+                                        "Facebook",
+                                        style: TextStyle(
+                                          color: Colors.white60,
+                                          fontSize: 1.5 * Responsive.textMultiplier,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   SizedBox(
-                                    width: 2 * Responsive.widthMultiplier,
+                                    width: 7 * Responsive.widthMultiplier,
                                   ),
-                                  Text(
-                                    "Instagram",
-                                    style: TextStyle(
-                                      color: Colors.white60,
-                                      fontSize: 1.5 * Responsive.textMultiplier,
-                                    ),
-                                  ),
+                                  Row(
+                                    children: <Widget>[
+                                      Image.asset(
+                                        "assets/icons/instagram.png",
+                                        height: 3 * Responsive.heightMultiplier,
+                                        width: 3 * Responsive.widthMultiplier,
+                                      ),
+                                      SizedBox(
+                                        width: 2 * Responsive.widthMultiplier,
+                                      ),
+                                      Text(
+                                        "Instagram",
+                                        style: TextStyle(
+                                          color: Colors.white60,
+                                          fontSize: 1.5 * Responsive.textMultiplier,
+                                        ),
+                                      ),
+                                    ],
+                                  )
                                 ],
                               )
                             ],
                           )
                         ],
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: 3 * Responsive.heightMultiplier,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Column(
-                        children: <Widget>[
-                          Text(
-                            "10.2K",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 3 * Responsive.textMultiplier,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            "Uy Tín",
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 1.7 * Responsive.textMultiplier,
-                            ),
-                          ),
-                        ],
                       ),
-                      Column(
-                        children: <Widget>[
-                          Text(
-                            "696",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 3 * Responsive.textMultiplier,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            "Bài Đăng",
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 1.7 * Responsive.textMultiplier,
-                            ),
-                          ),
-                        ],
+                      SizedBox(
+                        height: 3 * Responsive.heightMultiplier,
                       ),
-                      Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.white),
-                            borderRadius: BorderRadius.circular(5.0),
-                          ),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => EditProfilePage()));
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                "EDIT PROFILE",
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Column(
+                            children: <Widget>[
+                              Text(
+                                "10.2K",
                                 style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 1.8 * Responsive.textMultiplier),
+                                    fontSize: 3 * Responsive.textMultiplier,
+                                    fontWeight: FontWeight.bold),
                               ),
-                            ),
-                          )),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 35 * Responsive.heightMultiplier),
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(30.0),
-                    topLeft: Radius.circular(30.0),
-                  )),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                        padding: EdgeInsets.only(
-                            top: 3 * Responsive.heightMultiplier),
-                        child: Center(
-                          child: Text(
-                            "Posts",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 2.2 * Responsive.textMultiplier),
+                              Text(
+                                "Stars",
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 1.7 * Responsive.textMultiplier,
+                                ),
+                              ),
+                            ],
                           ),
-                        )),
-                    SizedBox(
-                      height: 2 * Responsive.heightMultiplier,
-                    ),
-                    Container(
-                      height: 58 * Responsive.heightMultiplier,
-                      child: ListView(
-                        scrollDirection: Axis.vertical,
-                        children: <Widget>[
-                          /// Đặt post tại đây
-                          MyPost(),
-                          MyPost(),
-                          MyPost(),
-                          MyPost(),
-                          MyPost(),
-                          MyPost(),
-                          MyPost(),
-                          MyPost(),
-                          MyPost(),
-                          MyPost(),
-                          MyPost(),
-                          MyPost(),
+                          Column(
+                            children: <Widget>[
+                              Text(
+                                "696",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 3 * Responsive.textMultiplier,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "Posts",
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 1.7 * Responsive.textMultiplier,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.white),
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => EditProfilePage()));
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "EDIT PROFILE",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 1.8 * Responsive.textMultiplier),
+                                  ),
+                                ),
+                              )),
                         ],
                       ),
-                    ),
-                    SizedBox(
-                      height: 2 * Responsive.heightMultiplier,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          )
-        ],
+              Padding(
+                padding: EdgeInsets.only(top: 35 * Responsive.heightMultiplier),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(30.0),
+                        topLeft: Radius.circular(30.0),
+                      )),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: <Widget>[
+                        Padding(
+                            padding: EdgeInsets.only(
+                                top: 3 * Responsive.heightMultiplier),
+                            child: Center(
+                              child: Text(
+                                "All Posts",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 2.2 * Responsive.textMultiplier),
+                              ),
+                            )),
+                        SizedBox(
+                          height: 2 * Responsive.heightMultiplier,
+                        ),
+                        Container(
+                          height: 58 * Responsive.heightMultiplier,
+                          child: ListView(
+                            scrollDirection: Axis.vertical,
+                            children: <Widget>[
+                              /// Đặt post tại đây
+                              MyPost(),
+                              MyPost(),
+                              MyPost(),
+                              MyPost(),
+                              MyPost(),
+                              MyPost(),
+                              MyPost(),
+                              MyPost(),
+                              MyPost(),
+                              MyPost(),
+                              MyPost(),
+                              MyPost(),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 2 * Responsive.heightMultiplier,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -275,13 +292,12 @@ class MyPost extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 100,
-      margin: EdgeInsets.only(bottom: 10, left: 30, right: 30),
-      decoration: BoxDecoration(
-          color: Colors.blue,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(15), bottomRight: Radius.circular(15))),
+    return Card(
+      child: Container(
+        height: 100,
+        decoration: BoxDecoration(
+        )
+      ),
     );
   }
 }

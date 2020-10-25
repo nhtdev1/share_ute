@@ -20,9 +20,7 @@ class _DistributionViewState extends State<DistributionView> {
                   const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
               child: Container(
                 decoration: BoxDecoration(
-                    color: index == 0
-                        ? CupertinoColors.activeGreen.withOpacity(0.4)
-                        : CupertinoColors.white,
+                    color:  CupertinoColors.white,
                     borderRadius: const BorderRadius.all(Radius.circular(4.0))),
                 child: ListTile(
                     leading: Container(

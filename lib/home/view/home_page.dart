@@ -8,6 +8,9 @@ import 'package:share_ute/drawer/drawer.dart';
 import 'package:share_ute/main_screen/main_screen.dart';
 import 'package:share_ute/search_screen/search_screen.dart';
 import 'package:share_ute/theme.dart';
+import 'package:share_ute/upload_screen/upload_screen.dart';
+import 'package:share_ute/views/folder_page.dart';
+import 'package:share_ute/views/recent_page.dart';
 
 class HomePage extends StatefulWidget {
   static Route route() {
@@ -103,15 +106,9 @@ class _HomePageState extends State<HomePage>
                 controller: _pageController,
                 children: [
                   ListPost(),
-                  Container(
-                    color: Colors.lightBlueAccent,
-                  ),
-                  Container(
-                    color: Colors.lightGreenAccent,
-                  ),
-                  Container(
-                    color: Colors.white54,
-                  ),
+                  RecentPage(),
+                  UploadPage(),
+                  MyFolderPage(),
                 ],
                 onPageChanged: (index) {
                   _bottomNavigationKey.currentState.animateTo(index);

@@ -5,6 +5,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:share_ute/app.dart';
 import 'package:share_ute/views/signup_page.dart';
 import 'package:share_ute/widgets/textfield_container.dart';
 import 'package:share_ute/utils/responsive.dart';
@@ -168,7 +169,12 @@ class _LoginPageState extends State<LoginPage> {
                         EdgeInsets.symmetric(vertical: 20, horizontal: 40),
                         color: Colors.lightBlue,
                         onPressed: () {
-                          widget.signInCallback();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => App()),
+                          );
+                          //widget.signInCallback();
                         },
                         child: Text(
                           "Sign In",

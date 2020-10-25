@@ -1,69 +1,52 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:share_ute/views/expand_folder_page.dart';
+import 'package:share_ute/models/file.dart';
+import 'package:share_ute/search_screen/search_screen.dart';
 import 'package:share_ute/widgets/folder_bottom_actions_sheet.dart';
 import 'package:share_ute/widgets/folder_create_bottom_sheet.dart';
 import 'package:share_ute/widgets/folder_sortby_bottom_sheet.dart';
-import 'package:share_ute/models/file.dart';
 
-class MyFolderPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    List<File> data = new List<File>();
-    File file = new File(
-        isFolder: true,
-        fileName: "Hệ CLC",
-        fileType: "folder",
-        dateCreated: DateTime.now());
-    data.add(file);
-
-    file = new File(
-        isFolder: true,
-        fileName: "Hệ Đại Trà",
-        fileType: "folder",
-        dateCreated: DateTime.now());
-    data.add(file);
-
-    return FolderPage(
-      isChild: false,
-      data: data,
-    );
-  }
-}
-
-class FolderPage extends StatefulWidget {
+class ExpandFolderPage extends StatefulWidget {
   /// False nếu đây là folder ban đầu
   final bool isChild;
 
   /// Nếu là folder con
   final String folderTitle;
   final List<File> data;
+  final bool isListView;
 
-  const FolderPage({Key key, this.isChild = false, this.folderTitle, this.data})
+  const ExpandFolderPage(
+      {Key key,
+      this.isChild = false,
+      this.folderTitle,
+      this.data,
+      this.isListView})
       : super(key: key);
 
   @override
-  _FolderPageState createState() => _FolderPageState();
+  _ExpandFolderPageState createState() => _ExpandFolderPageState();
 }
 
-class _FolderPageState extends State<FolderPage> {
-  bool isListView = false;
+class _ExpandFolderPageState extends State<ExpandFolderPage> {
   bool sortIncrement = true;
   bool expandableFolder = true;
+  bool isListView;
   SORT_BY curSelection = SORT_BY.Name;
+  List<File> data;
   Widget viewMode;
 
   @override
   void initState() {
-    viewMode = isListView ? _listViewMode() : _gridViewMode();
+    isListView = widget.isListView;
+    data = widget.data;
+    viewMode = widget.isListView ? _listViewMode() : _gridViewMode();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MediaQuery.removePadding(
-        removeTop: true,
-        context: context,
+    return MaterialApp(
+      home: SafeArea(
         child: Scaffold(
           floatingActionButton: FloatingActionButton(
             tooltip: "Create new folder",
@@ -78,6 +61,46 @@ class _FolderPageState extends State<FolderPage> {
                   context: context,
                   builder: (builderContext) => FolderCreateBottomSheet());
             },
+          ),
+          appBar: AppBar(
+            backgroundColor: CupertinoColors.white,
+            leading: CupertinoButton(
+              child: Icon(
+                const IconData(0xf4fd,
+                    fontFamily: CupertinoIcons.iconFont,
+                    fontPackage: CupertinoIcons.iconFontPackage),
+                color: CupertinoColors.systemGrey,
+              ),
+              onPressed: () {
+                Navigator.pop(context, widget.isListView);
+              },
+            ),
+            title: Text(
+              widget.folderTitle,
+              style: TextStyle(color: CupertinoColors.systemGrey, fontSize: 16),
+            ),
+            actions: [
+              CupertinoButton(
+                child: Icon(
+                  const IconData(0xf4a5,
+                      fontFamily: CupertinoIcons.iconFont,
+                      fontPackage: CupertinoIcons.iconFontPackage),
+                  color: CupertinoColors.systemGrey,
+                ),
+                onPressed: () async {
+                  final results =
+                      showSearch(context: context, delegate: SearchPage());
+                },
+              ),
+              CupertinoButton(
+                child: Icon(
+                  const IconData(0xf8da,
+                      fontFamily: CupertinoIcons.iconFont,
+                      fontPackage: CupertinoIcons.iconFontPackage),
+                  color: CupertinoColors.systemGrey,
+                ),
+              )
+            ],
           ),
           body: ListView(
             children: <Widget>[
@@ -158,11 +181,12 @@ class _FolderPageState extends State<FolderPage> {
               Padding(
                 padding: const EdgeInsets.only(top: 5),
               ),
-              //isListView?_listViewMode():_gridViewMode()
               viewMode
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Widget _listViewMode() {
@@ -255,7 +279,7 @@ class _FolderPageState extends State<FolderPage> {
                   ),
                   onTap: () {
                     if (isFolder)
-                      _goToChild(title, File.folderList, isListView);
+                      _goToChild(title, widget.data, widget.isListView);
                   },
                 )),
           ),
@@ -293,7 +317,7 @@ class _FolderPageState extends State<FolderPage> {
             ),
             onTap: () {
               isFolder
-                  ? _goToChild(title, File.folderList, isListView)
+                  ? _goToChild(title, widget.data, widget.isListView)
                   : print("Click File");
             },
           ),
@@ -356,7 +380,7 @@ class _FolderPageState extends State<FolderPage> {
                     ),
                     onTap: () {
                       if (isFolder)
-                        _goToChild(title, File.folderList, isListView);
+                        _goToChild(title, widget.data, widget.isListView);
                     },
                   )),
               Row(
@@ -378,7 +402,8 @@ class _FolderPageState extends State<FolderPage> {
                         ),
                         onTap: () {
                           isFolder
-                              ? _goToChild(title, File.folderList, isListView)
+                              ? _goToChild(
+                                  title, widget.data, widget.isListView)
                               : print("Click File");
                         },
                       )),

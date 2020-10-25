@@ -23,21 +23,26 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_bloc: ^6.0.6
+  bloc: ^6.1.0
+  formz: ^0.3.2
+  equatable: ^1.2.5
   badges: ^1.1.3
   convex_bottom_bar: ^2.5.1+1
   flutter_tags: ^0.4.9
   font_awesome_flutter: ^8.8.1
-  floating_search_bar: ^0.3.0
   flutter_svg: ^0.19.0
   google_fonts: ^1.1.0
   percent_indicator: ^2.1.5
   flutter_circular_chart: ^0.1.0
   line_icons: ^0.2.0
+  flutter_picker: ^1.1.5
   flutter_datetime_picker: ^1.4.0
   pdftron_flutter:
     git:
       url: git://github.com/PDFTron/pdftron-flutter.git
   permission_handler: '3.0.1'
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

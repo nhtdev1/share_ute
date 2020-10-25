@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:share_ute/views/profile_page.dart';
 
 // Phần dành cho drawer
 class DrawerWidget extends StatelessWidget {
@@ -36,7 +37,12 @@ class DrawerWidget extends StatelessWidget {
                   leading: Icon(const IconData(0xf746,
                       fontFamily: CupertinoIcons.iconFont,
                       fontPackage: CupertinoIcons.iconFontPackage)),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MyProfile()),
+                    );
+                  },
                 ),
                 ListTile(
                   title: Text('Settings'),
@@ -86,6 +92,7 @@ class DrawerWidget extends StatelessWidget {
                       ),
                       onTap: () {
                         print('Sign Out here');
+                        Navigator.pop(context);
                       },
                     ),
                     SizedBox(
