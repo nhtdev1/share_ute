@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:share_ute/blocs/folder_bloc.dart';
+import 'package:share_ute/search_screen/view/search_page.dart';
 import 'package:share_ute/views/expand_folder_page.dart';
 import 'package:share_ute/widgets/folder_bottom_actions_sheet.dart';
 import 'package:share_ute/widgets/folder_create_bottom_sheet.dart';
@@ -35,11 +37,18 @@ class FolderPage extends StatefulWidget {
   /// False nếu đây là folder ban đầu
   final bool isChild;
 
-  /// Nếu là folder con
+  /// Nếu là folder con (isChild = true)
   final String folderTitle;
-  final List<File> data;
 
-  const FolderPage({Key key, this.isChild = false, this.folderTitle, this.data})
+  final List<File> data;
+  final bool isListView;
+
+  const FolderPage(
+      {Key key,
+      this.isChild = false,
+      this.folderTitle,
+      this.data,
+      this.isListView = true})
       : super(key: key);
 
   @override
@@ -47,25 +56,77 @@ class FolderPage extends StatefulWidget {
 }
 
 class _FolderPageState extends State<FolderPage> {
-  bool isListView = false;
-  bool sortIncrement = true;
-  bool expandableFolder = true;
-  SORT_BY curSelection = SORT_BY.Name;
+  FolderBloc _bloc = new FolderBloc();
+
+  bool isListView = true;
   Widget viewMode;
 
   @override
   void initState() {
-    viewMode = isListView ? _listViewMode() : _gridViewMode();
     super.initState();
+    isListView = widget.isListView;
+    viewMode = isListView ? _listViewMode() : _gridViewMode();
+    _bloc.init(data: widget.data);
+  }
+
+  @override
+  void dispose() {
+    _bloc.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MediaQuery.removePadding(
-        removeTop: true,
-        context: context,
-        child: Scaffold(
-          floatingActionButton: FloatingActionButton(
+    return Scaffold(
+        appBar: widget.isChild
+            ? AppBar(
+                backgroundColor: CupertinoColors.white,
+                leading: CupertinoButton(
+                  child: Icon(
+                    const IconData(0xf4fd,
+                        fontFamily: CupertinoIcons.iconFont,
+                        fontPackage: CupertinoIcons.iconFontPackage),
+                    color: CupertinoColors.systemGrey,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context, isListView);
+                  },
+                ),
+                title: Text(
+                  widget.folderTitle,
+                  style: TextStyle(
+                      color: CupertinoColors.systemGrey, fontSize: 16),
+                ),
+                actions: [
+                  CupertinoButton(
+                    child: Icon(
+                      const IconData(0xf4a5,
+                          fontFamily: CupertinoIcons.iconFont,
+                          fontPackage: CupertinoIcons.iconFontPackage),
+                      color: CupertinoColors.systemGrey,
+                    ),
+                    onPressed: () async {
+                      final results =
+                          showSearch(context: context, delegate: SearchPage());
+                    },
+                  ),
+                  CupertinoButton(
+                    child: Icon(
+                      const IconData(0xf8da,
+                          fontFamily: CupertinoIcons.iconFont,
+                          fontPackage: CupertinoIcons.iconFontPackage),
+                      color: CupertinoColors.systemGrey,
+                    ),
+                    onPressed: () {
+                      print("more");
+                    },
+                  )
+                ],
+              )
+            : null,
+        floatingActionButton: Padding(
+          padding: EdgeInsets.only(bottom: 15),
+          child: FloatingActionButton(
             tooltip: "Create new folder",
             backgroundColor: Colors.white,
             elevation: 2,
@@ -76,144 +137,139 @@ class _FolderPageState extends State<FolderPage> {
             onPressed: () {
               showModalBottomSheet(
                   context: context,
-                  builder: (builderContext) => FolderCreateBottomSheet());
+                  builder: (builderContext) => FolderCreateBottomSheet(
+                        context: context,
+                        bloc: _bloc,
+                      ));
             },
           ),
-          body: ListView(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        GestureDetector(
-                          child: Text(
-                            "name",
-                            style: TextStyle(fontSize: 14),
+        ),
+        body: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      GestureDetector(
+                        child: StreamBuilder(
+                          stream: _bloc.sortTypeStream,
+                          builder: (context, snapshot) => Row(
+                            children: [
+                              Text(
+                                _bloc.curSortType.convertToString,
+                                style: TextStyle(fontSize: 14),
+                              ),
+                              Icon(
+                                _bloc.isIncrement
+                                    ? Icons.arrow_upward
+                                    : Icons.arrow_downward,
+                                color: Colors.black,
+                                size: 14,
+                              )
+                            ],
                           ),
-                          onTap: () {
-                            showModalBottomSheet(
-                                context: context,
-                                builder: (builderContext) =>
-                                    FolderSortByBottomSheet(
-                                        curSelection: curSelection,
-                                        dataIcon: sortIncrement
-                                            ? const IconData(0xf366,
-                                                fontFamily:
-                                                    CupertinoIcons.iconFont,
-                                                fontPackage: CupertinoIcons
-                                                    .iconFontPackage)
-                                            : const IconData(0xf35d,
-                                                fontFamily:
-                                                    CupertinoIcons.iconFont,
-                                                fontPackage: CupertinoIcons
-                                                    .iconFontPackage)));
-                          },
                         ),
-                        GestureDetector(
-                          child: Icon(
-                            sortIncrement
-                                ? const IconData(0xf366,
-                                    fontFamily: CupertinoIcons.iconFont,
-                                    fontPackage: CupertinoIcons.iconFontPackage)
-                                : const IconData(0xf35d,
-                                    fontFamily: CupertinoIcons.iconFont,
-                                    fontPackage:
-                                        CupertinoIcons.iconFontPackage),
-                            size: 14,
+                        onTap: () {
+                          showModalBottomSheet(
+                              context: context,
+                              builder: (builderContext) =>
+                                  FolderSortByBottomSheet(
+                                      context: context,
+                                      bloc: _bloc,
+                                      curSortSelection: _bloc.curSortType,
+                                      isIncrement: _bloc.isIncrement));
+                        },
+                      ),
+                    ],
+                  ),
+                  GestureDetector(
+                    child: isListView
+                        ? Icon(
+                            const IconData(0xf5ed,
+                                fontFamily: CupertinoIcons.iconFont,
+                                fontPackage: CupertinoIcons.iconFontPackage),
+                          )
+                        : Icon(
+                            const IconData(0xf6e8,
+                                fontFamily: CupertinoIcons.iconFont,
+                                fontPackage: CupertinoIcons.iconFontPackage),
                           ),
-                          onTap: () {
-                            setState(() {
-                              sortIncrement = !sortIncrement;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                    GestureDetector(
-                      child: isListView
-                          ? Icon(
-                              const IconData(0xf5ed,
-                                  fontFamily: CupertinoIcons.iconFont,
-                                  fontPackage: CupertinoIcons.iconFontPackage),
-                            )
-                          : Icon(
-                              const IconData(0xf6e8,
-                                  fontFamily: CupertinoIcons.iconFont,
-                                  fontPackage: CupertinoIcons.iconFontPackage),
-                            ),
-                      onTap: () {
-                        setState(() {
-                          isListView = !isListView;
-                          viewMode =
-                              isListView ? _listViewMode() : _gridViewMode();
-                        });
-                      },
-                    ),
-                  ],
-                ),
+                    onTap: () {
+                      setState(() {
+                        _changeTypeView();
+                      });
+                    },
+                  ),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 5),
-              ),
-              //isListView?_listViewMode():_gridViewMode()
-              viewMode
-            ],
-          ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 5),
+            ),
+            //isListView?_listViewMode():_gridViewMode()
+            Expanded(
+              child: viewMode,
+            )
+          ],
         ));
   }
 
   Widget _listViewMode() {
     return Container(
-      child: new ListView.builder(
-          itemCount: widget.data.length + 1,
-          shrinkWrap: true,
-          itemBuilder: (context, index) {
-            return index < widget.data.length
-                ? _mediaListItem(
-                    widget.data[index].fileName,
-                    widget.data[index].isFolder
-                        ? CupertinoColors.systemGrey
-                        : CupertinoColors.activeBlue,
-                    Colors.transparent,
-                    widget.data[index].dateCreated.toString().split(' ')[0],
-                    widget.data[index].isFolder
-                        ? const IconData(0xf435,
-                            fontFamily: CupertinoIcons.iconFont,
-                            fontPackage: CupertinoIcons.iconFontPackage)
-                        : Icons.insert_drive_file,
-                    isFolder: widget.data[index].isFolder)
-                : const SizedBox(
-                    height: 15,
-                  );
-          }),
+      child: StreamBuilder(
+        stream: _bloc.listDataStream,
+        builder: (context, snapshot) => ListView.builder(
+            padding: EdgeInsets.zero,
+            shrinkWrap: true,
+            itemCount: _bloc.getLength,
+            itemBuilder: (context, index) {
+              return _mediaListItem(
+                  _bloc.getData[index].fileName,
+                  _bloc.getData[index].isFolder
+                      ? CupertinoColors.systemGrey
+                      : CupertinoColors.activeBlue,
+                  Colors.transparent,
+                  _bloc.getData[index].dateCreated.toString().split(' ')[0],
+                  _bloc.getData[index].isFolder
+                      ? const IconData(0xf435,
+                          fontFamily: CupertinoIcons.iconFont,
+                          fontPackage: CupertinoIcons.iconFontPackage)
+                      : Icons.insert_drive_file,
+                  isFolder: _bloc.getData[index].isFolder);
+            }),
+      ),
     );
   }
 
   Widget _gridViewMode() {
     return Container(
-      child: GridView.builder(
-          shrinkWrap: true,
-          itemCount: widget.data.length,
-          gridDelegate:
-              new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-          itemBuilder: (context, index) {
-            return _mediaGridItem(
-                widget.data[index].fileName,
-                widget.data[index].isFolder
-                    ? CupertinoColors.systemGrey
-                    : CupertinoColors.activeBlue,
-                Colors.transparent,
-                widget.data[index].dateCreated.toString(),
-                widget.data[index].isFolder
-                    ? const IconData(0xf435,
-                        fontFamily: CupertinoIcons.iconFont,
-                        fontPackage: CupertinoIcons.iconFontPackage)
-                    : Icons.insert_drive_file,
-                isFolder: widget.data[index].isFolder);
-          }),
+      child: StreamBuilder(
+        stream: _bloc.listDataStream,
+        builder: (context, snapshot) => GridView.builder(
+            padding: EdgeInsets.zero,
+            shrinkWrap: true,
+            itemCount: _bloc.getLength,
+            gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2),
+            itemBuilder: (context, index) {
+              return _mediaGridItem(
+                  _bloc.getData[index].fileName,
+                  _bloc.getData[index].isFolder
+                      ? CupertinoColors.systemGrey
+                      : CupertinoColors.activeBlue,
+                  Colors.transparent,
+                  _bloc.getData[index].dateCreated.toString(),
+                  _bloc.getData[index].isFolder
+                      ? const IconData(0xf435,
+                          fontFamily: CupertinoIcons.iconFont,
+                          fontPackage: CupertinoIcons.iconFontPackage)
+                      : Icons.insert_drive_file,
+                  isFolder: _bloc.getData[index].isFolder);
+            }),
+      ),
     );
   }
 
@@ -255,7 +311,8 @@ class _FolderPageState extends State<FolderPage> {
                   ),
                   onTap: () {
                     if (isFolder)
-                      _goToChild(title, File.folderList, isListView);
+                      _goToChild(
+                          title, _bloc.getChildOf(folderId: '0'), isListView);
                   },
                 )),
           ),
@@ -293,7 +350,8 @@ class _FolderPageState extends State<FolderPage> {
             ),
             onTap: () {
               isFolder
-                  ? _goToChild(title, File.folderList, isListView)
+                  ? _goToChild(
+                      title, _bloc.getChildOf(folderId: '1'), isListView)
                   : print("Click File");
             },
           ),
@@ -356,7 +414,8 @@ class _FolderPageState extends State<FolderPage> {
                     ),
                     onTap: () {
                       if (isFolder)
-                        _goToChild(title, File.folderList, isListView);
+                        _goToChild(
+                            title, _bloc.getChildOf(folderId: '1'), isListView);
                     },
                   )),
               Row(
@@ -378,7 +437,8 @@ class _FolderPageState extends State<FolderPage> {
                         ),
                         onTap: () {
                           isFolder
-                              ? _goToChild(title, File.folderList, isListView)
+                              ? _goToChild(title,
+                                  _bloc.getChildOf(folderId: '1'), isListView)
                               : print("Click File");
                         },
                       )),
@@ -404,14 +464,31 @@ class _FolderPageState extends State<FolderPage> {
   }
 
   void _goToChild(title, data, isListViewMode) async {
-    isListView = await Navigator.push(
+    var result = await Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => ExpandFolderPage(
+          builder: (context) => FolderPage(
                 folderTitle: title,
                 data: data,
                 isListView: isListViewMode,
+                isChild: true,
               )),
     );
+    if (result != isListView) {
+      setState(() {
+        _changeTypeView();
+      });
+    }
+  }
+
+  void _changeTypeView() {
+    isListView = !isListView;
+    var data = _bloc.getData;
+    var isIncre = _bloc.isIncrement;
+    var typeSort = _bloc.curSortType;
+    _bloc.dispose();
+    _bloc = new FolderBloc();
+    _bloc.init(data: data, isIncrement: isIncre, type: typeSort);
+    viewMode = isListView ? _listViewMode() : _gridViewMode();
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:share_ute/blocs/folder_bloc.dart';
 
 enum SORT_BY {
   Name,
@@ -8,10 +9,40 @@ enum SORT_BY {
   StorageUsed,
 }
 
+extension SORT_BY_EX on SORT_BY {
+  String get convertToString {
+    switch (this) {
+      case SORT_BY.Name:
+        return 'name';
+      case SORT_BY.LastModified:
+        return "last modified";
+      case SORT_BY.LastModifiedByMe:
+        return "last modified by me";
+      case SORT_BY.StorageUsed:
+        return "storage used";
+      case SORT_BY.LastOpenedByMe:
+        return "last opened by me";
+      default:
+        return "";
+    }
+  }
+}
+
 class FolderSortByBottomSheet extends StatelessWidget {
-  final IconData dataIcon;
-  final SORT_BY curSelection;
-  const FolderSortByBottomSheet({Key key, this.dataIcon, this.curSelection})
+  @required
+  final context;
+  @required
+  final bool isIncrement;
+  @required
+  final SORT_BY curSortSelection;
+  @required
+  final FolderBloc bloc;
+  const FolderSortByBottomSheet(
+      {Key key,
+        this.context,
+        this.isIncrement,
+        this.curSortSelection,
+        this.bloc})
       : super(key: key);
 
   @override
@@ -45,25 +76,33 @@ class FolderSortByBottomSheet extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               GestureDetector(
-                onTap: (){print("Name");},
+                onTap: () {
+                  sortBy(SORT_BY.Name, isIncrement);
+                },
                 child: Container(
-                    width: size.width-5,
-                    decoration: curSelection==SORT_BY.Name? BoxDecoration(
+                    width: size.width - 5,
+                    decoration: curSortSelection == SORT_BY.Name
+                        ? BoxDecoration(
                         color: Color(0xffC4E2F4),
                         borderRadius: BorderRadius.only(
                             topRight: Radius.circular(30),
-                            bottomRight: Radius.circular(30))) : null,
+                            bottomRight: Radius.circular(30)))
+                        : null,
                     padding: EdgeInsets.only(top: 10, left: 10, bottom: 10),
                     child: Row(
                       children: [
-                        curSelection == SORT_BY.Name
+                        curSortSelection == SORT_BY.Name
                             ? Icon(
-                          dataIcon,
+                          isIncrement
+                              ? Icons.arrow_upward
+                              : Icons.arrow_downward,
                           color: Colors.blue[900],
                           size: 20,
                         )
                             : Icon(
-                          dataIcon,
+                          isIncrement
+                              ? Icons.arrow_upward
+                              : Icons.arrow_downward,
                           color: Colors.transparent,
                         ),
                         SizedBox(
@@ -87,25 +126,33 @@ class FolderSortByBottomSheet extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               GestureDetector(
-                onTap: (){print("last modified");},
+                onTap: () {
+                  sortBy(SORT_BY.LastModified, isIncrement);
+                },
                 child: Container(
-                    width: size.width-5,
-                    decoration: curSelection==SORT_BY.LastModified? BoxDecoration(
+                    width: size.width - 5,
+                    decoration: curSortSelection == SORT_BY.LastModified
+                        ? BoxDecoration(
                         color: Color(0xffC4E2F4),
                         borderRadius: BorderRadius.only(
                             topRight: Radius.circular(30),
-                            bottomRight: Radius.circular(30))) : null,
+                            bottomRight: Radius.circular(30)))
+                        : null,
                     padding: EdgeInsets.only(top: 10, left: 10, bottom: 10),
                     child: Row(
                       children: [
-                        curSelection == SORT_BY.LastModified
+                        curSortSelection == SORT_BY.LastModified
                             ? Icon(
-                          dataIcon,
+                          isIncrement
+                              ? Icons.arrow_upward
+                              : Icons.arrow_downward,
                           color: Colors.blue[900],
                           size: 20,
                         )
                             : Icon(
-                          dataIcon,
+                          isIncrement
+                              ? Icons.arrow_upward
+                              : Icons.arrow_downward,
                           color: Colors.transparent,
                         ),
                         SizedBox(
@@ -129,25 +176,33 @@ class FolderSortByBottomSheet extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               GestureDetector(
-                onTap: (){print("last modified by me");},
+                onTap: () {
+                  sortBy(SORT_BY.LastModifiedByMe, isIncrement);
+                },
                 child: Container(
-                    width: size.width-5,
-                    decoration: curSelection==SORT_BY.LastModifiedByMe? BoxDecoration(
+                    width: size.width - 5,
+                    decoration: curSortSelection == SORT_BY.LastModifiedByMe
+                        ? BoxDecoration(
                         color: Color(0xffC4E2F4),
                         borderRadius: BorderRadius.only(
                             topRight: Radius.circular(30),
-                            bottomRight: Radius.circular(30))) : null,
+                            bottomRight: Radius.circular(30)))
+                        : null,
                     padding: EdgeInsets.only(top: 10, left: 10, bottom: 10),
                     child: Row(
                       children: [
-                        curSelection == SORT_BY.LastModifiedByMe
+                        curSortSelection == SORT_BY.LastModifiedByMe
                             ? Icon(
-                          dataIcon,
+                          isIncrement
+                              ? Icons.arrow_upward
+                              : Icons.arrow_downward,
                           color: Colors.blue[900],
                           size: 20,
                         )
                             : Icon(
-                          dataIcon,
+                          isIncrement
+                              ? Icons.arrow_upward
+                              : Icons.arrow_downward,
                           color: Colors.transparent,
                         ),
                         SizedBox(
@@ -167,30 +222,37 @@ class FolderSortByBottomSheet extends StatelessWidget {
               )
             ],
           ),
-
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               GestureDetector(
-                onTap: (){print("last opened by me");},
+                onTap: () {
+                  sortBy(SORT_BY.LastOpenedByMe, isIncrement);
+                },
                 child: Container(
-                    width: size.width-5,
-                    decoration: curSelection==SORT_BY.LastOpenedByMe? BoxDecoration(
+                    width: size.width - 5,
+                    decoration: curSortSelection == SORT_BY.LastOpenedByMe
+                        ? BoxDecoration(
                         color: Color(0xffC4E2F4),
                         borderRadius: BorderRadius.only(
                             topRight: Radius.circular(30),
-                            bottomRight: Radius.circular(30))) : null,
+                            bottomRight: Radius.circular(30)))
+                        : null,
                     padding: EdgeInsets.only(top: 10, left: 10, bottom: 10),
                     child: Row(
                       children: [
-                        curSelection == SORT_BY.LastOpenedByMe
+                        curSortSelection == SORT_BY.LastOpenedByMe
                             ? Icon(
-                          dataIcon,
+                          isIncrement
+                              ? Icons.arrow_upward
+                              : Icons.arrow_downward,
                           color: Colors.blue[900],
                           size: 20,
                         )
                             : Icon(
-                          dataIcon,
+                          isIncrement
+                              ? Icons.arrow_upward
+                              : Icons.arrow_downward,
                           color: Colors.transparent,
                         ),
                         SizedBox(
@@ -214,26 +276,34 @@ class FolderSortByBottomSheet extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               GestureDetector(
-                onTap: (){print("Storage used");},
+                onTap: () {
+                  sortBy(SORT_BY.StorageUsed, isIncrement);
+                },
                 child: Container(
-                    width: size.width-5,
+                    width: size.width - 5,
                     margin: EdgeInsets.only(bottom: 5),
-                    decoration: curSelection==SORT_BY.StorageUsed? BoxDecoration(
+                    decoration: curSortSelection == SORT_BY.StorageUsed
+                        ? BoxDecoration(
                         color: Color(0xffC4E2F4),
                         borderRadius: BorderRadius.only(
                             topRight: Radius.circular(30),
-                            bottomRight: Radius.circular(30))) : null,
+                            bottomRight: Radius.circular(30)))
+                        : null,
                     padding: EdgeInsets.only(top: 10, left: 10, bottom: 10),
                     child: Row(
                       children: [
-                        curSelection == SORT_BY.StorageUsed
+                        curSortSelection == SORT_BY.StorageUsed
                             ? Icon(
-                          dataIcon,
+                          isIncrement
+                              ? Icons.arrow_upward
+                              : Icons.arrow_downward,
                           color: Colors.blue[900],
                           size: 20,
                         )
                             : Icon(
-                          dataIcon,
+                          isIncrement
+                              ? Icons.arrow_upward
+                              : Icons.arrow_downward,
                           color: Colors.transparent,
                         ),
                         SizedBox(
@@ -256,5 +326,11 @@ class FolderSortByBottomSheet extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void sortBy(SORT_BY typeChoose, bool isIncrement) {
+    bloc.sort(typeChoose,
+        curSortSelection == typeChoose ? !isIncrement : isIncrement);
+    Navigator.pop(context);
   }
 }
