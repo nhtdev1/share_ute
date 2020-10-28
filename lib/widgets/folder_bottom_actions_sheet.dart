@@ -1,12 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:share_ute/blocs/folder_bloc.dart';
+import 'package:share_ute/models/file.dart';
+import 'file:///D:/_STUDY/2020-2021/HK_I/_TLCN/share_ute/lib/widgets/folder_components/dialogs.dart';
+import 'package:share_ute/widgets/folder_components/popup_input.dart';
+
+import 'folder_components/action_type.dart';
 
 class FolderBottomActionsSheet extends StatefulWidget {
   final IconData iconData;
   final Color iconColor;
+  final String itemId;
+  final FolderBloc bloc;
+
+  /// Thuộc tính này không còn sử dụng
+  /// Nhưng expand_folder_page có sử dụng
+  /// Nên tạm thời để lại để không lỗi
   final String title;
 
   const FolderBottomActionsSheet(
-      {Key key, this.iconData, this.iconColor, this.title})
+      {Key key,
+      this.iconData,
+      this.iconColor,
+      this.itemId,
+      this.bloc,
+      this.title})
       : super(key: key);
   @override
   State<StatefulWidget> createState() {
@@ -21,7 +38,27 @@ class _FolderBottomActionsSheet extends State<FolderBottomActionsSheet> {
 
   @override
   Widget build(BuildContext context) {
+    File myFile = widget.bloc.getItem(widget.itemId);
     var size = MediaQuery.of(context).size;
+    void addStarred() {
+      setState(() {
+        myFile.isAddStarted = !myFile.isAddStarted;
+      });
+      widget.bloc.updateItem(id: myFile.id, isStarred: myFile.isAddStarted);
+    }
+
+    void sharing() {
+      setState(() {
+        myFile.isSharing = !myFile.isSharing;
+      });
+      widget.bloc.updateItem(id: myFile.id, isSharing: myFile.isSharing);
+    }
+
+    void rename(value) {
+      widget.bloc.updateItem(id: myFile.id, name: value);
+    }
+
+    /// View
     return Container(
       child: new Wrap(
         children: <Widget>[
@@ -45,7 +82,7 @@ class _FolderBottomActionsSheet extends State<FolderBottomActionsSheet> {
                     Container(
                       width: 0.8 * size.width,
                       child: Text(
-                        widget.title,
+                        myFile.fileName,
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.black,
@@ -69,25 +106,28 @@ class _FolderBottomActionsSheet extends State<FolderBottomActionsSheet> {
               Container(
                 padding: EdgeInsets.only(
                     left: PADDING_LEFT, top: PADDING_TOP, bottom: PADDING_BOT),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.share,
-                      color: Colors.grey,
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      "Share",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
+                child: GestureDetector(
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.share,
+                        color: Colors.grey,
                       ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    )
-                  ],
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        "Share",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      )
+                    ],
+                  ),
+                  onTap: () {},
                 ),
               )
             ],
@@ -96,29 +136,36 @@ class _FolderBottomActionsSheet extends State<FolderBottomActionsSheet> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
-                padding: EdgeInsets.only(
-                    left: PADDING_LEFT, top: PADDING_TOP, bottom: PADDING_BOT),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.star_border,
-                      color: Colors.grey,
+                  padding: EdgeInsets.only(
+                      left: PADDING_LEFT,
+                      top: PADDING_TOP,
+                      bottom: PADDING_BOT),
+                  child: GestureDetector(
+                    child: Row(
+                      children: [
+                        Icon(
+                          myFile.isAddStarted ? Icons.star : Icons.star_border,
+                          color:
+                              myFile.isAddStarted ? Colors.yellow : Colors.grey,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          myFile.isAddStarted
+                              ? "Remove from Starred"
+                              : "Add to starred",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        )
+                      ],
                     ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      "Add to starred",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    )
-                  ],
-                ),
-              )
+                    onTap: () => addStarred(),
+                  ))
             ],
           ),
           Divider(
@@ -130,29 +177,35 @@ class _FolderBottomActionsSheet extends State<FolderBottomActionsSheet> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
-                padding: EdgeInsets.only(
-                    left: PADDING_LEFT, top: PADDING_TOP, bottom: PADDING_BOT),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.link_off,
-                      color: Colors.grey,
+                  padding: EdgeInsets.only(
+                      left: PADDING_LEFT,
+                      top: PADDING_TOP,
+                      bottom: PADDING_BOT),
+                  child: GestureDetector(
+                    child: Row(
+                      children: [
+                        Icon(
+                          myFile.isSharing ? Icons.link : Icons.link_off,
+                          color: myFile.isSharing ? Colors.green : Colors.grey,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          myFile.isSharing
+                              ? "Link sharing on"
+                              : "Link sharing off",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        )
+                      ],
                     ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      "Link sharing off",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    )
-                  ],
-                ),
-              )
+                    onTap: () => sharing(),
+                  ))
             ],
           ),
           Row(
@@ -195,26 +248,39 @@ class _FolderBottomActionsSheet extends State<FolderBottomActionsSheet> {
               Container(
                 padding: EdgeInsets.only(
                     left: PADDING_LEFT, top: PADDING_TOP, bottom: PADDING_BOT),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.edit,
-                      color: Colors.grey,
+                child: GestureDetector(
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.edit,
+                          color: Colors.grey,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          "Rename",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        )
+                      ],
                     ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      "Rename",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    )
-                  ],
-                ),
+                    onTap: () {
+                      Navigator.pop(context);
+                      showDialog(
+                          context: context,
+                          builder: (_) => PopupInput(
+                                title: "Rename Folder",
+                                hintText: "Untitled folder",
+                                text: myFile.fileName,
+                                action: ACTION_TYPE.CANCEL_RENAME,
+                                callback: rename,
+                              ));
+                    }),
               )
             ],
           ),
@@ -282,25 +348,36 @@ class _FolderBottomActionsSheet extends State<FolderBottomActionsSheet> {
               Container(
                 padding: EdgeInsets.only(
                     left: PADDING_LEFT, top: PADDING_TOP, bottom: PADDING_BOT),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.restore_from_trash,
-                      color: Colors.grey,
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      "Remove",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
+                child: GestureDetector(
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.restore_from_trash,
+                        color: Colors.grey,
                       ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    )
-                  ],
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        "Remove",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      )
+                    ],
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                    MyDialogs.showDialogConfirm(
+                        context,
+                        "DO YOU WANT REMOVE IT?",
+                        ACTION_TYPE.NO_YES,
+                        widget.bloc.removeItem,
+                        widget.itemId);
+                  },
                 ),
               )
             ],

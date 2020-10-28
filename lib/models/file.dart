@@ -1,7 +1,10 @@
 class File {
   final String fileType;
 
-  final String fileName;
+  /// Update by Quan
+  /// DateUpdate: 28-10-2020
+  /// Change final to non-final variable (Allow setter)
+  String fileName;
 
   final String fileImage;
 
@@ -9,12 +12,24 @@ class File {
 
   DateTime dateCreated;
 
+  /// Attributes create by Quan
+  /// DateCreate: 28-10-2020
+  /// Using for folder page
+  String id;
+  bool isAddStarted;
+  bool isSharing;
+
+  /// void set setName(value) => fileName = value;
+
   File(
       {this.fileType,
       this.fileName,
       this.fileImage,
       this.isFolder,
-      this.dateCreated});
+      this.dateCreated,
+      this.id,
+      this.isSharing = false,
+      this.isAddStarted = false});
 
   static final folderList = [
     File(

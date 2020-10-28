@@ -3,9 +3,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:share_ute/blocs/folder_bloc.dart';
+import 'package:share_ute/widgets/folder_components/popup_input.dart';
 import 'package:share_ute/widgets/textfield_container.dart';
 //import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
+
+import 'folder_components/action_type.dart';
 
 class FolderCreateBottomSheet extends StatefulWidget {
   // final IconData iconData;
@@ -86,57 +89,12 @@ class _FolderCreateBottomSheet extends State<FolderCreateBottomSheet> {
                       Navigator.pop(context);
                       showDialog(
                           context: context,
-                          builder: (_) => AlertDialog(
-                            title: Center(
-                              child: Text("New Folder"),
-                            ),
-                            content: TextFieldContainer(
-                              borderRadius: 5.0,
-                              backColor: Colors.grey[200],
-                              child: TextField(
-                                controller: _folderNameController,
-                                cursorColor: Colors.blue[900],
-                                decoration: InputDecoration(
-                                  icon: null,
-                                  hintText: "Untitled folder",
-                                  border: InputBorder.none,
-                                ),
-                              ),
-                            ),
-                            actions: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    right: 5, bottom: 5),
-                                child: Row(
-                                  children: [
-                                    GestureDetector(
-                                      child: Text(
-                                        "Cancel",
-                                        style: TextStyle(
-                                            color: Colors.blue[900]),
-                                      ),
-                                      onTap: (){
-                                        Navigator.pop(_);
-                                      },
-                                    ),
-                                    SizedBox(
-                                      width: 15,
-                                    ),
-                                    GestureDetector(
-                                      child: Text(
-                                        "Create",
-                                        style: TextStyle(
-                                            color: Colors.blue[900]),
-                                      ),
-                                      onTap: (){
-                                        widget.bloc.createFolder(_folderNameController.text,);
-                                        Navigator.pop(_);
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
+                          builder: (_) => PopupInput(
+                            title: "New Folder",
+                            hintText: "Untitled folder",
+                            text: "Untitled folder",
+                            action: ACTION_TYPE.CANCEL_CREATE,
+                            callback: widget.bloc.createFolder,
                           ));
                     },
                   ),
@@ -284,7 +242,7 @@ class _FolderCreateBottomSheet extends State<FolderCreateBottomSheet> {
                         ),
                       ],
                     ),
-                    onTap: (){
+                    onTap: () {
                       getImage();
                     },
                   ),
@@ -349,7 +307,7 @@ class _FolderCreateBottomSheet extends State<FolderCreateBottomSheet> {
   //   return files;
   // }
 
-  Future  getImage() async {
+  Future getImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.getImage(source: ImageSource.camera);
 

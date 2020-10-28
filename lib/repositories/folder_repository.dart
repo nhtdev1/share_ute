@@ -1,7 +1,6 @@
 import 'package:share_ute/models/file.dart';
 
 import '../models/file.dart';
-import '../models/file.dart';
 
 class FolderRepository {
   static final folderList = [
@@ -196,9 +195,15 @@ class FolderRepository {
         fileType: "folder",
         dateCreated: DateTime.now()),
   ];
+
   List<File> getFileData() {
+    var id = 0;
     List<File> myFiles = new List<File>();
-    for(var item in folderList){
+    for (var item in folderList) {
+      item.id = id.toString();
+      item.isAddStarted = false;
+      item.isSharing = false;
+      id += 1;
       myFiles.add(item);
     }
     return myFiles;

@@ -45,12 +45,71 @@ class FolderBloc {
     return _repository.getFileData();
   }
 
-  bool createFolder(String fileName){
-    _data.add(_repository.createFile("folder", fileName, "", true, DateTime.now()));
+  /// Hàm tạo một folder mới
+  bool createFolder(String fileName) {
+    if (fileName == "") {
+      _listDataController.sink.addError("File Name Not Allow");
+      _listDataController.sink.add(false);
+      return false;
+    }
+    _data.add(
+        _repository.createFile("folder", fileName, "", true, DateTime.now()));
     _listDataController.sink.add(true);
     return true;
   }
 
+  /// Hàm lấy thuộc tính 1 file/folder
+  File getItem(String id) {
+    for (var item in _data) {
+      if (item.id == id) {
+        return item;
+      }
+    }
+    return null;
+  }
+
+  /// Hàm câp nhật 1 file/folder
+  bool updateItem({
+    @required String id,
+    bool isStarred,
+    bool isSharing,
+    String name,
+  }) {
+    for (var item in _data) {
+      if (item.id == id) {
+        item.isSharing = isSharing == null ? item.isSharing : isSharing;
+        item.isAddStarted = isStarred == null ? item.isAddStarted : isStarred;
+        if(name != null && name != ""){
+          item.fileName = name;
+          _listDataController.sink.add(true);
+        }
+      }
+    }
+  }
+
+  /// Hàm xóa 1 file/folder
+  bool removeItem(String id){
+    for (var item in _data) {
+      if (item.id == id) {
+        _data.remove(item);
+        _listDataController.sink.add(true);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  List<String> indexItemChose = new List<String>();
+  void selected(String id){
+    if(indexItemChose.contains(id)){
+      indexItemChose.remove(id);
+    }else{
+      indexItemChose.add(id);
+    }
+    _listDataController.sink.add(true);
+  }
+
+  /// Hàm sắp xếp
   void sort(SORT_BY sortBy, bool isIncrement) {
     _curSortType = sortBy;
     _isIncrement = isIncrement;
@@ -60,6 +119,8 @@ class FolderBloc {
     _listDataController.sink.add(true);
   }
 
+
+  /// Thuật toán bubble sort
   List<File> _sorted(List<File> data, SORT_BY type, bool isIncrement) {
     for (int i = 0; i < data.length; i++) {
       for (int j = 0; j < data.length - i - 1; j++) {
@@ -72,7 +133,6 @@ class FolderBloc {
     }
     return isIncrement ? data : List.from(data.reversed);
   }
-
 
   bool _isGreaterThan(File a, File b, SORT_BY type) {
     /// Folder đứng trước file

@@ -13,6 +13,7 @@ class MyFolderPage extends StatelessWidget {
   Widget build(BuildContext context) {
     List<File> data = new List<File>();
     File file = new File(
+        id: '100',
         isFolder: true,
         fileName: "Hệ CLC",
         fileType: "folder",
@@ -20,6 +21,7 @@ class MyFolderPage extends StatelessWidget {
     data.add(file);
 
     file = new File(
+        id: '200',
         isFolder: true,
         fileName: "Hệ Đại Trà",
         fileType: "folder",
@@ -220,27 +222,35 @@ class _FolderPageState extends State<FolderPage> {
   Widget _listViewMode() {
     return Container(
       child: StreamBuilder(
-        stream: _bloc.listDataStream,
-        builder: (context, snapshot) => ListView.builder(
-            padding: EdgeInsets.zero,
-            shrinkWrap: true,
-            itemCount: _bloc.getLength,
-            itemBuilder: (context, index) {
-              return _mediaListItem(
-                  _bloc.getData[index].fileName,
-                  _bloc.getData[index].isFolder
-                      ? CupertinoColors.systemGrey
-                      : CupertinoColors.activeBlue,
-                  Colors.transparent,
-                  _bloc.getData[index].dateCreated.toString().split(' ')[0],
-                  _bloc.getData[index].isFolder
-                      ? const IconData(0xf435,
-                          fontFamily: CupertinoIcons.iconFont,
-                          fontPackage: CupertinoIcons.iconFontPackage)
-                      : Icons.insert_drive_file,
-                  isFolder: _bloc.getData[index].isFolder);
-            }),
-      ),
+          stream: _bloc.listDataStream,
+          builder: (context, snapshot) => _bloc.getLength > 0
+              ? ListView.builder(
+                  padding: EdgeInsets.zero,
+                  shrinkWrap: true,
+                  itemCount: _bloc.getLength,
+                  itemBuilder: (context, index) {
+                    return _mediaListItem(
+                        _bloc.getData[index].id,
+                        _bloc.getData[index].fileName,
+                        _bloc.getData[index].isFolder
+                            ? CupertinoColors.systemGrey
+                            : CupertinoColors.activeBlue,
+                        Colors.transparent,
+                        _bloc.getData[index].dateCreated
+                            .toString()
+                            .split(' ')[0],
+                        _bloc.getData[index].isFolder
+                            ? const IconData(0xf435,
+                                fontFamily: CupertinoIcons.iconFont,
+                                fontPackage: CupertinoIcons.iconFontPackage)
+                            : Icons.insert_drive_file,
+                        isFolder: _bloc.getData[index].isFolder,
+                        isChoose: _bloc.indexItemChose
+                            .contains(_bloc.getData[index].id));
+                  })
+              : Center(
+                  child: Text("NO ITEMS"),
+                )),
     );
   }
 
@@ -248,33 +258,40 @@ class _FolderPageState extends State<FolderPage> {
     return Container(
       child: StreamBuilder(
         stream: _bloc.listDataStream,
-        builder: (context, snapshot) => GridView.builder(
-            padding: EdgeInsets.zero,
-            shrinkWrap: true,
-            itemCount: _bloc.getLength,
-            gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2),
-            itemBuilder: (context, index) {
-              return _mediaGridItem(
-                  _bloc.getData[index].fileName,
-                  _bloc.getData[index].isFolder
-                      ? CupertinoColors.systemGrey
-                      : CupertinoColors.activeBlue,
-                  Colors.transparent,
-                  _bloc.getData[index].dateCreated.toString(),
-                  _bloc.getData[index].isFolder
-                      ? const IconData(0xf435,
-                          fontFamily: CupertinoIcons.iconFont,
-                          fontPackage: CupertinoIcons.iconFontPackage)
-                      : Icons.insert_drive_file,
-                  isFolder: _bloc.getData[index].isFolder);
-            }),
+        builder: (context, snapshot) => _bloc.getLength > 0
+            ? GridView.builder(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                itemCount: _bloc.getLength,
+                gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2),
+                itemBuilder: (context, index) {
+                  return _mediaGridItem(
+                      _bloc.getData[index].id,
+                      _bloc.getData[index].fileName,
+                      _bloc.getData[index].isFolder
+                          ? CupertinoColors.systemGrey
+                          : CupertinoColors.activeBlue,
+                      Colors.transparent,
+                      _bloc.getData[index].dateCreated.toString(),
+                      _bloc.getData[index].isFolder
+                          ? const IconData(0xf435,
+                              fontFamily: CupertinoIcons.iconFont,
+                              fontPackage: CupertinoIcons.iconFontPackage)
+                          : Icons.insert_drive_file,
+                      isFolder: _bloc.getData[index].isFolder,
+                      isChoose: _bloc.indexItemChose
+                          .contains(_bloc.getData[index].id));
+                })
+            : Center(
+                child: Text("NO ITEMS"),
+              ),
       ),
     );
   }
 
-  Widget _mediaListItem(String title, Color iconColor, Color accent,
-      String meta, IconData mediaIcon,
+  Widget _mediaListItem(String itemId, String title, Color iconColor,
+      Color accent, String meta, IconData mediaIcon,
       {bool isFolder = false, bool isChoose = false}) {
     final size = MediaQuery.of(context).size;
     return Container(
@@ -313,6 +330,9 @@ class _FolderPageState extends State<FolderPage> {
                     if (isFolder)
                       _goToChild(
                           title, _bloc.getChildOf(folderId: '0'), isListView);
+                  },
+                  onLongPress: () {
+                    _bloc.selected(itemId);
                   },
                 )),
           ),
@@ -354,6 +374,9 @@ class _FolderPageState extends State<FolderPage> {
                       title, _bloc.getChildOf(folderId: '1'), isListView)
                   : print("Click File");
             },
+            onLongPress: () {
+              _bloc.selected(itemId);
+            },
           ),
           Expanded(
               child: Row(
@@ -367,9 +390,10 @@ class _FolderPageState extends State<FolderPage> {
                     showModalBottomSheet(
                         context: context,
                         builder: (builderContext) => FolderBottomActionsSheet(
+                              bloc: _bloc,
                               iconData: mediaIcon,
                               iconColor: iconColor,
-                              title: title,
+                              itemId: itemId,
                             ));
                   },
                 ),
@@ -381,8 +405,8 @@ class _FolderPageState extends State<FolderPage> {
     );
   }
 
-  Widget _mediaGridItem(String title, Color iconColor, Color accent,
-      String meta, IconData mediaIcon,
+  Widget _mediaGridItem(String itemId, String title, Color iconColor,
+      Color accent, String meta, IconData mediaIcon,
       {bool isFolder = false, bool isChoose = false}) {
     var size = MediaQuery.of(context).size;
     return Padding(
@@ -417,6 +441,9 @@ class _FolderPageState extends State<FolderPage> {
                         _goToChild(
                             title, _bloc.getChildOf(folderId: '1'), isListView);
                     },
+                    onLongPress: () {
+                      _bloc.selected(itemId);
+                    },
                   )),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -441,6 +468,9 @@ class _FolderPageState extends State<FolderPage> {
                                   _bloc.getChildOf(folderId: '1'), isListView)
                               : print("Click File");
                         },
+                        onLongPress: () {
+                          _bloc.selected(itemId);
+                        },
                       )),
                   GestureDetector(
                     child: Icon(const IconData(0xf8da,
@@ -450,9 +480,10 @@ class _FolderPageState extends State<FolderPage> {
                       showModalBottomSheet(
                           context: context,
                           builder: (builderContext) => FolderBottomActionsSheet(
+                                bloc: _bloc,
                                 iconData: mediaIcon,
                                 iconColor: iconColor,
-                                title: title,
+                                itemId: itemId,
                               ));
                     },
                   )
@@ -463,6 +494,7 @@ class _FolderPageState extends State<FolderPage> {
         ));
   }
 
+  /// Gọi lại chính trang này nhưng với nội dung khác
   void _goToChild(title, data, isListViewMode) async {
     var result = await Navigator.push(
       context,
@@ -481,14 +513,17 @@ class _FolderPageState extends State<FolderPage> {
     }
   }
 
+  /// Thay đổi giữa list view và grid view
   void _changeTypeView() {
     isListView = !isListView;
     var data = _bloc.getData;
     var isIncre = _bloc.isIncrement;
     var typeSort = _bloc.curSortType;
+    var listSelected = _bloc.indexItemChose;
     _bloc.dispose();
     _bloc = new FolderBloc();
     _bloc.init(data: data, isIncrement: isIncre, type: typeSort);
+    _bloc.indexItemChose = listSelected;
     viewMode = isListView ? _listViewMode() : _gridViewMode();
   }
 }
