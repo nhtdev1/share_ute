@@ -1,36 +1,8 @@
-class File {
-  final String fileType;
+import 'package:share_ute/models/file.dart';
 
-  /// Update by Quan
-  /// DateUpdate: 28-10-2020
-  /// Change final to non-final variable (Allow setter)
-  String fileName;
+import '../models/file.dart';
 
-  final String fileImage;
-
-  final bool isFolder;
-
-  DateTime dateCreated;
-
-  /// Attributes create by Quan
-  /// DateCreate: 28-10-2020
-  /// Using for folder page
-  String id;
-  bool isAddStarted;
-  bool isSharing;
-
-  /// void set setName(value) => fileName = value;
-
-  File(
-      {this.fileType,
-      this.fileName,
-      this.fileImage,
-      this.isFolder,
-      this.dateCreated,
-      this.id,
-      this.isSharing = false,
-      this.isAddStarted = false});
-
+class FolderRepository {
   static final folderList = [
     File(
         isFolder: true,
@@ -223,4 +195,32 @@ class File {
         fileType: "folder",
         dateCreated: DateTime.now()),
   ];
+
+  List<File> getFileData() {
+    var id = 0;
+    List<File> myFiles = new List<File>();
+    for (var item in folderList) {
+      item.id = id.toString();
+      item.isAddStarted = false;
+      item.isSharing = false;
+      id += 1;
+      myFiles.add(item);
+    }
+    return myFiles;
+  }
+
+  File createFile(fileType, fileName, fileImg, isFolder, datCreate) {
+    File file = new File(
+        fileType: fileType,
+        fileName: fileName,
+        fileImage: fileImg,
+        isFolder: isFolder,
+        dateCreated: datCreate);
+    //TODO: Ghi vao db
+    return file;
+  }
+
+  bool editFile() {}
+  bool deleteFile() {}
+  bool getFile() {}
 }

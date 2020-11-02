@@ -121,18 +121,8 @@ class _ExpandFolderPageState extends State<ExpandFolderPage> {
                                 context: context,
                                 builder: (builderContext) =>
                                     FolderSortByBottomSheet(
-                                        curSelection: curSelection,
-                                        dataIcon: sortIncrement
-                                            ? const IconData(0xf366,
-                                                fontFamily:
-                                                    CupertinoIcons.iconFont,
-                                                fontPackage: CupertinoIcons
-                                                    .iconFontPackage)
-                                            : const IconData(0xf35d,
-                                                fontFamily:
-                                                    CupertinoIcons.iconFont,
-                                                fontPackage: CupertinoIcons
-                                                    .iconFontPackage)));
+                                        curSortSelection: curSelection,
+                                        isIncrement: sortIncrement));
                           },
                         ),
                         GestureDetector(
