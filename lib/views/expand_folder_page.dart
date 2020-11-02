@@ -192,8 +192,9 @@ class _ExpandFolderPageState extends State<ExpandFolderPage> {
   Widget _listViewMode() {
     return Container(
       child: new ListView.builder(
-          itemCount: widget.data.length + 1,
           shrinkWrap: true,
+          physics: ClampingScrollPhysics(),
+          itemCount: widget.data.length + 1,
           itemBuilder: (context, index) {
             return index < widget.data.length
                 ? _mediaListItem(
@@ -220,6 +221,7 @@ class _ExpandFolderPageState extends State<ExpandFolderPage> {
     return Container(
       child: GridView.builder(
           shrinkWrap: true,
+          physics: ClampingScrollPhysics(),
           itemCount: widget.data.length,
           gridDelegate:
               new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),

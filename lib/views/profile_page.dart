@@ -60,9 +60,10 @@ class _ProfilePageState extends State<ProfilePage> {
               Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [Color(0xff2980B9), Color(0xff6DD5FA)]),
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [Color(0xff2980B9), Color(0xff6DD5FA)],
+                  ),
                 ),
                 height: 40 * Responsive.heightMultiplier,
                 child: Padding(
@@ -76,12 +77,14 @@ class _ProfilePageState extends State<ProfilePage> {
                         children: <Widget>[
                           Container(
                             height: 11 * Responsive.heightMultiplier,
-                            width: 11 * Responsive.heightMultiplier, //22 * Responsive.widthMultiplier,
+                            width: 11 * Responsive.heightMultiplier,
+                            //22 * Responsive.widthMultiplier,
                             decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
                                     fit: BoxFit.cover,
-                                    image: AssetImage("assets/images/HCMUTE.png"))),
+                                    image: AssetImage(
+                                        "assets/images/HCMUTE.png"))),
                           ),
                           SizedBox(
                             width: 5 * Responsive.widthMultiplier,
@@ -115,7 +118,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                         "Facebook",
                                         style: TextStyle(
                                           color: Colors.white60,
-                                          fontSize: 1.5 * Responsive.textMultiplier,
+                                          fontSize:
+                                              1.5 * Responsive.textMultiplier,
                                         ),
                                       ),
                                     ],
@@ -137,7 +141,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                         "Instagram",
                                         style: TextStyle(
                                           color: Colors.white60,
-                                          fontSize: 1.5 * Responsive.textMultiplier,
+                                          fontSize:
+                                              1.5 * Responsive.textMultiplier,
                                         ),
                                       ),
                                     ],
@@ -200,7 +205,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => EditProfilePage()));
+                                          builder: (context) =>
+                                              EditProfilePage()));
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
@@ -208,7 +214,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                     "EDIT PROFILE",
                                     style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 1.8 * Responsive.textMultiplier),
+                                        fontSize:
+                                            1.8 * Responsive.textMultiplier),
                                   ),
                                 ),
                               )),
@@ -288,16 +295,13 @@ class MyPost extends StatelessWidget {
   final String fileName;
   final String fileImage;
   DateTime dateCreated;
+
   MyPost({this.fileType, this.fileName, this.fileImage, this.dateCreated});
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Container(
-        height: 100,
-        decoration: BoxDecoration(
-        )
-      ),
+      child: Container(height: 100, decoration: BoxDecoration()),
     );
   }
 }

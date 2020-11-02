@@ -1,7 +1,6 @@
 import 'dart:ui';
 
-import 'package:badges/badges.dart';
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:share_ute/drawer/drawer.dart';
@@ -23,11 +22,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
-  GlobalKey<ConvexAppBarState> _bottomNavigationKey =
-      GlobalKey<ConvexAppBarState>();
 
   ScrollController _scrollController;
   PageController _pageController;
+  int currentIndex = 0;
 
   @override
   void initState() {
@@ -111,39 +109,54 @@ class _HomePageState extends State<HomePage>
                   MyFolderPage(),
                 ],
                 onPageChanged: (index) {
-                  _bottomNavigationKey.currentState.animateTo(index);
+                  setState(() {
+                    currentIndex = index;
+                  });
                 },
               ),
             ),
           ),
-          bottomNavigationBar: ConvexAppBar(
-            height: 60,
-            key: _bottomNavigationKey,
+          bottomNavigationBar: BottomNavigationBar(
             backgroundColor: AppTheme.notWhite,
-            items: [
-              TabItem(
-                  icon: Badge(
-                      animationDuration: Duration(milliseconds: 1000),
-                      animationType: BadgeAnimationType.fade,
-                      toAnimate: true,
-                      badgeContent: Text('5'),
-                      child: Icon(const IconData(63715,
-                          fontFamily: CupertinoIcons.iconFont,
-                          fontPackage: CupertinoIcons.iconFontPackage)))),
-              TabItem(
-                  icon: Icon(const IconData(0xf4be,
+            type: BottomNavigationBarType.fixed,
+            selectedItemColor: CupertinoColors.activeBlue,
+            currentIndex: currentIndex,
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                title: Text('Home'),
+                icon: Icon(
+                  const IconData(63715,
                       fontFamily: CupertinoIcons.iconFont,
-                      fontPackage: CupertinoIcons.iconFontPackage))),
-              TabItem(
-                  icon: Icon(const IconData(0xf8c6,
+                      fontPackage: CupertinoIcons.iconFontPackage),
+                ),
+              ),
+              BottomNavigationBarItem(
+                title: Text('Recent'),
+                icon: Icon(
+                  const IconData(0xf4be,
                       fontFamily: CupertinoIcons.iconFont,
-                      fontPackage: CupertinoIcons.iconFontPackage))),
-              TabItem(
-                  icon: Icon(const IconData(0xf677,
-                      fontFamily: CupertinoIcons.iconFont,
-                      fontPackage: CupertinoIcons.iconFontPackage))),
+                      fontPackage: CupertinoIcons.iconFontPackage),
+                ),
+              ),
+              BottomNavigationBarItem(
+                  title: Text('Upload'),
+                  icon: Icon(
+                    const IconData(0xf8c6,
+                        fontFamily: CupertinoIcons.iconFont,
+                        fontPackage: CupertinoIcons.iconFontPackage),
+                  )),
+              BottomNavigationBarItem(
+                  title: Text('Files'),
+                  icon: Icon(
+                    const IconData(0xf434,
+                        fontFamily: CupertinoIcons.iconFont,
+                        fontPackage: CupertinoIcons.iconFontPackage),
+                  )),
             ],
             onTap: (index) {
+              setState(() {
+                currentIndex = index;
+              });
               _pageController.jumpToPage(index);
             },
           ),

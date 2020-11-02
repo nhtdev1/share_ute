@@ -25,17 +25,21 @@ class TagsView extends StatelessWidget {
 }
 
 class _TagNameInput extends StatelessWidget {
+  TextEditingController _controller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TagBloc, TagState>(
-      buildWhen: (previous, current) => previous.tagName != current.tagName,
       builder: (context, state) {
+        _controller.text = _controller.text +" "+state.tagSuggestion.title;
         return TextFormField(
+          controller: _controller,
           key: const Key('_tagNameInput_textField'),
           onChanged: (tagName) {
-            context.bloc<TagBloc>().add(TagNameChanged(tagName));
+            context.bloc<TagBloc>().add(TagInputChanged(tagName));
           },
-          maxLines: 1,
+          maxLines: 8,
+          minLines: 1,
           decoration: InputDecoration(
             hintText: 'tag name',
           ),
@@ -52,45 +56,52 @@ class _ListSuggestions extends StatelessWidget {
       buildWhen: (previous, current) => previous.tagName != current.tagName,
       builder: (context, state) {
         return ListView(
-          children: state.tagName.value != ''
-              ? TagSuggestion.suggestions
-                  .where((element) =>
-                      element.title
-                          .contains(state.tagName.value.toLowerCase()) ||
-                      element.title.contains(state.tagName.value.toUpperCase()))
-                  .map<ListTile>((a) => ListTile(
+          children: TagSuggestion.suggestions
+              .map<Container>((a) => a.type == TagSuggestionType.DIVIDER
+                  ? Container(
+                      child: ListTile(
                         title: Text(
                           a.title,
                         ),
-                        onTap: () {},
-                      ))
-                  .toList()
-              : TagSuggestion.suggestions
-                  .map<ListTile>((a) => a.type == TagSuggestionType.DIVIDER
-                      ? ListTile(
-                          title: Text(
-                            a.title,
-                          ),
-                          onTap: () {},
-                        )
-                      : a.type == TagSuggestionType.YEAR
-                          ? ListTile(
-                              leading: a.icon,
-                              title: Text(
-                                a.title,
-                              ),
+                      ),
+                    )
+                  : a.type == TagSuggestionType.YEAR
+                      ? Container(
+                          child: ListTile(
+                            leading: GestureDetector(
+                              child: a.icon,
                               onTap: () {
                                 showYearsPicker(context, a);
                               },
-                            )
-                          : ListTile(
-                              leading: a.icon,
-                              title: Text(
+                            ),
+                            title: GestureDetector(
+                              child: Text(
                                 a.title,
                               ),
-                              onTap: () {},
-                            ))
-                  .toList(),
+                              onTap: () {
+                                a.isSelected = !a.isSelected;
+                                context
+                                    .bloc<TagBloc>()
+                                    .add(TagSuggestionSelected(a));
+                              },
+                            ),
+                          ),
+                        )
+                      : Container(
+                          child: ListTile(
+                            leading: a.icon,
+                            title: Text(
+                              a.title,
+                            ),
+                            onTap: () {
+                              a.isSelected = !a.isSelected;
+                              context
+                                  .bloc<TagBloc>()
+                                  .add(TagSuggestionSelected(a));
+                            },
+                          ),
+                        ))
+              .toList(),
         );
       },
     );
@@ -98,12 +109,11 @@ class _ListSuggestions extends StatelessWidget {
 
   showYearsPicker(BuildContext context, TagSuggestion tagSuggestion) {
     Picker(
-        adapter: PickerDataAdapter<String>(pickerdata: years),
-        hideHeader: true,
-        title: Text('Year of document'),
-        onConfirm: (picker, value) {
-
-        }).showDialog(context);
+            adapter: PickerDataAdapter<String>(pickerdata: years),
+            hideHeader: true,
+            title: Text('Year of document'),
+            onConfirm: (picker, value) {})
+        .showDialog(context);
   }
 
   List<String> years = [
@@ -117,3 +127,10 @@ class _ListSuggestions extends StatelessWidget {
     "Năm 2020 - 2021"
   ];
 }
+
+// ? TagSuggestion.suggestions
+//     .where((element) =>
+// element.title
+//     .contains(state.tagName.value.toLowerCase()) ||
+// element.title.contains(state.tagName.value.toUpperCase()))
+// .map<ListTile>((a) => a.type == TagSuggestionType.DIVIDER

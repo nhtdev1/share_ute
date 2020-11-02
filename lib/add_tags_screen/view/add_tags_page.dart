@@ -83,10 +83,10 @@ class AddTagsPage extends SearchDelegate<String> {
         hideHeader: true,
         title: Text('Chọn năm của tài liệu'),
         onConfirm: (picker, value) {
-          print(value.toString());
-          tagSuggestion.title = picker.adapter.text.toString();
-          tagSuggestion.title =
-              tagSuggestion.title.substring(1, tagSuggestion.title.length - 1);
+          // print(value.toString());
+          // tagSuggestion.title = picker.adapter.text.toString();
+          // tagSuggestion.title =
+          //     tagSuggestion.title.substring(1, tagSuggestion.title.length - 1);
         }).showDialog(context);
   }
 

@@ -170,6 +170,7 @@ class _FolderPageState extends State<FolderPage> {
       child: new ListView.builder(
           itemCount: widget.data.length + 1,
           shrinkWrap: true,
+          physics: ClampingScrollPhysics(),
           itemBuilder: (context, index) {
             return index < widget.data.length
                 ? _mediaListItem(
@@ -196,6 +197,7 @@ class _FolderPageState extends State<FolderPage> {
     return Container(
       child: GridView.builder(
           shrinkWrap: true,
+          physics: ClampingScrollPhysics(),
           itemCount: widget.data.length,
           gridDelegate:
               new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),

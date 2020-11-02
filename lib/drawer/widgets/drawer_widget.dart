@@ -2,12 +2,15 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:share_ute/authentication/authentication.dart';
 import 'package:share_ute/views/profile_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Phần dành cho drawer
 class DrawerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final user = context.bloc<AuthenticationBloc>().state.user;
     return Drawer(
       child: Column(
         children: [
@@ -16,10 +19,12 @@ class DrawerWidget extends StatelessWidget {
               children: [
                 UserAccountsDrawerHeader(
                   accountName: Text(
+                    //user.name,
                     'Hoang Thinh',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   accountEmail: Text(
+                    //user.email,
                     'blv.tu97@gmail.com',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
@@ -91,8 +96,9 @@ class DrawerWidget extends StatelessWidget {
                         color: CupertinoColors.systemRed,
                       ),
                       onTap: () {
-                        print('Sign Out here');
-                        Navigator.pop(context);
+                        context
+                            .bloc<AuthenticationBloc>()
+                            .add(AuthenticationLogoutRequested());
                       },
                     ),
                     SizedBox(

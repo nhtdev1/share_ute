@@ -1,12 +1,19 @@
 import 'package:flutter/cupertino.dart';
 
 class TagSuggestion {
-  TagSuggestion({this.icon, this.title, this.code, this.type});
+  TagSuggestion(
+      {this.icon,
+      this.title = "",
+      this.code,
+      this.type,
+      this.isSelected = false});
 
   Icon icon;
   String title;
   String code;
   TagSuggestionType type;
+  bool isSelected;
+
   static final suggestions = [
     TagSuggestion(type: TagSuggestionType.DIVIDER, title: 'Năm'),
     TagSuggestion(

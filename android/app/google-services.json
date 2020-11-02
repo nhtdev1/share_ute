@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "382663485323",
+    "firebase_url": "https://utes-20591.firebaseio.com",
+    "project_id": "utes-20591",
+    "storage_bucket": "utes-20591.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:382663485323:android:e237bb18db4d59efb4f18e",
+        "android_client_info": {
+          "package_name": "com.example.share_ute"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "382663485323-kmp7r9nb0ugh1f7ff84tjf995hu717c1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.share_ute",
+            "certificate_hash": "e93f3885990cb8e5610011c843b049435a064fe3"
+          }
+        },
+        {
+          "client_id": "382663485323-i4t0vuqbr6el4s3s406gutlr70l38rci.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUA3Qhd4NNXS4xiZNUbYsJzxEP3YZGb8s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "382663485323-i4t0vuqbr6el4s3s406gutlr70l38rci.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -8,12 +8,22 @@ abstract class TagEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class TagNameChanged extends TagEvent {
-  const TagNameChanged(this.tagName);
+class TagInputChanged extends TagEvent {
+  const TagInputChanged(this.tagInputData);
 
-  final String tagName;
+  final String tagInputData;
 
   @override
   // TODO: implement props
-  List<Object> get props => [tagName];
+  List<Object> get props => [tagInputData];
+}
+
+class TagSuggestionSelected extends TagEvent {
+  const TagSuggestionSelected(this.tagSuggestion);
+
+  final TagSuggestion tagSuggestion;
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [tagSuggestion];
 }

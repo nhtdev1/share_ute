@@ -169,11 +169,11 @@ class _LoginPageState extends State<LoginPage> {
                         EdgeInsets.symmetric(vertical: 20, horizontal: 40),
                         color: Colors.lightBlue,
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => App()),
-                          );
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //       builder: (context) => App()),
+                          // );
                           //widget.signInCallback();
                         },
                         child: Text(
