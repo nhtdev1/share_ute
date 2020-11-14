@@ -72,15 +72,15 @@ class _EmailInput extends StatelessWidget {
             ),
             key: const Key('loginForm_emailInput_textField'),
             onChanged: (email) =>
-                context.bloc<LoginCubit>().emailChanged(email),
+                context.watch<LoginCubit>().emailChanged(email),
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
                 hintStyle: TextStyle(
                   fontSize: 16,
                   color: Theme.of(context).primaryColor,
                 ),
-                hintText: 'EMAIL',
-                errorText: state.email.invalid ? 'invalid email' : null,
+                hintText: 'Tài khoản',
+                errorText: state.email.invalid ? 'mail không hợp lệ' : null,
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                   borderSide: BorderSide(
@@ -126,15 +126,15 @@ class _PasswordInput extends StatelessWidget {
             ),
             key: const Key('loginForm_passwordInput_textField'),
             onChanged: (password) =>
-                context.bloc<LoginCubit>().passwordChanged(password),
+                context.watch<LoginCubit>().passwordChanged(password),
             obscureText: true,
             decoration: InputDecoration(
                 hintStyle: TextStyle(
                   fontSize: 16,
                   color: Theme.of(context).primaryColor,
                 ),
-                hintText: 'PASSWORD',
-                errorText: state.password.invalid ? 'invalid password' : null,
+                hintText: 'Mật khẩu',
+                errorText: state.password.invalid ? 'mật khẩu không hợp lệ' : null,
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                   borderSide: BorderSide(
@@ -182,7 +182,7 @@ class _LoginButton extends StatelessWidget {
                 color: Colors.blueAccent,
                 key: const Key('loginForm_continue_raisedButton'),
                 child: const Text(
-                  'LOGIN',
+                  'Đăng nhập',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -191,7 +191,7 @@ class _LoginButton extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0)),
                 onPressed: state.status.isValidated
-                    ? () => context.bloc<LoginCubit>().logInWithCredentials()
+                    ? () => context.watch<LoginCubit>().logInWithCredentials()
                     : null,
               );
       },
@@ -206,13 +206,13 @@ class _GoogleLoginButton extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       color: Colors.lightBlueAccent,
       key: const Key('loginForm_googleLogin_raisedButton'),
-      onPressed: () => context.bloc<LoginCubit>().logInWithGoogle(),
+      onPressed: () => context.read<LoginCubit>().logInWithGoogle(),
       icon: const Icon(
         FontAwesomeIcons.google,
         color: Colors.redAccent,
       ),
       label: const Text(
-        'Sign in with Google',
+        'Đăng nhập với Gmail',
         style: TextStyle(
           color: Colors.white,
           fontSize: 16,
@@ -231,7 +231,7 @@ class _SignUpButton extends StatelessWidget {
     return FlatButton(
       key: const Key('loginForm_createAccount_flatButton'),
       child: Text(
-        'CREATE ACCOUNT',
+        'Tạo tài khoản',
         style: TextStyle(
           color: Colors.greenAccent.withOpacity(0.8),
         ),

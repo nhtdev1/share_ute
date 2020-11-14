@@ -3,7 +3,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meta/meta.dart';
 
 import 'models/models.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 // Thrown during the sign up process if a failure occurs
 class SignUpFailure implements Exception {}
@@ -29,22 +28,15 @@ class AuthenticationRepository {
   final firebase_auth.FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
 
+
   // Stream of [User] which emit the current user when the authentication state
   // changes. Emits [User.empty] if the user is not authenticated
   Stream<User> get user {
-    return _firebaseAuth.authStateChanges().asyncMap((user) async {
+    return _firebaseAuth.authStateChanges().map((user) {
       if (user == null) {
         return User.empty;
       } else {
-        final docs = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid)
-            .get();
-        if (!docs.exists) {
-          await createNewUserToFireStore(user);
-          return user.toUser(isNewUser: true);
-        } else
-          return user.toUser(isNewUser: false);
+        return user.toUser();
       }
     });
   }
@@ -78,20 +70,6 @@ class AuthenticationRepository {
     } on Exception {
       throw LogInWithGoogleFailure();
     }
-  }
-
-  // Adds a new user to FireStore
-  Future<void> createNewUserToFireStore(user) {
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
-    return users
-        .doc(user.uid)
-        .set({
-          'email': user.email,
-          'displayName': user.displayName,
-          'photoURL': user.photoURL,
-        })
-        .then((value) => print("New User is created"))
-        .catchError((error) => print("Failed to create user: $error"));
   }
 
   // Signs in with the provided [email] and [password]

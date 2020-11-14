@@ -36,7 +36,7 @@ class _TagNameInput extends StatelessWidget {
           controller: _controller,
           key: const Key('_tagNameInput_textField'),
           onChanged: (tagName) {
-            context.bloc<TagBloc>().add(TagInputChanged(tagName));
+            context.watch<TagBloc>().add(TagInputChanged(tagName));
           },
           maxLines: 8,
           minLines: 1,
@@ -81,7 +81,7 @@ class _ListSuggestions extends StatelessWidget {
                               onTap: () {
                                 a.isSelected = !a.isSelected;
                                 context
-                                    .bloc<TagBloc>()
+                                    .watch<TagBloc>()
                                     .add(TagSuggestionSelected(a));
                               },
                             ),
@@ -96,7 +96,7 @@ class _ListSuggestions extends StatelessWidget {
                             onTap: () {
                               a.isSelected = !a.isSelected;
                               context
-                                  .bloc<TagBloc>()
+                                  .watch<TagBloc>()
                                   .add(TagSuggestionSelected(a));
                             },
                           ),

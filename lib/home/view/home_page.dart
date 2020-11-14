@@ -1,168 +1,68 @@
-import 'dart:ui';
-
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:share_ute/drawer/drawer.dart';
-import 'package:share_ute/main_screen/main_screen.dart';
-import 'package:share_ute/search_screen/search_screen.dart';
-import 'package:share_ute/theme.dart';
-import 'package:share_ute/upload_screen/upload_screen.dart';
-import 'package:share_ute/views/folder_page.dart';
-import 'package:share_ute/views/recent_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:share_ute/firestore_user/firestore_user.dart';
+import 'package:share_ute/home/view/view.dart';
+import 'package:share_ute/introduction_screen/introduction_screen.dart';
+import 'package:share_ute/splash/splash.dart';
+import 'package:user_repository/user_repository.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
+  const HomePage({Key key}) : super(key: key);
+
   static Route route() {
-    return MaterialPageRoute<void>(builder: (_) => HomePage());
-  }
-
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage>
-    with SingleTickerProviderStateMixin {
-
-  ScrollController _scrollController;
-  PageController _pageController;
-  int currentIndex = 0;
-
-  @override
-  void initState() {
-    _pageController = PageController();
-    _scrollController = ScrollController();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    _scrollController.dispose();
-    super.dispose();
+    return MaterialPageRoute<void>(builder: (context) => const HomePage());
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AppTheme.nearlyWhite,
-      child: SafeArea(
-        top: false,
-        bottom: false,
-        child: Scaffold(
-          backgroundColor: AppTheme.nearlyWhite,
-          body: NestedScrollView(
-            controller: _scrollController,
-            headerSliverBuilder: (context, innerBoxIsScrolled) {
-              return <Widget>[
-                // SliverAppBar custom SearchBar
-                SliverAppBar(
-                  iconTheme:
-                      new IconThemeData(color: CupertinoColors.systemGrey),
-                  toolbarHeight: 80,
-                  pinned: innerBoxIsScrolled == true ? false : true,
-                  floating: true,
-                  backgroundColor: CupertinoColors.white,
-                  title: Container(
-                    child: Material(
-                      elevation: 8,
-                      borderRadius: BorderRadius.all(Radius.circular(7.0)),
-                      child: Container(
-                        height: 45,
-                        child: Row(
-                          children: [
-                            const SizedBox(
-                              width: 15,
-                            ),
-                            Expanded(
-                              child: InkWell(
-                                child: TextFormField(
-                                  enabled: false,
-                                  textAlign: TextAlign.start,
-                                  style: TextStyle(
-                                      fontSize: 16, fontFamily: 'WorkSans'),
-                                  decoration: InputDecoration(
-                                    hintText: "Search for Documents",
-                                    border: InputBorder.none,
-                                  ),
-                                ),
-                                onTap: () async {
-                                  await showSearch(
-                                      context: context, delegate: SearchPage());
-                                },
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-              ];
-            },
-            body: Container(
-              child: PageView(
-                controller: _pageController,
-                children: [
-                  ListPost(),
-                  RecentPage(),
-                  UploadPage(),
-                  MyFolderPage(),
-                ],
-                onPageChanged: (index) {
-                  setState(() {
-                    currentIndex = index;
-                  });
-                },
-              ),
-            ),
-          ),
-          bottomNavigationBar: BottomNavigationBar(
-            backgroundColor: AppTheme.notWhite,
-            type: BottomNavigationBarType.fixed,
-            selectedItemColor: CupertinoColors.activeBlue,
-            currentIndex: currentIndex,
-            items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                title: Text('Home'),
-                icon: Icon(
-                  const IconData(63715,
-                      fontFamily: CupertinoIcons.iconFont,
-                      fontPackage: CupertinoIcons.iconFontPackage),
-                ),
-              ),
-              BottomNavigationBarItem(
-                title: Text('Recent'),
-                icon: Icon(
-                  const IconData(0xf4be,
-                      fontFamily: CupertinoIcons.iconFont,
-                      fontPackage: CupertinoIcons.iconFontPackage),
-                ),
-              ),
-              BottomNavigationBarItem(
-                  title: Text('Upload'),
-                  icon: Icon(
-                    const IconData(0xf8c6,
-                        fontFamily: CupertinoIcons.iconFont,
-                        fontPackage: CupertinoIcons.iconFontPackage),
-                  )),
-              BottomNavigationBarItem(
-                  title: Text('Files'),
-                  icon: Icon(
-                    const IconData(0xf434,
-                        fontFamily: CupertinoIcons.iconFont,
-                        fontPackage: CupertinoIcons.iconFontPackage),
-                  )),
-            ],
-            onTap: (index) {
-              setState(() {
-                currentIndex = index;
-              });
-              _pageController.jumpToPage(index);
-            },
-          ),
-          drawer: DrawerWidget(),
-        ),
+    return BlocProvider<FirestoreUserBloc>(
+      create: (_) => FirestoreUserBloc(
+        firestoreUserRepository:
+        context.read<FirestoreUserRepository>(),
       ),
+      child: HomeView(),
+    );
+  }
+}
+
+class HomeView extends StatefulWidget {
+  @override
+  _HomeViewState createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  final _navigatorKey = GlobalKey<NavigatorState>();
+
+  NavigatorState get _navigator => _navigatorKey.currentState;
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      navigatorKey: _navigatorKey,
+      builder: (context, child) {
+        return BlocListener<FirestoreUserBloc, FirestoreUserState>(
+          listener: (context, state) {
+            switch (state.status) {
+              case FirestoreUserStatus.authenticatedWithNewUser:
+                _navigator.pushAndRemoveUntil(
+                  IntroPage.route(),
+                  (route) => false,
+                );
+                break;
+              case FirestoreUserStatus.authenticatedWithOldUser:
+                _navigator.pushAndRemoveUntil(
+                  HomeForm.route(),
+                  (route) => false,
+                );
+                break;
+              default:
+                break;
+            }
+          },
+          child: child,
+        );
+      },
+      onGenerateRoute: (_) => SplashPage.route(),
     );
   }
 }

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 // The SplashPage is shown while the application determines the authentication state
@@ -16,7 +14,7 @@ class SplashPage extends StatelessWidget {
         child: Image.asset(
           'assets/images/logo_utes.png',
           key: const Key('splash_bloc_image'),
-          width: 150,
+          width: MediaQuery.of(context).size.width*3/4,
         ),
       ),
     );

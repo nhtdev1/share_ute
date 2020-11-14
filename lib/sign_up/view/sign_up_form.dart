@@ -61,15 +61,15 @@ class _EmailInput extends StatelessWidget {
             ),
             key: const Key('signUpForm_emailInput_textField'),
             onChanged: (email) =>
-                context.bloc<SignUpCubit>().emailChanged(email),
+                context.watch<SignUpCubit>().emailChanged(email),
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
                 hintStyle: TextStyle(
                   fontSize: 16,
                   color: Theme.of(context).primaryColor,
                 ),
-                hintText: 'EMAIL',
-                errorText: state.email.invalid ? 'invalid email' : null,
+                hintText: 'Tài khoản',
+                errorText: state.email.invalid ? 'email không hợp lệ' : null,
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                   borderSide: BorderSide(
@@ -112,15 +112,15 @@ class _PasswordInput extends StatelessWidget {
             ),
             key: const Key('signUpForm_passwordInput_textField'),
             onChanged: (password) =>
-                context.bloc<SignUpCubit>().passwordChange(password),
+                context.watch<SignUpCubit>().passwordChange(password),
             obscureText: true,
             decoration: InputDecoration(
                 hintStyle: TextStyle(
                   fontSize: 16,
                   color: Theme.of(context).primaryColor,
                 ),
-                hintText: 'PASSWORD',
-                errorText: state.password.invalid ? 'invalid password' : null,
+                hintText: 'Mật khẩu',
+                errorText: state.password.invalid ? 'mật khẩu không hợp lệ' : null,
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                   borderSide: BorderSide(
@@ -165,7 +165,7 @@ class _ConfirmPasswordInput extends StatelessWidget {
             ),
             key: const Key('signUpForm_confirmedPasswordInput_textField'),
             onChanged: (confirmedPassword) => context
-                .bloc<SignUpCubit>()
+                .watch<SignUpCubit>()
                 .confirmedPasswordChanged(confirmedPassword),
             obscureText: true,
             decoration: InputDecoration(
@@ -173,9 +173,9 @@ class _ConfirmPasswordInput extends StatelessWidget {
                   fontSize: 16,
                   color: Theme.of(context).primaryColor,
                 ),
-                hintText: 'CONFIRM PASSWORD',
+                hintText: 'Xác nhận mật khẩu',
                 errorText: state.confirmedPassword.invalid
-                    ? 'password do not match'
+                    ? 'mật khẩu không khớp'
                     : null,
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
@@ -218,7 +218,7 @@ class _SignUpButton extends StatelessWidget {
             : RaisedButton(
                 key: const Key('signUpForm_continue_raisedButton'),
                 child: const Text(
-                  'SIGN UP',
+                  'Đăng ký',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.white,
@@ -229,7 +229,7 @@ class _SignUpButton extends StatelessWidget {
                 ),
                 color: Colors.orangeAccent,
                 onPressed: state.status.isValidated
-                    ? () => context.bloc<SignUpCubit>().signUpFormSubmitted()
+                    ? () => context.watch<SignUpCubit>().signUpFormSubmitted()
                     : null,
               );
       },

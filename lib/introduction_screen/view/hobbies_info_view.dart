@@ -1,37 +1,49 @@
 part of 'intro_form.dart';
 
-PageViewModel getHobbiesInfoView(
+final List<String> hobbyList = const [
+  "Công nghệ thông tin",
+  "Kinh tế",
+  "Ngôn ngữ Anh",
+  "Điện tử",
+  "Khoa học tự nhiên",
+  "Cơ khí",
+  "Lý luận chính trị",
+  "Kiến trúc",
+  "Biểu mẫu luận văn",
+  "Đề tài tốt nghiệp",
+];
+
+PageViewModel _buildHobbiesPageModel(
     {Widget image, PageDecoration pageDecoration}) {
   return PageViewModel(
-    title: "Your following feed?",
+    title: "Chủ đề bạn quan tâm là?",
     bodyWidget: BlocBuilder<IntroductionCubit, IntroductionState>(
       buildWhen: (previous, current) =>
-          previous.selectedHobbies.currentSelected !=
-          current.selectedHobbies.currentSelected,
+          previous.hobbies.value != current.hobbies.value,
       builder: (context, state) {
         List<Widget> choices = List();
-        state.selectedHobbies.hobbiesList.forEach((element) {
+        hobbyList.forEach((element) {
           choices.add(Container(
             padding: const EdgeInsets.all(2.0),
             child: ChoiceChip(
-              avatar: state.selectedHobbies.currentSelected.contains(element)
+              avatar: state.hobbies.value.contains(element)
                   ? Icon(
-                      Icons.check,
+                      Icons.check_circle,
                       color: Colors.lightBlueAccent,
                     )
                   : null,
               label: Text(element),
-              selected: state.selectedHobbies.currentSelected.contains(element),
+              selected: state.hobbies.value.contains(element),
               onSelected: (selected) {
                 List<String> currentSelectedList = [];
-                state.selectedHobbies.currentSelected.forEach((element) {
+                state.hobbies.value.forEach((element) {
                   currentSelectedList.add(element);
                 });
                 currentSelectedList.contains(element)
                     ? currentSelectedList.remove(element)
                     : currentSelectedList.add(element);
                 context
-                    .bloc<IntroductionCubit>()
+                    .read<IntroductionCubit>()
                     .hobbiesChanged(currentSelectedList);
               },
             ),

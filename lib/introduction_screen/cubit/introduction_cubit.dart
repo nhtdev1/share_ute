@@ -1,35 +1,59 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:share_ute/introduction_screen/models/models.dart';
+import 'package:share_ute/firestore_user/firestore_user.dart';
+import 'package:user_repository/user_repository.dart';
+import 'package:meta/meta.dart';
 
 part 'introduction_state.dart';
 
 class IntroductionCubit extends Cubit<IntroductionState> {
-  IntroductionCubit() : super(const IntroductionState());
+  IntroductionCubit({@required FirestoreUserRepository firestoreUserRepository})
+      : assert(firestoreUserRepository != null),
+        _firestoreUserRepository = firestoreUserRepository,
+        super(const IntroductionState());
+
+  final FirestoreUserRepository _firestoreUserRepository;
 
   void yearChanged(String value) {
+    final year = Year.dirty(value);
     emit(state.copyWith(
-      selectedYear: value,
-      selectedHobbies: state.selectedHobbies.currentSelected,
+      year: year,
     ));
   }
 
   void facultyChanged(String value) {
+    final faculty = Faculty.dirty(value);
     emit(state.copyWith(
-      selectedFaculty: value,
+      faculty: faculty,
     ));
   }
 
   void majorChanged(String value) {
+    final major = Major.dirty(value);
     emit(state.copyWith(
-      selectedMajor: value,
+      major: major,
     ));
   }
 
-  void hobbiesChanged(List<String> values) {
+  void hobbiesChanged(List<String> value) {
+    final hobbies = Hobbies.dirty(value);
     emit(state.copyWith(
-      selectedYear: state.selectedYear.currentSelected,
-      selectedHobbies: values,
+      hobbies: hobbies,
     ));
+  }
+
+
+  Future<void> done({
+    String year,
+    String faculty,
+    String major,
+    List<String> hobbies,
+  }) async {
+    await _firestoreUserRepository.createUser(
+      year: year ?? state.year.value,
+      faculty: faculty ?? state.faculty.value,
+      major: major ?? state.major.value,
+      hobbies: hobbies ?? state.hobbies.value,
+    );
   }
 }

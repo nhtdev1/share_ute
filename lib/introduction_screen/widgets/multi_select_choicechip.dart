@@ -40,7 +40,7 @@ class _MultiSelectChoiceChipState extends State<MultiSelectChoiceChip> {
             selectedChoices.contains(element)
                 ? selectedChoices.remove(element)
                 : selectedChoices.add(element);
-            context.bloc<IntroductionCubit>().hobbiesChanged(selectedChoices);
+            context.watch<IntroductionCubit>().hobbiesChanged(selectedChoices);
           },
         ),
       ));

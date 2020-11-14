@@ -6,8 +6,10 @@ import 'package:share_ute/login/login.dart';
 // The LoginPage is responsible for creating and providing an instance of
 // LoginCubit to the LoginForm
 class LoginPage extends StatelessWidget {
+  const LoginPage({Key key}) : super(key: key);
+
   static Route route() {
-    return MaterialPageRoute<void>(builder: (_) => LoginPage());
+    return MaterialPageRoute<void>(builder: (_) => const LoginPage());
   }
 
   @override
@@ -17,7 +19,7 @@ class LoginPage extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: BlocProvider(
           create: (_) => LoginCubit(
-            context.repository<AuthenticationRepository>(),
+            context.read<AuthenticationRepository>(),
           ),
           child: LoginForm(),
         ),

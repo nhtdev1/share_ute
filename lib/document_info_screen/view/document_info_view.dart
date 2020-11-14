@@ -55,7 +55,7 @@ class _DocumentInfoViewState extends State<DocumentInfoView> {
           GestureDetector(
             child: AspectRatio(
               aspectRatio: 6 / 5,
-              child: Image.asset('assets/design_course/webInterFace.png'),
+              child: Image.asset('assets/images/webInterFace.png'),
             ),
             onTap: () async {
               await PdftronFlutter.openDocument(widget.document.fileUrl);
