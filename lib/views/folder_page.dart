@@ -11,7 +11,7 @@ class MyFolderPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<File> data = new List<File>();
-    File file = new File(
+    File file = File(
         id: '100',
         isFolder: true,
         fileName: "Hệ CLC",
@@ -19,7 +19,7 @@ class MyFolderPage extends StatelessWidget {
         dateCreated: DateTime.now());
     data.add(file);
 
-    file = new File(
+    file = File(
         id: '200',
         isFolder: true,
         fileName: "Hệ Đại Trà",
@@ -125,26 +125,26 @@ class _FolderPageState extends State<FolderPage> {
                 ],
               )
             : null,
-        floatingActionButton: Padding(
-          padding: EdgeInsets.only(bottom: 15),
-          child: FloatingActionButton(
-            tooltip: "Create new folder",
-            backgroundColor: Colors.white,
-            elevation: 2,
-            child: Icon(
-              Icons.add,
-              color: Colors.blue[900],
-            ),
-            onPressed: () {
-              showModalBottomSheet(
-                  context: context,
-                  builder: (builderContext) => FolderCreateBottomSheet(
-                        context: context,
-                        bloc: _bloc,
-                      ));
-            },
-          ),
-        ),
+        // floatingActionButton: Padding(
+        //   padding: EdgeInsets.only(bottom: 15),
+        //   child: FloatingActionButton(
+        //     tooltip: "Create new folder",
+        //     backgroundColor: Colors.white,
+        //     elevation: 2,
+        //     child: Icon(
+        //       Icons.add,
+        //       color: Colors.blue[900],
+        //     ),
+        //     onPressed: () {
+        //       showModalBottomSheet(
+        //           context: context,
+        //           builder: (builderContext) => FolderCreateBottomSheet(
+        //                 context: context,
+        //                 bloc: _bloc,
+        //               ));
+        //     },
+        //   ),
+        // ),
         body: Column(
           children: <Widget>[
             Padding(

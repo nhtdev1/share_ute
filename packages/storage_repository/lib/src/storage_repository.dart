@@ -25,6 +25,20 @@ class StorageRepository {
         .snapshotEvents;
   }
 
+  Stream<TaskSnapshot> uploadDocument({
+    String path,
+    String name,
+  }) {
+    String filePath =
+        'posts/${_firebaseAuth.currentUser.uid}/original/${DateTime.now()}_$name';
+    return _firebaseStorage
+        .ref()
+        .child(filePath)
+        .putFile(File(path))
+        .snapshotEvents;
+  }
+
+
   Future<String> getDownloadURL(String url) async {
     return _firebaseStorage.ref(url).getDownloadURL();
   }

@@ -7,7 +7,8 @@ enum UpdateAvatarStatus {
   unknown,
   cropped,
   cleared,
-  picked,
+  pickedOverSize,
+  pickedAcceptableSize,
 }
 
 

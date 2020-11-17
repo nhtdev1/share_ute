@@ -8,66 +8,66 @@ import 'package:share_ute/models/file.dart';
 class RecentPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    List<File> data = new List<File>();
-    File file = new File(
+    List<File> data = List<File>();
+    File file = File(
         isFolder: false,
         fileName: "Đề thi kỹ thuật lập trình 2020",
         fileType: "pdf",
         dateCreated: DateTime.now());
     data.add(file);
 
-    file = new File(
+    file = File(
         isFolder: false,
         fileName: "Đề thi toán A1",
         fileType: "pdf",
         dateCreated: DateTime.now());
     data.add(file);
 
-    file = new File(
+    file = File(
         isFolder: false,
         fileName: "Đề thi Vật lý 1",
         fileType: "pdf",
         dateCreated: DateTime.now());
     data.add(file);
 
-    file = new File(
+    file = File(
         isFolder: false,
         fileName: "Đề thi Vật lý 2",
         fileType: "pdf",
         dateCreated: DateTime.now());
     data.add(file);
 
-    file = new File(
+    file = File(
         isFolder: false,
         fileName: "Đề thi xác suất thống kế",
         fileType: "pdf",
         dateCreated: DateTime.now());
     data.add(file);
-    file = new File(
+    file = File(
         isFolder: false,
         fileName: "Đề thi cơ sở dữ liệu",
         fileType: "pdf",
         dateCreated: DateTime.now());
     data.add(file);
 
-    file = new File(
+    file = File(
         isFolder: false,
         fileName: "Đề thi OOP",
         fileType: "pdf",
         dateCreated: DateTime.now());
     data.add(file);
-    file = new File(
+    file = File(
         isFolder: false,
         fileName: "Đề thi mạng máy tính",
         fileType: "pdf",
         dateCreated: DateTime.now());
     data.add(file);
-    file = new File(
+    file = File(
         isFolder: false,
         fileName: "Đề thi anh văn 1",
         fileType: "pdf",
         dateCreated: DateTime.now());
-    file = new File(
+    file = File(
         isFolder: false,
         fileName: "Đề thi anh văn 2",
         fileType: "pdf",
@@ -97,7 +97,7 @@ class RecentView extends StatefulWidget {
 }
 
 class _RecentViewState extends State<RecentView> {
-  bool isListView = false;
+  bool isListView = true;
   bool sortIncrement = true;
   bool expandableFolder = true;
   SORT_BY curSelection = SORT_BY.Name;
@@ -115,26 +115,12 @@ class _RecentViewState extends State<RecentView> {
         removeTop: true,
         context: context,
         child: Scaffold(
-          floatingActionButton: FloatingActionButton(
-            tooltip: "Create new folder",
-            backgroundColor: Colors.white,
-            elevation: 2,
-            child: Icon(
-              Icons.add,
-              color: Colors.blue[900],
-            ),
-            onPressed: () {
-              showModalBottomSheet(
-                  context: context,
-                  builder: (builderContext) => FolderCreateBottomSheet());
-            },
-          ),
           body: ListView(
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Spacer(),
                     GestureDetector(
@@ -172,25 +158,19 @@ class _RecentViewState extends State<RecentView> {
 
   Widget _listViewMode() {
     return Container(
-      child: new ListView.builder(
+      child: ListView.builder(
           itemCount: widget.data.length + 1,
           shrinkWrap: true,
           itemBuilder: (context, index) {
             return index < widget.data.length
                 ? _mediaListItem(
                     widget.data[index].fileName,
-                    widget.data[index].isFolder
-                        ? CupertinoColors.systemGrey
-                        : CupertinoColors.activeGreen,
+                    CupertinoColors.systemGrey,
                     Colors.transparent,
                     widget.data[index].dateCreated.toString().split(' ')[0],
-                    widget.data[index].isFolder
-                        ? const IconData(0xf8d2,
-                            fontFamily: CupertinoIcons.iconFont,
-                            fontPackage: CupertinoIcons.iconFontPackage)
-                        : const IconData(0xf8d2,
-                            fontFamily: CupertinoIcons.iconFont,
-                            fontPackage: CupertinoIcons.iconFontPackage),
+                    const IconData(0xf8d2,
+                        fontFamily: CupertinoIcons.iconFont,
+                        fontPackage: CupertinoIcons.iconFontPackage),
                     isFolder: widget.data[index].isFolder)
                 : const SizedBox(
                     height: 15,
@@ -205,22 +185,16 @@ class _RecentViewState extends State<RecentView> {
           shrinkWrap: true,
           itemCount: widget.data.length,
           gridDelegate:
-              new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+              SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
           itemBuilder: (context, index) {
             return _mediaGridItem(
                 widget.data[index].fileName,
-                widget.data[index].isFolder
-                    ? CupertinoColors.systemGrey
-                    : CupertinoColors.activeGreen,
+                CupertinoColors.secondaryLabel,
                 Colors.transparent,
                 widget.data[index].dateCreated.toString(),
-                widget.data[index].isFolder
-                    ? const IconData(0xf8d2,
-                        fontFamily: CupertinoIcons.iconFont,
-                        fontPackage: CupertinoIcons.iconFontPackage)
-                    : const IconData(0xf8d2,
-                        fontFamily: CupertinoIcons.iconFont,
-                        fontPackage: CupertinoIcons.iconFontPackage),
+                const IconData(0xf8d2,
+                    fontFamily: CupertinoIcons.iconFont,
+                    fontPackage: CupertinoIcons.iconFontPackage),
                 isFolder: widget.data[index].isFolder);
           }),
     );
@@ -369,10 +343,10 @@ class _RecentViewState extends State<RecentView> {
                     },
                   )),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                      padding: EdgeInsets.only(left: 0.06 * size.width),
+                      padding: const EdgeInsets.all(10.0),
                       width: 0.4 * size.width,
                       child: GestureDetector(
                         child: Text(

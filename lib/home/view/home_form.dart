@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:share_ute/create_folder_and_post/create_folder_and_post.dart';
 import 'package:share_ute/drawer/drawer.dart';
 import 'package:share_ute/main_screen/main_screen.dart';
 import 'package:share_ute/search_screen/search_screen.dart';
 import 'package:share_ute/theme.dart';
+import 'package:share_ute/upload_post/upload_post.dart';
 import 'package:share_ute/upload_screen/upload_screen.dart';
 import 'package:share_ute/views/folder_page.dart';
 import 'package:share_ute/views/recent_page.dart';
+import 'package:share_ute/widgets/folder_create_bottom_sheet.dart';
 
 class HomeForm extends StatefulWidget {
   const HomeForm({Key key}) : super(key: key);
@@ -103,7 +106,7 @@ class _HomeFormState extends State<HomeForm>
                 children: [
                   ListPost(),
                   RecentPage(),
-                  UploadPage(),
+                  // UploadPage(),
                   MyFolderPage(),
                 ],
                 onPageChanged: (index) {
@@ -121,7 +124,7 @@ class _HomeFormState extends State<HomeForm>
             currentIndex: currentIndex,
             items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(
-                label: 'Home',
+                label: 'Trang chủ',
                 icon: Icon(
                   const IconData(63715,
                       fontFamily: CupertinoIcons.iconFont,
@@ -129,39 +132,82 @@ class _HomeFormState extends State<HomeForm>
                 ),
               ),
               BottomNavigationBarItem(
-                label: 'Recent',
+                label: 'Gần đây',
                 icon: Icon(
                   const IconData(0xf4be,
                       fontFamily: CupertinoIcons.iconFont,
                       fontPackage: CupertinoIcons.iconFontPackage),
                 ),
               ),
+              // BottomNavigationBarItem(
+              //     label: 'Tải lên',
+              //     icon: Icon(
+              //       const IconData(0xf8c6,
+              //           fontFamily: CupertinoIcons.iconFont,
+              //           fontPackage: CupertinoIcons.iconFontPackage),
+              //     ),),
               BottomNavigationBarItem(
-                  label: 'Upload',
-                  icon: Icon(
-                    const IconData(0xf8c6,
-                        fontFamily: CupertinoIcons.iconFont,
-                        fontPackage: CupertinoIcons.iconFontPackage),
-                  )),
-              BottomNavigationBarItem(
-                  label: 'Files',
-                  icon: Icon(
-                    const IconData(0xf434,
-                        fontFamily: CupertinoIcons.iconFont,
-                        fontPackage: CupertinoIcons.iconFontPackage),
-                  )),
+                label: 'Thư mục',
+                icon: Icon(
+                  const IconData(0xf434,
+                      fontFamily: CupertinoIcons.iconFont,
+                      fontPackage: CupertinoIcons.iconFontPackage),
+                ),
+              ),
             ],
             onTap: (index) {
               setState(() {
                 currentIndex = index;
               });
+
               _pageController.jumpToPage(index);
             },
           ),
-
           drawer: DrawerWidget(),
+          floatingActionButton: Padding(
+            padding: EdgeInsets.only(bottom: 15),
+            child: FloatingActionButton(
+              backgroundColor: Colors.white,
+              elevation: 2,
+              child: RadiantGradientMask(
+                child: Icon(
+                  const IconData(
+                    0xf489,
+                    fontFamily: CupertinoIcons.iconFont,
+                    fontPackage: CupertinoIcons.iconFontPackage,
+                  ),
+                  size: 40.0,
+                ),
+              ),
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (_) => CreateFolderAndPostPage(),
+                );
+              },
+            ),
+          ),
         ),
       ),
+    );
+  }
+}
+
+class RadiantGradientMask extends StatelessWidget {
+  RadiantGradientMask({this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return ShaderMask(
+      shaderCallback: (bounds) => LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment(0.8, 0.0),
+        colors: [const Color(0xffee0000), const Color(0xffeeee00)],
+        tileMode: TileMode.repeated,
+      ).createShader(bounds),
+      child: child,
     );
   }
 }

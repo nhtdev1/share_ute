@@ -42,6 +42,13 @@ class UpdateAvatarForm extends StatelessWidget {
                 const SnackBar(
                     content: Text('Cập nhật ảnh đại diện thành công!')),
               );
+          }else if (state.status == UpdateAvatarStatus.pickedOverSize) {
+            Scaffold.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                const SnackBar(
+                    content: Text('Không thể upload ảnh lớn hơn 10mb!')),
+              );
           }
         },
         child: ListView(
@@ -121,7 +128,7 @@ class _UploadButton extends StatelessWidget {
             strokeWidth: 1,
           );
         } else {
-          return state.status == UpdateAvatarStatus.picked ||
+          return state.status == UpdateAvatarStatus.pickedAcceptableSize ||
                   state.status == UpdateAvatarStatus.cropped
               ? RaisedButton(
                   highlightElevation: 0.0,

@@ -21,6 +21,12 @@ class UpdateAvatarCubit extends Cubit<UpdateAvatarState> {
         _firestoreUserRepository = firestoreUserRepository,
         super(const UpdateAvatarState());
 
+  @override
+  Future<void> close() {
+    _storageSubscription?.cancel();
+    return super.close();
+  }
+
   final FilePickerRepository _filePickerRepository;
   final StorageRepository _storageRepository;
   final FirestoreUserRepository _firestoreUserRepository;
@@ -29,18 +35,27 @@ class UpdateAvatarCubit extends Cubit<UpdateAvatarState> {
 
   Future<void> pickImageFromCamera() async {
     final result = await _filePickerRepository.pickImageFromCamera();
+
     emit(state.copyWith(
       avatar: Avatar.from(result.path),
-      status: UpdateAvatarStatus.picked,
+      status: UpdateAvatarStatus.pickedAcceptableSize,
     ));
   }
 
   Future<void> pickImageFromGallery() async {
     final result = await _filePickerRepository.pickImageFromGallery();
-    emit(state.copyWith(
-      avatar: Avatar.from(result.path),
-      status: UpdateAvatarStatus.picked,
-    ));
+    final size = await result.readAsBytes();
+    if (size.length > 1e+7) {
+      emit(state.copyWith(
+        avatar: Avatar.none(),
+        status: UpdateAvatarStatus.pickedOverSize,
+      ));
+    } else {
+      emit(state.copyWith(
+        avatar: Avatar.from(result.path),
+        status: UpdateAvatarStatus.pickedAcceptableSize,
+      ));
+    }
   }
 
   Future<void> cropImage() async {
