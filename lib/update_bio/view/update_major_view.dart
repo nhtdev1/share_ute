@@ -64,7 +64,8 @@ class UpdateMajorView extends StatelessWidget {
                   decoration: BoxDecoration(
                     border: state.major.value == element
                         ? Border.all(
-                            color: Colors.lightGreenAccent,
+                            color: Colors.lightBlue,
+                            width: 1.5,
                           )
                         : null,
                   ),
@@ -72,15 +73,20 @@ class UpdateMajorView extends StatelessWidget {
                     title: Text(
                       element,
                       style: TextStyle(
-                        color: Colors.black,
+                        color: Colors.blue,
                         fontSize: 16,
+                        letterSpacing: 1.0,
+                        height: 1.5,
+                        fontWeight: state.major.value == element
+                            ? FontWeight.bold
+                            : null,
                       ),
                     ),
                     trailing: state.major.value == element
                         ? IconButton(
                             icon: Icon(
                               Icons.check_circle,
-                              color: Colors.lightGreenAccent,
+                              color: Colors.lightBlue,
                             ),
                           )
                         : null,
@@ -110,8 +116,8 @@ class UpdateMajorView extends StatelessWidget {
             ),
             body: ListView(
               padding: const EdgeInsets.symmetric(
-                horizontal: 10.0,
-                vertical: 10.0,
+                horizontal: 8.0,
+                vertical: 8.0,
               ),
               children: tiles,
             ),

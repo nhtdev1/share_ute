@@ -42,7 +42,8 @@ class UpdateYearView extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20.0),
                         border: state.year.value == element
                             ? Border.all(
-                                color: Colors.lightGreenAccent,
+                                color: Colors.lightBlueAccent,
+                                width: 1.5,
                               )
                             : null,
                       ),
@@ -51,9 +52,13 @@ class UpdateYearView extends StatelessWidget {
                           child: Text(
                             element,
                             style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                              color: Colors.lightBlue,
+                              fontSize: 16,
+                              letterSpacing: 1.0,
+                              height: 1.5,
+                              fontWeight: state.year.value == element
+                                  ? FontWeight.bold
+                                  : null,
                             ),
                           ),
                         ),
@@ -66,7 +71,7 @@ class UpdateYearView extends StatelessWidget {
                         child: IconButton(
                           icon: Icon(
                             Icons.check_circle,
-                            color: Colors.lightGreenAccent,
+                            color: Colors.lightBlue,
                           ),
                         ),
                       ),
@@ -95,9 +100,13 @@ class UpdateYearView extends StatelessWidget {
               elevation: 0.0,
             ),
             body: GridView.count(
+              childAspectRatio: (MediaQuery.of(context).size.width / 2) /
+                  ((MediaQuery.of(context).size.height -
+                          AppBar().preferredSize.height) /
+                      4),
               crossAxisCount: 2,
-              mainAxisSpacing: 12.0,
-              crossAxisSpacing: 12.0,
+              mainAxisSpacing: 10.0,
+              crossAxisSpacing: 10.0,
               padding: const EdgeInsets.symmetric(
                 horizontal: 16.0,
                 vertical: 8.0,

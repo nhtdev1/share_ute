@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'models/file.dart' as file_picker;
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -34,8 +35,8 @@ class FilePickerRepository {
     );
   }
 
-  Future<FilePickerResult> pickFile() async {
-    return FilePicker.platform.pickFiles(
+  Future<file_picker.File> pickFile() async {
+    FilePickerResult result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: [
         'pdf',
@@ -47,5 +48,15 @@ class FilePickerRepository {
         'pptx',
       ],
     );
+    if (result != null) {
+      return file_picker.File(
+        path: result.files.single.path,
+        fileName: result.files.first.name,
+        fileExtension: result.files.first.extension,
+        fileSize: result.files.first.size.toString(),
+      );
+    } else {
+      return file_picker.File.empty;
+    }
   }
 }

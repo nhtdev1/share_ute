@@ -36,8 +36,9 @@ class UpdateFacultyView extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20.0),
                         border: state.faculty.value == element
                             ? Border.all(
-                          color: Colors.lightGreenAccent,
-                        )
+                                color: Colors.lightBlue,
+                                width: 1.5,
+                              )
                             : null,
                       ),
                       child: GridTile(
@@ -45,9 +46,10 @@ class UpdateFacultyView extends StatelessWidget {
                           child: Text(
                             element,
                             style: TextStyle(
-                              color: Colors.black,
+                              color: Colors.blue,
                               fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1.0,
+                              height: 1.5,
                             ),
                           ),
                         ),
@@ -60,7 +62,7 @@ class UpdateFacultyView extends StatelessWidget {
                         child: IconButton(
                           icon: Icon(
                             Icons.check_circle,
-                            color: Colors.lightGreenAccent,
+                            color: Colors.lightBlue,
                           ),
                         ),
                       )
@@ -89,9 +91,13 @@ class UpdateFacultyView extends StatelessWidget {
             ),
             body: GridView.count(
               shrinkWrap: true,
+              childAspectRatio: (MediaQuery.of(context).size.width / 2) /
+                  ((MediaQuery.of(context).size.height -
+                      AppBar().preferredSize.height) /
+                      4),
               crossAxisCount: 1,
-              mainAxisSpacing: 12.0,
-              crossAxisSpacing: 12.0,
+              mainAxisSpacing: 10.0,
+              crossAxisSpacing: 10.0,
               padding: const EdgeInsets.symmetric(
                 horizontal: 16.0,
                 vertical: 8.0,

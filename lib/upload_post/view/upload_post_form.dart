@@ -8,7 +8,7 @@ class UploadPostForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<UploadPostCubit, UploadPostState>(
       listener: (context, state) {
-        if (state.postStatus == UploadPostStatus.error) {
+        if (state.postStatus == PostStatus.error) {
           Scaffold.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
@@ -19,7 +19,7 @@ class UploadPostForm extends StatelessWidget {
                 content: Text('Tạo bài đăng thất bại!'),
               ),
             );
-        } else if (state.postStatus == UploadPostStatus.success) {
+        } else if (state.postStatus == PostStatus.success) {
           Scaffold.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
@@ -30,7 +30,8 @@ class UploadPostForm extends StatelessWidget {
                 content: Text('Tạo bài đăng thành công!'),
               ),
             );
-        } else if (state.postStatus == UploadPostStatus.pickedOverFileSize) {
+        } else if (state.originalFileStatus == FileStatus.pickedWithOverSize ||
+            state.solutionFileStatus == FileStatus.pickedWithOverSize) {
           Scaffold.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
@@ -54,13 +55,16 @@ class UploadPostForm extends StatelessWidget {
               _ModifiersDropDown(),
               Spacer(),
               _PostButton(),
+              const SizedBox(
+                width: 10.0,
+              ),
             ],
           ),
           _TitleInput(),
           const Divider(
             height: 1,
           ),
-          _PickFile(),
+          _PickOriginalFile(),
           const Divider(
             height: 1,
           ),
@@ -80,14 +84,12 @@ class _ModifiersDropDown extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<UploadPostCubit, UploadPostState>(
       buildWhen: (previous, current) =>
-          previous.post.postAccessModifiers != current.post.postAccessModifiers,
+          previous.post.public != current.post.public,
       builder: (context, state) {
         return Padding(
           padding: const EdgeInsets.only(left: 15.0),
           child: DropdownButton<String>(
-            value: state.post.postAccessModifiers.public
-                ? 'Công khai'
-                : 'Riêng tư',
+            value: state.post.public == 'true' ? 'Công khai' : 'Riêng tư',
             icon: Icon(Icons.arrow_drop_down),
             iconSize: 16,
             style: TextStyle(color: Colors.blue),
@@ -117,32 +119,30 @@ class _PostButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<UploadPostCubit, UploadPostState>(
       builder: (context, state) {
-        if (state.postStatus == UploadPostStatus.running) {
+        if (state.postStatus == PostStatus.running) {
           return SizedBox(
             child: CircularProgressIndicator(
-              strokeWidth: 2,
+              strokeWidth: 1.0,
             ),
-            height: 20,
-            width: 20,
           );
         }
-        return state.post.isNotEmpty
-            ? Padding(
-                padding: const EdgeInsets.only(right: 10.0),
-                child: GestureDetector(
-                  child: Text(
-                    'Đăng',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontSize: 16,
-                    ),
-                  ),
-                  onTap: () {
-                    context.read<UploadPostCubit>().uploadPost();
-                  },
+        if (state.post.isNotEmpty)
+          return Padding(
+            padding: const EdgeInsets.only(right: 10.0),
+            child: GestureDetector(
+              child: Text(
+                'Đăng',
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 16,
                 ),
-              )
-            : Container();
+              ),
+              onTap: () {
+                context.read<UploadPostCubit>().uploadPost();
+              },
+            ),
+          );
+        return Container();
       },
     );
   }
@@ -173,10 +173,12 @@ class _TitleInput extends StatelessWidget {
             ),
             hintText: 'Mô tả về tài liệu của bạn...',
             fillColor: Colors.white,
-            focusedBorder:
-                OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
-            enabledBorder:
-                OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.white),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.white),
+            ),
           ),
         );
       },
@@ -184,12 +186,12 @@ class _TitleInput extends StatelessWidget {
   }
 }
 
-class _PickFile extends StatelessWidget {
+class _PickOriginalFile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<UploadPostCubit, UploadPostState>(
         buildWhen: (previous, current) =>
-            previous.post.file != current.post.file,
+            previous.post.originalFile != current.post.originalFile,
         builder: (context, state) {
           return Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -199,28 +201,30 @@ class _PickFile extends StatelessWidget {
                 child: Icon(Icons.attach_file),
               ),
               GestureDetector(
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Text(
-                      state.post.file.isNotEmpty
-                          ? state.post.file.fileName.value
-                          : 'Chọn tài liệu',
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 15,
-                        letterSpacing: 1.0,
-                        height: 1.5,
-                      ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(
+                    state.post.originalFile.isNotEmpty
+                        ? state.post.originalFile.fileName
+                        : 'Chọn tài liệu',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 15,
+                      letterSpacing: 1.0,
+                      height: 1.5,
                     ),
                   ),
-                  onTap: () => context.read<UploadPostCubit>().pickFile()),
+                ),
+                onTap: () => context.read<UploadPostCubit>().pickOriginalFile(),
+              ),
               Spacer(),
-              if (state.post.file.isNotEmpty)
+              if (state.post.originalFile.isNotEmpty)
                 IconButton(
                   icon: Icon(
                     Icons.clear,
                   ),
-                  onPressed: () => context.read<UploadPostCubit>().clearFile(),
+                  onPressed: () =>
+                      context.read<UploadPostCubit>().clearOriginalFile(),
                 ),
             ],
           );
@@ -249,7 +253,7 @@ class _TagsRow extends StatelessWidget {
                     shrinkWrap: true,
                     children: [
                       _buildTags(state, context),
-                      if (!state.post.postTags.value.isNotEmpty)
+                      if (!state.post.postTags.isNotEmpty)
                         Container(
                           child: Text(
                             'Gán nhãn cho tài liệu giúp nó được tìm kiếm dễ dàng hơn',
@@ -267,10 +271,11 @@ class _TagsRow extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (_) => BlocProvider.value(
-                                value: context.read<UploadPostCubit>(),
-                                child: const UploadTagsView(),
-                              )),
+                        builder: (_) => BlocProvider.value(
+                          value: context.read<UploadPostCubit>(),
+                          child: const UploadTagsView(),
+                        ),
+                      ),
                     );
                   },
                 ),
@@ -282,7 +287,7 @@ class _TagsRow extends StatelessWidget {
 
   _buildTags(UploadPostState state, BuildContext context) {
     List<Widget> chips = List();
-    state.post.postTags.value.forEach((element) {
+    state.post.postTags.forEach((element) {
       chips.add(
         Container(
           padding: const EdgeInsets.all(2.0),
@@ -290,7 +295,7 @@ class _TagsRow extends StatelessWidget {
             deleteIconColor: Colors.white,
             onDeleted: () {
               List<String> temp = [];
-              state.post.postTags.value.forEach((element) {
+              state.post.postTags.forEach((element) {
                 temp.add(element);
               });
               temp.remove(element);
@@ -319,50 +324,52 @@ class _OptionalRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<UploadPostCubit, UploadPostState>(
-        buildWhen: (previous, current) => previous.optional != current.optional,
-        builder: (context, state) {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width * 1 / 8,
-                child: Icon(Icons.more_horiz_outlined),
-              ),
-              Expanded(
-                child: GestureDetector(
-                  child: ListView(
-                    padding: const EdgeInsets.all(10.0),
-                    shrinkWrap: true,
-                    children: [
-                      if (!state.post.postTags.value.isNotEmpty)
-                        Container(
-                          child: Text(
-                            'Thêm thông tin (không bắt buộc)',
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontSize: 15,
-                              letterSpacing: 1.0,
-                              height: 1.5,
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => BlocProvider.value(
-                          value: context.read<UploadPostCubit>(),
-                          child: const UploadOptionalView(),
+      buildWhen: (previous, current) => previous.post != current.post,
+      builder: (context, state) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width * 1 / 8,
+              child: Icon(Icons.more_horiz_outlined),
+            ),
+            Expanded(
+              child: GestureDetector(
+                child: ListView(
+                  padding: const EdgeInsets.all(10.0),
+                  shrinkWrap: true,
+                  children: [
+                    Container(
+                      child: Text(
+                        state.post.isNotEmpty
+                            ? 'Đã bổ sung thêm thông tin'
+                            : 'Thêm thông tin (không bắt buộc)',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: 15,
+                          letterSpacing: 1.0,
+                          height: 1.5,
                         ),
                       ),
-                    );
-                  },
+                    ),
+                  ],
                 ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => BlocProvider.value(
+                        value: context.read<UploadPostCubit>(),
+                        child: const UploadOptionalView(),
+                      ),
+                    ),
+                  );
+                },
               ),
-            ],
-          );
-        });
+            ),
+          ],
+        );
+      },
+    );
   }
 }

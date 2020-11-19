@@ -9,3 +9,5 @@ dependencies:
     sdk: flutter
   firebase_storage: ^5.0.1
   firebase_auth: ^0.18.1+2
+  post_repository:
+    path: ../post_repository

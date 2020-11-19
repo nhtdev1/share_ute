@@ -1,48 +1,52 @@
 part of 'upload_post_cubit.dart';
 
-enum UploadPostStatus {
+enum FileStatus {
+  unknown,
+  error,
+  cleared,
+  pickedWithOverSize,
+  pickedWithAcceptableSize,
+}
+
+enum PostStatus {
   running,
   success,
   error,
   unknown,
-  cleared,
-  pickedOverFileSize,
-  pickedAcceptableFileSize,
 }
 
 class UploadPostState extends Equatable {
   const UploadPostState({
-    this.post = const Post(),
-    this.postStatus = UploadPostStatus.unknown,
-    this.optional = const Optional(),
-    this.solutionFileStatus = UploadPostStatus.unknown,
+    this.post = Post.empty,
+    this.postStatus = PostStatus.unknown,
+    this.originalFileStatus = FileStatus.unknown,
+    this.solutionFileStatus = FileStatus.unknown,
   });
 
   final Post post;
-  final UploadPostStatus postStatus;
-
-  final Optional optional;
-  final UploadPostStatus solutionFileStatus;
+  final PostStatus postStatus;
+  final FileStatus originalFileStatus;
+  final FileStatus solutionFileStatus;
 
   @override
   // TODO: implement props
   List<Object> get props => [
         post,
         postStatus,
-        optional,
+        originalFileStatus,
         solutionFileStatus,
       ];
 
   UploadPostState copyWith({
     Post post,
-    UploadPostStatus postStatus,
-    Optional optional,
-    UploadPostStatus solutionFileStatus,
+    PostStatus postStatus,
+    FileStatus originalFileStatus,
+    FileStatus solutionFileStatus,
   }) {
     return UploadPostState(
       post: post ?? this.post,
       postStatus: postStatus ?? this.postStatus,
-      optional: optional ?? this.optional,
+      originalFileStatus: originalFileStatus ?? this.originalFileStatus,
       solutionFileStatus: solutionFileStatus ?? this.solutionFileStatus,
     );
   }

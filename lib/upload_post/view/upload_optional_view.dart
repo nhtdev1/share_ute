@@ -12,9 +12,8 @@ class UploadOptionalView extends StatelessWidget {
         iconTheme: IconThemeData(
           color: Colors.grey,
         ),
-        backgroundColor: Colors.transparent,
-        shadowColor: Color(0x802196F3),
-        elevation: 0.0,
+        backgroundColor: Colors.white,
+        elevation: 0.5,
       ),
       body: ListView(
         children: [
@@ -22,22 +21,27 @@ class UploadOptionalView extends StatelessWidget {
             height: 15,
           ),
           _PickSolutionFile(),
-          Padding(
+          const Padding(
             padding: const EdgeInsets.only(left: 10, right: 10),
             child: Divider(),
           ),
           _YearRow(),
-          Padding(
+          const Padding(
             padding: const EdgeInsets.only(left: 10, right: 10),
             child: Divider(),
           ),
           _SemesterRow(),
-          Padding(
+          const Padding(
             padding: const EdgeInsets.only(left: 10, right: 10),
             child: Divider(),
           ),
           _CreditsRow(),
-          Padding(
+          const Padding(
+            padding: const EdgeInsets.only(left: 10, right: 10),
+            child: Divider(),
+          ),
+          _MajorRow(),
+          const Padding(
             padding: const EdgeInsets.only(left: 10, right: 10),
             child: Divider(),
           ),
@@ -53,7 +57,7 @@ class _PickSolutionFile extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<UploadPostCubit, UploadPostState>(
         buildWhen: (previous, current) =>
-            previous.optional.solutionFile != current.optional.solutionFile,
+            previous.post.solutionFile != current.post.solutionFile,
         builder: (context, state) {
           return Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -69,8 +73,8 @@ class _PickSolutionFile extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Text(
-                      state.optional.solutionFile.isNotEmpty
-                          ? state.optional.solutionFile.fileName.value
+                      state.post.solutionFile.isNotEmpty
+                          ? state.post.solutionFile.fileName
                           : 'Thêm đáp án gợi ý',
                       style: TextStyle(
                         color: Colors.blue,
@@ -83,10 +87,11 @@ class _PickSolutionFile extends StatelessWidget {
                   onTap: () =>
                       context.read<UploadPostCubit>().pickSolutionFile()),
               Spacer(),
-              if (state.optional.solutionFile.isNotEmpty)
+              if (state.post.solutionFile.isNotEmpty)
                 IconButton(
                   icon: Icon(
                     Icons.clear,
+                    color: Colors.grey,
                   ),
                   onPressed: () =>
                       context.read<UploadPostCubit>().clearSolutionFile(),
@@ -102,7 +107,7 @@ class _YearRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<UploadPostCubit, UploadPostState>(
         buildWhen: (previous, current) =>
-            previous.optional.year != current.optional.year,
+            previous.post.postYear != current.post.postYear,
         builder: (context, state) {
           return Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -118,8 +123,8 @@ class _YearRow extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Text(
-                    state.optional.year.isNotEmpty
-                        ? state.optional.year.value
+                    state.post.postYear.isNotEmpty
+                        ? state.post.postYear
                         : 'Tài liệu này năm nào?',
                     style: TextStyle(
                       color: Colors.blue,
@@ -141,6 +146,16 @@ class _YearRow extends StatelessWidget {
                   );
                 },
               ),
+              Spacer(),
+              if (state.post.postYear.isNotEmpty)
+                IconButton(
+                  icon: Icon(
+                    Icons.clear,
+                    color: Colors.grey,
+                  ),
+                  onPressed: () =>
+                      context.read<UploadPostCubit>().yearChanged(''),
+                ),
             ],
           );
         });
@@ -158,7 +173,7 @@ class _SemesterRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<UploadPostCubit, UploadPostState>(
         buildWhen: (previous, current) =>
-            previous.optional.semester != current.optional.semester,
+            previous.post.semester != current.post.semester,
         builder: (context, state) {
           return Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -196,17 +211,17 @@ class _SemesterRow extends StatelessWidget {
                 ),
               ),
               decoration: BoxDecoration(
-                color: state.optional.semester.value == element
+                color: state.post.semester == element
                     ? Colors.grey.withOpacity(0.2)
                     : null,
               ),
             ),
           ),
           onTap: () {
-            if (state.optional.semester.value != element) {
-              context.read<UploadPostCubit>().optionalSemesterChanged(element);
+            if (state.post.semester != element) {
+              context.read<UploadPostCubit>().semesterChanged(element);
             } else {
-              context.read<UploadPostCubit>().optionalSemesterChanged('');
+              context.read<UploadPostCubit>().semesterChanged('');
             }
           },
         ),
@@ -231,7 +246,7 @@ class _CreditsRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<UploadPostCubit, UploadPostState>(
         buildWhen: (previous, current) =>
-            previous.optional.credits != current.optional.credits,
+            previous.post.credit != current.post.credit,
         builder: (context, state) {
           return Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -269,17 +284,17 @@ class _CreditsRow extends StatelessWidget {
                 ),
               ),
               decoration: BoxDecoration(
-                color: state.optional.credits.value == element
+                color: state.post.credit == element
                     ? Colors.grey.withOpacity(0.2)
                     : null,
               ),
             ),
           ),
           onTap: () {
-            if (state.optional.credits.value != element) {
-              context.read<UploadPostCubit>().optionalCreditsChanged(element);
+            if (state.post.credit != element) {
+              context.read<UploadPostCubit>().creditChanged(element);
             } else {
-              context.read<UploadPostCubit>().optionalCreditsChanged('');
+              context.read<UploadPostCubit>().creditChanged('');
             }
           },
         ),
@@ -291,12 +306,72 @@ class _CreditsRow extends StatelessWidget {
   }
 }
 
+class _MajorRow extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<UploadPostCubit, UploadPostState>(
+        buildWhen: (previous, current) =>
+            previous.post.major != current.post.major,
+        builder: (context, state) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width * 1 / 8,
+                child: Icon(
+                  Icons.label_important_outline,
+                  color: Colors.grey,
+                ),
+              ),
+              GestureDetector(
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(
+                    state.post.major.isNotEmpty
+                        ? state.post.major
+                        : 'Tài liệu thuộc ngành nào?',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 15,
+                      letterSpacing: 1.0,
+                      height: 1.5,
+                    ),
+                  ),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => BlocProvider.value(
+                        value: context.read<UploadPostCubit>(),
+                        child: const UploadMajorView(),
+                      ),
+                    ),
+                  );
+                },
+              ),
+              Spacer(),
+              if (state.post.major.isNotEmpty)
+                IconButton(
+                  icon: Icon(
+                    Icons.clear,
+                    color: Colors.grey,
+                  ),
+                  onPressed: () =>
+                      context.read<UploadPostCubit>().majorChanged(''),
+                ),
+            ],
+          );
+        });
+  }
+}
+
 class _LecturersInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<UploadPostCubit, UploadPostState>(
       buildWhen: (previous, current) =>
-          previous.optional.lecturers != current.optional.lecturers,
+          previous.post.lecturer != current.post.lecturer,
       builder: (context, state) {
         return Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -319,9 +394,8 @@ class _LecturersInput extends StatelessWidget {
                   letterSpacing: 1.0,
                   height: 1.5,
                 ),
-                onChanged: (value) => context
-                    .read<UploadPostCubit>()
-                    .optionalLecturersChanged(value),
+                onChanged: (value) =>
+                    context.read<UploadPostCubit>().lecturerChanged(value),
                 key: const Key('uploadForm_lecturersInput_textField'),
                 keyboardType: TextInputType.name,
                 decoration: InputDecoration(
@@ -331,9 +405,12 @@ class _LecturersInput extends StatelessWidget {
                     letterSpacing: 1.0,
                     height: 1.5,
                   ),
-                  hintText: state.optional.lecturers.isNotEmpty
-                      ? state.optional.lecturers.value
+                  hintText: state.post.lecturer.isNotEmpty
+                      ? state.post.lecturer
                       : 'Giảng viên phụ trách',
+                  errorText: state.post.lecturer.length > 30
+                      ? 'tên không hợp lệ'
+                      : null,
                   border: InputBorder.none,
                 ),
               ),

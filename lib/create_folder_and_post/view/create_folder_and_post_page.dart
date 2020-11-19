@@ -39,10 +39,13 @@ class CreateFolderAndPostPage extends StatelessWidget {
                             color: Colors.white,
                             border: Border.all(
                               width: 1,
-                              color: Colors.grey,
+                              color: Colors.black54,
                             ),
                           ),
-                          child: Icon(Icons.create_new_folder_outlined),
+                          child: Icon(
+                            Icons.create_new_folder_outlined,
+                            color: Colors.black54,
+                          ),
                         ),
                         Text(
                           "Thư mục",
@@ -68,10 +71,13 @@ class CreateFolderAndPostPage extends StatelessWidget {
                             color: Colors.white,
                             border: Border.all(
                               width: 1,
-                              color: Colors.grey,
+                              color: Colors.black54,
                             ),
                           ),
-                          child: Icon(Icons.cloud_upload_outlined),
+                          child: Icon(
+                            Icons.cloud_upload_outlined,
+                            color: Colors.black54,
+                          ),
                         ),
                         Text(
                           "Tải lên",

@@ -110,10 +110,11 @@ class _YearRow extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (_) => BlocProvider.value(
-                              value: context.read<UpdateBioCubit>(),
-                              child: const UpdateYearView(),
-                            )),
+                      builder: (_) => BlocProvider.value(
+                        value: context.read<UpdateBioCubit>(),
+                        child: const UpdateYearView(),
+                      ),
+                    ),
                   );
                 },
               ),

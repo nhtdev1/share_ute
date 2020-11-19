@@ -24,7 +24,7 @@ class UploadYearView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<UploadPostCubit, UploadPostState>(
       buildWhen: (previous, current) =>
-          previous.optional.year != current.optional.year,
+          previous.post.postYear != current.post.postYear,
       builder: (context, state) {
         List<Widget> tiles = List();
         data.forEach((element) {
@@ -33,16 +33,17 @@ class UploadYearView extends StatelessWidget {
               color: Colors.white,
               elevation: 14.0,
               shadowColor: Color(0x802196F3),
-              borderRadius: BorderRadius.circular(20.0),
+              borderRadius: BorderRadius.circular(10.0),
               child: GestureDetector(
                 child: Stack(
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0),
-                        border: state.optional.year.value == element
+                        borderRadius: BorderRadius.circular(10.0),
+                        border: state.post.postYear == element
                             ? Border.all(
-                                color: Colors.lightGreenAccent,
+                                color: Colors.lightBlueAccent,
+                                width: 1.5,
                               )
                             : null,
                       ),
@@ -51,34 +52,38 @@ class UploadYearView extends StatelessWidget {
                           child: Text(
                             element,
                             style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                              color: Colors.lightBlue,
+                              fontSize: 16,
+                              letterSpacing: 1.0,
+                              height: 1.5,
+                              fontWeight: state.post.postYear == element
+                                  ? FontWeight.bold
+                                  : null,
                             ),
                           ),
                         ),
                       ),
                     ),
-                    if (state.optional.year.value == element)
+                    if (state.post.postYear == element)
                       Positioned(
                         top: 5.0,
                         right: 5.0,
                         child: IconButton(
                           icon: Icon(
                             Icons.check_circle,
-                            color: Colors.lightGreenAccent,
+                            color: Colors.lightBlue,
                           ),
                         ),
                       ),
                   ],
                 ),
                 onTap: () {
-                  if (state.optional.year.value != element) {
+                  if (state.post.postYear != element) {
                     context
                         .read<UploadPostCubit>()
-                        .optionalYearChanged(element);
+                        .yearChanged(element);
                   } else {
-                    context.read<UploadPostCubit>().optionalYearChanged('');
+                    context.read<UploadPostCubit>().yearChanged('');
                   }
                 },
               ),
@@ -97,9 +102,13 @@ class UploadYearView extends StatelessWidget {
               elevation: 0.0,
             ),
             body: GridView.count(
+              childAspectRatio: (MediaQuery.of(context).size.width / 2) /
+                  ((MediaQuery.of(context).size.height -
+                          AppBar().preferredSize.height) /
+                      4),
               crossAxisCount: 2,
-              mainAxisSpacing: 12.0,
-              crossAxisSpacing: 12.0,
+              mainAxisSpacing: 10.0,
+              crossAxisSpacing: 10.0,
               padding: const EdgeInsets.symmetric(
                 horizontal: 16.0,
                 vertical: 8.0,

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:post_repository/post_repository.dart';
 
 class StorageRepository {
   StorageRepository({
@@ -26,18 +27,16 @@ class StorageRepository {
   }
 
   Stream<TaskSnapshot> uploadDocument({
-    String path,
-    String name,
+    Post post,
   }) {
-    String filePath =
-        'posts/${_firebaseAuth.currentUser.uid}/original/${DateTime.now()}_$name';
+    String filePath = 'posts/${_firebaseAuth.currentUser.uid}/'
+        'original/${DateTime.now()}_${post.originalFile.fileName}';
     return _firebaseStorage
         .ref()
         .child(filePath)
-        .putFile(File(path))
+        .putFile(File(post.originalFile.path))
         .snapshotEvents;
   }
-
 
   Future<String> getDownloadURL(String url) async {
     return _firebaseStorage.ref(url).getDownloadURL();

@@ -16,6 +16,11 @@ class UploadPostPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.grey,
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0.5,
       ),
       body: BlocProvider<UploadPostCubit>(
         create: (_) => UploadPostCubit(

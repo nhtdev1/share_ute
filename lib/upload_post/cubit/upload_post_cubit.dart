@@ -4,7 +4,6 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:file_picker_repository/file_picker_repository.dart';
 import 'package:post_repository/post_repository.dart';
-import 'package:share_ute/upload_post/models/models.dart';
 import 'package:storage_repository/storage_repository.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -33,155 +32,147 @@ class UploadPostCubit extends Cubit<UploadPostState> {
   }
 
   void accessModifiersChanged(String value) {
-    final postAccessModifiers = value == 'Công khai'
-        ? const AccessModifiers.public()
-        : const AccessModifiers.private();
     emit(state.copyWith(
       post: state.post.copyWith(
-        postAccessModifiers: postAccessModifiers,
+        public: value == 'Công khai' ? 'true' : 'false',
       ),
     ));
   }
 
   void postTitleChanged(String value) {
-    final postTitle = Title.dirty(value);
     emit(state.copyWith(
       post: state.post.copyWith(
-        postTitle: postTitle,
+        postTitle: value,
       ),
     ));
   }
 
   void postTagsChanged(List<String> value) {
-    final tags = Tags.dirty(value);
     emit(state.copyWith(
       post: state.post.copyWith(
-        postTags: tags,
+        postTags: value,
       ),
     ));
   }
 
-  void optionalYearChanged(String value) {
-    final year = Year.dirty(value);
-    emit(state.copyWith(
-      optional: state.optional.copyWith(
-        year: year,
-      ),
-    ));
-  }
-
-  void optionalCreditsChanged(String value) {
-    final credits = Credits.dirty(value);
-    emit(state.copyWith(
-      optional: state.optional.copyWith(
-        credits: credits,
-      ),
-    ));
-  }
-
-  void optionalSemesterChanged(String value) {
-    final semester = Semester.dirty(value);
-    emit(state.copyWith(
-      optional: state.optional.copyWith(
-        semester: semester,
-      ),
-    ));
-  }
-
-  void optionalLecturersChanged(String value) {
-    final lecturers = Lecturers.dirty(value);
-    emit(state.copyWith(
-      optional: state.optional.copyWith(
-        lecturers: lecturers,
-      ),
-    ));
-  }
-
-  Future<void> pickFile() async {
-    final result = await _filePickerRepository.pickFile();
+  void yearChanged(String value) {
     emit(state.copyWith(
       post: state.post.copyWith(
-        file: state.post.file.copyWith(
-          path: result.files.single.path,
-          fileName: Name.dirty(result.files.first.name),
-          fileExtension: Extension.dirty(result.files.first.extension),
-          fileSize: Size.dirty(result.files.first.size.toString()),
-        ),
+        postYear: value,
       ),
-      postStatus: UploadPostStatus.pickedAcceptableFileSize,
     ));
   }
 
-  void clearFile() {
+  void creditChanged(String value) {
     emit(state.copyWith(
       post: state.post.copyWith(
-        file: const File(),
+        credit: value,
       ),
-      postStatus: UploadPostStatus.cleared,
+    ));
+  }
+
+  void semesterChanged(String value) {
+    emit(state.copyWith(
+      post: state.post.copyWith(
+        semester: value,
+      ),
+    ));
+  }
+
+  void majorChanged(String value) {
+    emit(state.copyWith(
+      post: state.post.copyWith(
+        major: value,
+      ),
+    ));
+  }
+
+  void lecturerChanged(String value) {
+    emit(state.copyWith(
+      post: state.post.copyWith(
+        lecturer: value,
+      ),
+    ));
+  }
+
+  Future<void> pickOriginalFile() async {
+    final file = await _filePickerRepository.pickFile();
+    file != File.empty
+        ? emit(state.copyWith(
+            post: state.post.copyWith(
+              originalFile: file,
+            ),
+            originalFileStatus: FileStatus.pickedWithAcceptableSize,
+          ))
+        : emit(state.copyWith(
+            originalFileStatus: FileStatus.error,
+          ));
+  }
+
+  void clearOriginalFile() {
+    emit(state.copyWith(
+      post: state.post.copyWith(
+        originalFile: File.empty,
+      ),
+      originalFileStatus: FileStatus.cleared,
     ));
   }
 
   Future<void> pickSolutionFile() async {
-    final result = await _filePickerRepository.pickFile();
+    final file = await _filePickerRepository.pickFile();
     emit(state.copyWith(
-      optional: state.optional.copyWith(
-        solutionFile: state.optional.solutionFile.copyWith(
-          path: result.files.single.path,
-          fileName: Name.dirty(result.files.first.name),
-          fileExtension: Extension.dirty(result.files.first.extension),
-          fileSize: Size.dirty(result.files.first.size.toString()),
-        ),
+      post: state.post.copyWith(
+        solutionFile: file,
       ),
-      solutionFileStatus: UploadPostStatus.pickedAcceptableFileSize,
+      solutionFileStatus: FileStatus.pickedWithAcceptableSize,
     ));
   }
 
   void clearSolutionFile() {
     emit(state.copyWith(
-      optional: state.optional.copyWith(
-        solutionFile: const File(),
+      post: state.post.copyWith(
+        solutionFile: File.empty,
       ),
-      solutionFileStatus: UploadPostStatus.cleared,
+      solutionFileStatus: FileStatus.cleared,
     ));
   }
 
   void uploadPost() {
     _storageSubscription = _storageRepository
         .uploadDocument(
-      path: state.post.file.path,
-      name: state.post.file.fileName.value,
+      post: state.post,
     )
         .listen((taskSnapshot) async {
       if (taskSnapshot != null) {
         if (taskSnapshot.state == TaskState.success) {
-          final url = await _storageRepository
+          final originalFileURL = await _storageRepository
               .getDownloadURL(taskSnapshot.metadata.fullPath);
 
-          await _postRepository.createPost(
-            postAccessModifiers:
-                state.post.postAccessModifiers.public.toString(),
-            postTitle: state.post.postTitle.value,
-            fileName: state.post.file.fileName.value,
-            fileExtension: state.post.file.fileExtension.value,
-            fileSize: state.post.file.fileSize.value,
-            fileURL: url,
-            postTags: state.post.postTags.value,
+          final result = await _postRepository.createPost(
+            post: state.post,
+            originalFileURL: originalFileURL,
           );
-          emit(state.copyWith(
-            postStatus: UploadPostStatus.success,
-          ));
+          if (result == true) {
+            emit(state.copyWith(
+              postStatus: PostStatus.success,
+            ));
+          } else {
+            emit(state.copyWith(
+              postStatus: PostStatus.error,
+            ));
+          }
         } else if (taskSnapshot.state == TaskState.running) {
           emit(state.copyWith(
-            postStatus: UploadPostStatus.running,
+            postStatus: PostStatus.running,
           ));
         } else if (taskSnapshot.state == TaskState.error) {
           emit(state.copyWith(
-            postStatus: UploadPostStatus.error,
+            postStatus: PostStatus.error,
           ));
         }
       } else {
         emit(state.copyWith(
-          postStatus: UploadPostStatus.error,
+          postStatus: PostStatus.error,
         ));
       }
     });

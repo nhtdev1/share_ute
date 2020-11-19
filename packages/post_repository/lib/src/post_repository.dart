@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:post_repository/src/models/models.dart';
 
 class PostRepository {
   PostRepository({
@@ -11,48 +12,26 @@ class PostRepository {
   final FirebaseFirestore _firebaseFirestore;
   final firebase_auth.FirebaseAuth _firebaseAuth;
 
-  Future<void> createPost({
-    String postAccessModifiers,
-    String postTitle,
-    String fileName,
-    String fileExtension,
-    String fileSize,
-    String fileURL,
-    List<String> postTags,
-  }) {
+  Future<bool> createPost({
+    Post post,
+    String originalFileURL,
+  }) async {
     final dateCreated = DateTime.now().toString();
-    return _firebaseFirestore
-        .collection('posts')
-        .add({
-      'uid': _firebaseAuth.currentUser.uid,
-      'postAccessModifiers': postAccessModifiers ?? '',
-      'postTitle': postTitle ?? '',
-      'fileName': fileName ?? '',
-      'fileExtension': fileExtension ?? '',
-      'fileSize': fileSize ?? '',
-      'fileURL': fileURL ?? '',
-      'postTags': postTags ?? '',
-      'dateCreated': dateCreated,
-    })
-        .then((value) => print('Create post on firestore successfully!'))
-        .catchError((onError) => print('Failed to create post: $onError'));
-    // return _firebaseFirestore
-    //     .collection('posts')
-    //     .doc(_firebaseAuth.currentUser.uid +
-    //         '_' +
-    //         dateCreated.millisecond.toString())
-    //     .set({
-    //       'uid': _firebaseAuth.currentUser.uid,
-    //       'postAccessModifiers': postAccessModifiers ?? '',
-    //       'postTitle': postTitle ?? '',
-    //       'fileName': fileName ?? '',
-    //       'fileExtension': fileExtension ?? '',
-    //       'fileSize': fileSize ?? '',
-    //       'fileURL': fileURL ?? '',
-    //       'postTags': postTags ?? '',
-    //       'dateCreated': dateCreated.toString(),
-    //     })
-    //     .then((value) => print('Create post on firestore successfully!'))
-    //     .catchError((onError) => print('Failed to create post: $onError'));
+    try {
+      await _firebaseFirestore.collection('posts').add({
+        'uid': _firebaseAuth.currentUser.uid,
+        'public': post.public,
+        'postTitle': post.postTitle,
+        'fileName': post.originalFile.fileName,
+        'fileExtension': post.originalFile.fileExtension,
+        'fileSize': post.originalFile.fileSize,
+        'originalFileURL': originalFileURL,
+        'postTags': post.postTags,
+        'dateCreated': dateCreated,
+      });
+      return true;
+    } on Exception {
+      return false;
+    }
   }
 }

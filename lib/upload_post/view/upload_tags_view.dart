@@ -34,17 +34,17 @@ class UploadTagsView extends StatelessWidget {
           tiles.add(Container(
             padding: const EdgeInsets.all(2.0),
             child: ChoiceChip(
-              avatar: state.post.postTags.value.contains(element)
+              avatar: state.post.postTags.contains(element)
                   ? Icon(
                       Icons.check_circle_outline,
                       color: Colors.lightBlueAccent,
                     )
                   : null,
               label: Text(element),
-              selected: state.post.postTags.value.contains(element),
+              selected: state.post.postTags.contains(element),
               onSelected: (selected) {
                 List<String> temp = [];
-                state.post.postTags.value.forEach((element) {
+                state.post.postTags.forEach((element) {
                   temp.add(element);
                 });
                 temp.contains(element)
