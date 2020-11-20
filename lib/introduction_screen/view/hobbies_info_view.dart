@@ -19,24 +19,24 @@ PageViewModel _buildHobbiesPageModel(
     title: "Chủ đề bạn quan tâm là?",
     bodyWidget: BlocBuilder<IntroductionCubit, IntroductionState>(
       buildWhen: (previous, current) =>
-          previous.hobbies.value != current.hobbies.value,
+          previous.user.hobbies != current.user.hobbies,
       builder: (context, state) {
         List<Widget> choices = List();
         hobbyList.forEach((element) {
           choices.add(Container(
             padding: const EdgeInsets.all(2.0),
             child: ChoiceChip(
-              avatar: state.hobbies.value.contains(element)
+              avatar: state.user.hobbies.contains(element)
                   ? Icon(
                       Icons.check_circle,
                       color: Colors.lightBlueAccent,
                     )
                   : null,
               label: Text(element),
-              selected: state.hobbies.value.contains(element),
+              selected: state.user.hobbies.contains(element),
               onSelected: (selected) {
                 List<String> currentSelectedList = [];
-                state.hobbies.value.forEach((element) {
+                state.user.hobbies.forEach((element) {
                   currentSelectedList.add(element);
                 });
                 currentSelectedList.contains(element)

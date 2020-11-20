@@ -1,37 +1,50 @@
 part of 'update_avatar_cubit.dart';
 
-enum UpdateAvatarStatus {
-  running,
-  success,
-  error,
+enum AvatarStatus {
   unknown,
   cropped,
+  croppedError,
   cleared,
   pickedOverSize,
   pickedAcceptableSize,
+  pickedError,
 }
 
+enum UpdateAvatarProgress {
+  unknown,
+  submissionInProgress,
+  submissionSuccess,
+  submissionFailure,
+}
 
 class UpdateAvatarState extends Equatable {
   const UpdateAvatarState({
-    this.avatar = const Avatar.none(),
-    this.status = UpdateAvatarStatus.unknown,
+    this.file = File.empty,
+    this.avatarStatus = AvatarStatus.unknown,
+    this.updateAvatarProgress = UpdateAvatarProgress.unknown,
   });
 
-  final Avatar avatar;
-  final UpdateAvatarStatus status;
+  final File file;
+  final AvatarStatus avatarStatus;
+  final UpdateAvatarProgress updateAvatarProgress;
 
   @override
   // TODO: implement props
-  List<Object> get props => [avatar, status];
+  List<Object> get props => [
+        file,
+        avatarStatus,
+        updateAvatarProgress,
+      ];
 
   UpdateAvatarState copyWith({
-    Avatar avatar,
-    UpdateAvatarStatus status,
+    File file,
+    AvatarStatus avatarStatus,
+    UpdateAvatarProgress updateAvatarProgress,
   }) {
     return UpdateAvatarState(
-      avatar: avatar ?? this.avatar,
-      status: status ?? this.status,
+      file: file ?? this.file,
+      avatarStatus: avatarStatus ?? this.avatarStatus,
+      updateAvatarProgress: updateAvatarProgress ?? this.updateAvatarProgress,
     );
   }
 }

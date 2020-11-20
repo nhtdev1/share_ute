@@ -12,7 +12,7 @@ abstract class FirestoreUserEvent extends Equatable {
 class FirestoreUserUpdated extends FirestoreUserEvent {
   const FirestoreUserUpdated(this.user);
 
-  final FirestoreUser user;
+  final User user;
 
   @override
   // TODO: implement props
@@ -22,7 +22,7 @@ class FirestoreUserUpdated extends FirestoreUserEvent {
 class FirestoreUserChanged extends FirestoreUserEvent {
   const FirestoreUserChanged(this.user);
 
-  final FirestoreUser user;
+  final User user;
 
   @override
   // TODO: implement props

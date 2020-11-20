@@ -24,7 +24,7 @@ class UpdateYearView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<UpdateBioCubit, UpdateBioState>(
       buildWhen: (previous, current) =>
-          previous.year.value != current.year.value,
+          previous.user.year != current.user.year,
       builder: (context, state) {
         List<Widget> tiles = List();
         data.forEach((element) {
@@ -40,7 +40,7 @@ class UpdateYearView extends StatelessWidget {
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20.0),
-                        border: state.year.value == element
+                        border: state.user.year == element
                             ? Border.all(
                                 color: Colors.lightBlueAccent,
                                 width: 1.5,
@@ -56,7 +56,7 @@ class UpdateYearView extends StatelessWidget {
                               fontSize: 16,
                               letterSpacing: 1.0,
                               height: 1.5,
-                              fontWeight: state.year.value == element
+                              fontWeight: state.user.year == element
                                   ? FontWeight.bold
                                   : null,
                             ),
@@ -64,7 +64,7 @@ class UpdateYearView extends StatelessWidget {
                         ),
                       ),
                     ),
-                    if (state.year.value == element)
+                    if (state.user.year== element)
                       Positioned(
                         top: 5.0,
                         right: 5.0,
@@ -78,7 +78,7 @@ class UpdateYearView extends StatelessWidget {
                   ],
                 ),
                 onTap: () {
-                  if (state.year.value != element) {
+                  if (state.user.year != element) {
                     context.read<UpdateBioCubit>().yearChanged(element);
                   } else {
                     context.read<UpdateBioCubit>().yearChanged('');

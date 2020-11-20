@@ -28,26 +28,40 @@ class UpdateAvatarForm extends StatelessWidget {
       ),
       body: BlocListener<UpdateAvatarCubit, UpdateAvatarState>(
         listener: (context, state) {
-          if (state.status == UpdateAvatarStatus.error) {
+          if (state.updateAvatarProgress ==
+              UpdateAvatarProgress.submissionFailure) {
             Scaffold.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
                 const SnackBar(
-                    content: Text('Cập nhật ảnh đại diện thất bại!')),
+                  elevation: 10.0,
+                  backgroundColor: Colors.blue,
+                  behavior: SnackBarBehavior.floating,
+                  content: Text('Cập nhật ảnh đại diện thất bại!'),
+                ),
               );
-          } else if (state.status == UpdateAvatarStatus.success) {
+          } else if (state.updateAvatarProgress ==
+              UpdateAvatarProgress.submissionSuccess) {
             Scaffold.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
                 const SnackBar(
-                    content: Text('Cập nhật ảnh đại diện thành công!')),
+                  elevation: 10.0,
+                  backgroundColor: Colors.blue,
+                  behavior: SnackBarBehavior.floating,
+                  content: Text('Cập nhật ảnh đại diện thành công!'),
+                ),
               );
-          }else if (state.status == UpdateAvatarStatus.pickedOverSize) {
+          } else if (state.avatarStatus == AvatarStatus.pickedOverSize) {
             Scaffold.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
                 const SnackBar(
-                    content: Text('Không thể upload ảnh lớn hơn 10mb!')),
+                  elevation: 10.0,
+                  backgroundColor: Colors.blue,
+                  behavior: SnackBarBehavior.floating,
+                  content: Text('Không thể upload ảnh lớn hơn 10mb!'),
+                ),
               );
           }
         },
@@ -69,9 +83,9 @@ class _ImageHolder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<UpdateAvatarCubit, UpdateAvatarState>(
-      buildWhen: (previous, current) => previous.avatar != current.avatar,
+      buildWhen: (previous, current) => previous.file != current.file,
       builder: (context, state) {
-        return state.avatar.path == ''
+        return state.file.path.isEmpty
             ? Padding(
                 padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 2 / 5),
@@ -85,7 +99,7 @@ class _ImageHolder extends StatelessWidget {
                 ),
               )
             // : Image.file(File(state.avatar.path));
-            : Image.file(File(state.avatar.path));
+            : Image.file(File(state.file.path));
       },
     );
   }
@@ -95,9 +109,10 @@ class _ImageTool extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<UpdateAvatarCubit, UpdateAvatarState>(
-        buildWhen: (previous, current) => previous.status != current.status,
+        buildWhen: (previous, current) =>
+            previous.avatarStatus != current.avatarStatus,
         builder: (context, state) {
-          return state.avatar.path == ''
+          return state.file.path.isEmpty
               ? Container()
               : Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -123,13 +138,14 @@ class _UploadButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<UpdateAvatarCubit, UpdateAvatarState>(
       builder: (context, state) {
-        if (state.status == UpdateAvatarStatus.running) {
+        if (state.updateAvatarProgress ==
+            UpdateAvatarProgress.submissionInProgress) {
           return const CircularProgressIndicator(
-            strokeWidth: 1,
+            strokeWidth: 2,
           );
         } else {
-          return state.status == UpdateAvatarStatus.pickedAcceptableSize ||
-                  state.status == UpdateAvatarStatus.cropped
+          return state.avatarStatus == AvatarStatus.pickedAcceptableSize ||
+                  state.avatarStatus == AvatarStatus.cropped
               ? RaisedButton(
                   highlightElevation: 0.0,
                   elevation: 0.0,
@@ -143,7 +159,7 @@ class _UploadButton extends StatelessWidget {
                   ),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0)),
-                  onPressed: state.avatar.path != ''
+                  onPressed: state.file.path.isNotEmpty
                       ? () => context.read<UpdateAvatarCubit>().uploadImage()
                       : null,
                 )

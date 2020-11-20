@@ -10,17 +10,28 @@ class UpdateBioForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<UpdateBioCubit, UpdateBioState>(
         listener: (context, state) {
-          if (state.status.isSubmissionSuccess) {
+          if (state.updateProgress == UpdateBioProgress.submissionSuccess) {
             Scaffold.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
-                const SnackBar(content: Text('Cập nhật thành công')),
+                const SnackBar(
+                  elevation: 10.0,
+                  backgroundColor: Colors.blue,
+                  behavior: SnackBarBehavior.floating,
+                  content: Text('Cập nhật thành công'),
+                ),
               );
-          } else if (state.status.isSubmissionFailure) {
+          } else if (state.updateProgress ==
+              UpdateBioProgress.submissionFailure) {
             Scaffold.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
-                const SnackBar(content: Text('Cập nhật thất bại')),
+                const SnackBar(
+                  elevation: 10.0,
+                  backgroundColor: Colors.blue,
+                  behavior: SnackBarBehavior.floating,
+                  content: Text('Cập nhật thất bại'),
+                ),
               );
           }
         },
@@ -30,42 +41,26 @@ class UpdateBioForm extends StatelessWidget {
               height: 15,
             ),
             _YearRow(),
-            Padding(
+            const Padding(
               padding: const EdgeInsets.only(left: 10, right: 10),
               child: Divider(),
             ),
             _FacultyRow(),
-            Padding(
+            const Padding(
               padding: const EdgeInsets.only(left: 10, right: 10),
               child: Divider(),
             ),
             _MajorRow(),
-            Padding(
+            const Padding(
               padding: const EdgeInsets.only(left: 10, right: 10),
               child: Divider(),
             ),
             _HobbiesRow(),
-            Padding(
+            const Padding(
               padding: const EdgeInsets.only(left: 10, right: 10),
               child: Divider(),
             ),
-            Center(
-              child: RaisedButton(
-                color: Colors.blue.withOpacity(0.8),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: Text(
-                  'Cập nhật',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-                onPressed: () {
-                  context.read<UpdateBioCubit>().updateBioUser();
-                },
-              ),
-            ),
+            _UpdateButton(),
           ],
         ));
   }
@@ -76,7 +71,7 @@ class _YearRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<UpdateBioCubit, UpdateBioState>(
         buildWhen: (previous, current) =>
-            previous.year.value != current.year.value,
+            previous.user.year != current.user.year,
         builder: (context, state) {
           return Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -98,9 +93,7 @@ class _YearRow extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Text(
-                    context.watch<UpdateBioCubit>().state.year.value == ''
-                        ? 'Không rõ'
-                        : context.watch<UpdateBioCubit>().state.year.value,
+                    state.user.year.isEmpty ? 'Không rõ' : state.user.year,
                     style: TextStyle(
                       fontSize: 16,
                     ),
@@ -129,7 +122,7 @@ class _FacultyRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<UpdateBioCubit, UpdateBioState>(
         buildWhen: (previous, current) =>
-            previous.faculty.value != current.faculty.value,
+            previous.user.faculty != current.user.faculty,
         builder: (context, state) {
           return Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -151,9 +144,9 @@ class _FacultyRow extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Text(
-                    context.watch<UpdateBioCubit>().state.faculty.value == ''
+                    state.user.faculty.isEmpty
                         ? 'Không rõ'
-                        : context.watch<UpdateBioCubit>().state.faculty.value,
+                        : state.user.faculty,
                     style: TextStyle(
                       fontSize: 16,
                     ),
@@ -181,7 +174,7 @@ class _MajorRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<UpdateBioCubit, UpdateBioState>(
         buildWhen: (previous, current) =>
-            previous.major.value != current.major.value,
+            previous.user.major != current.user.major,
         builder: (context, state) {
           return Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -203,9 +196,7 @@ class _MajorRow extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Text(
-                    context.watch<UpdateBioCubit>().state.major.value == ''
-                        ? 'Không rõ'
-                        : context.watch<UpdateBioCubit>().state.major.value,
+                    state.user.major.isEmpty ? 'Không rõ' : state.user.major,
                     style: TextStyle(
                       fontSize: 16,
                     ),
@@ -233,7 +224,7 @@ class _HobbiesRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<UpdateBioCubit, UpdateBioState>(
         buildWhen: (previous, current) =>
-            previous.hobbies.value != current.hobbies.value,
+            previous.user.hobbies != current.user.hobbies,
         builder: (context, state) {
           return Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -260,7 +251,7 @@ class _HobbiesRow extends StatelessWidget {
                     shrinkWrap: true,
                     children: [
                       _buildHobbies(state, context),
-                      if (!state.hobbies.value.isNotEmpty)
+                      if (!state.user.hobbies.isNotEmpty)
                         Container(
                           child: Text(
                             'Chọn chủ đề bạn quan tâm sẽ giúp chúng tôi tìm '
@@ -276,10 +267,11 @@ class _HobbiesRow extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (_) => BlocProvider.value(
-                                value: context.read<UpdateBioCubit>(),
-                                child: const UpdateHobbiesView(),
-                              )),
+                        builder: (_) => BlocProvider.value(
+                          value: context.read<UpdateBioCubit>(),
+                          child: const UpdateHobbiesView(),
+                        ),
+                      ),
                     );
                   },
                 ),
@@ -291,7 +283,7 @@ class _HobbiesRow extends StatelessWidget {
 
   _buildHobbies(UpdateBioState state, BuildContext context) {
     List<Widget> chips = List();
-    state.hobbies.value.forEach((element) {
+    state.user.hobbies.forEach((element) {
       chips.add(
         Container(
           padding: const EdgeInsets.all(2.0),
@@ -299,7 +291,7 @@ class _HobbiesRow extends StatelessWidget {
             deleteIconColor: Colors.white,
             onDeleted: () {
               List<String> temp = [];
-              state.hobbies.value.forEach((element) {
+              state.user.hobbies.forEach((element) {
                 temp.add(element);
               });
               temp.remove(element);
@@ -321,5 +313,42 @@ class _HobbiesRow extends StatelessWidget {
     return Wrap(
       children: chips,
     );
+  }
+}
+
+class _UpdateButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<UpdateBioCubit, UpdateBioState>(
+        builder: (context, state) {
+          if (state.updateProgress == UpdateBioProgress.submissionInProgress) {
+            return Center(
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+              ),
+            );
+          }
+          if (state.bioStatus != BioStatus.unknown &&
+              state.bioStatus != BioStatus.unchanged) {
+            return Center(
+              child: RaisedButton(
+                color: Colors.blue.withOpacity(0.8),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Text(
+                  'Cập nhật',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                onPressed: () {
+                  context.read<UpdateBioCubit>().updateBioUser();
+                },
+              ),
+            );
+          }
+          return Container();
+        });
   }
 }

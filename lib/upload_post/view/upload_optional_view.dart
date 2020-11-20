@@ -15,38 +15,54 @@ class UploadOptionalView extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0.5,
       ),
-      body: ListView(
-        children: [
-          const SizedBox(
-            height: 15,
-          ),
-          _PickSolutionFile(),
-          const Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10),
-            child: Divider(),
-          ),
-          _YearRow(),
-          const Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10),
-            child: Divider(),
-          ),
-          _SemesterRow(),
-          const Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10),
-            child: Divider(),
-          ),
-          _CreditsRow(),
-          const Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10),
-            child: Divider(),
-          ),
-          _MajorRow(),
-          const Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10),
-            child: Divider(),
-          ),
-          _LecturersInput(),
-        ],
+      body: BlocListener<UploadPostCubit, UploadPostState>(
+        listener: (context, state) {
+          if (state.solutionFileStatus == FileStatus.pickedWithOverSize) {
+            Scaffold.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                const SnackBar(
+                  elevation: 10.0,
+                  backgroundColor: Colors.blue,
+                  behavior: SnackBarBehavior.floating,
+                  content: Text('Không thể upload file lớn hơn 25mb!'),
+                ),
+              );
+          }
+        },
+        child: ListView(
+          children: [
+            const SizedBox(
+              height: 10,
+            ),
+            _YearRow(),
+            const Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10),
+              child: Divider(),
+            ),
+            _SemesterRow(),
+            const Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10),
+              child: Divider(),
+            ),
+            _CreditsRow(),
+            const Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10),
+              child: Divider(),
+            ),
+            _MajorRow(),
+            const Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10),
+              child: Divider(),
+            ),
+            _LecturersInput(),
+            const Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10),
+              child: Divider(),
+            ),
+            _PickSolutionFile(),
+          ],
+        ),
       ),
     );
   }
@@ -57,7 +73,7 @@ class _PickSolutionFile extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<UploadPostCubit, UploadPostState>(
         buildWhen: (previous, current) =>
-            previous.post.solutionFile != current.post.solutionFile,
+            previous.solutionFileStatus != current.solutionFileStatus,
         builder: (context, state) {
           return Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -72,30 +88,43 @@ class _PickSolutionFile extends StatelessWidget {
               GestureDetector(
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child: Text(
-                      state.post.solutionFile.isNotEmpty
-                          ? state.post.solutionFile.fileName
-                          : 'Thêm đáp án gợi ý',
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 15,
-                        letterSpacing: 1.0,
-                        height: 1.5,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 5 / 8,
+                      child: Text(
+                        state.post.solutionFile.isNotEmpty
+                            ? state.post.solutionFile.fileName
+                            : 'Thêm đáp án gợi ý nếu tài liệu của bạn là đề thi',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: 15,
+                          letterSpacing: 1.0,
+                          height: 1.5,
+                        ),
+                        maxLines: 5,
                       ),
                     ),
                   ),
                   onTap: () =>
                       context.read<UploadPostCubit>().pickSolutionFile()),
               Spacer(),
-              if (state.post.solutionFile.isNotEmpty)
-                IconButton(
-                  icon: Icon(
-                    Icons.clear,
-                    color: Colors.grey,
-                  ),
-                  onPressed: () =>
-                      context.read<UploadPostCubit>().clearSolutionFile(),
-                ),
+              state.solutionFileStatus == FileStatus.pickFileInProgress
+                  ? CircularProgressIndicator(
+                      strokeWidth: 2,
+                    )
+                  : state.post.solutionFile.isNotEmpty
+                      ? IconButton(
+                          icon: Icon(
+                            Icons.clear,
+                            color: Colors.black54,
+                          ),
+                          onPressed: () => context
+                              .read<UploadPostCubit>()
+                              .clearSolutionFile(),
+                        )
+                      : SizedBox(),
+              const SizedBox(
+                width: 10,
+              ),
             ],
           );
         });
@@ -151,11 +180,14 @@ class _YearRow extends StatelessWidget {
                 IconButton(
                   icon: Icon(
                     Icons.clear,
-                    color: Colors.grey,
+                    color: Colors.black54,
                   ),
                   onPressed: () =>
                       context.read<UploadPostCubit>().yearChanged(''),
                 ),
+              const SizedBox(
+                width: 5,
+              ),
             ],
           );
         });
@@ -355,11 +387,14 @@ class _MajorRow extends StatelessWidget {
                 IconButton(
                   icon: Icon(
                     Icons.clear,
-                    color: Colors.grey,
+                    color: Colors.black54,
                   ),
                   onPressed: () =>
                       context.read<UploadPostCubit>().majorChanged(''),
                 ),
+              const SizedBox(
+                width: 5,
+              ),
             ],
           );
         });

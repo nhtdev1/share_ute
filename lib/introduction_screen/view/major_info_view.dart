@@ -41,7 +41,8 @@ final List<String> majorList = const [
   "Ngôn ngữ Anh",
 ];
 
-PageViewModel _buildMajorPageModel({Widget image, PageDecoration pageDecoration}) {
+PageViewModel _buildMajorPageModel(
+    {Widget image, PageDecoration pageDecoration}) {
   return PageViewModel(
     title: "Bạn học ngành?",
     bodyWidget: BlocBuilder<IntroductionCubit, IntroductionState>(
@@ -51,18 +52,19 @@ PageViewModel _buildMajorPageModel({Widget image, PageDecoration pageDecoration}
           majors.add(Card(
             child: Center(
               child: ListTile(
-                trailing: state.major.value == element
+                trailing: state.user.major == element
                     ? Icon(
                         Icons.check_circle_rounded,
-                        color: Colors.lightGreenAccent,
+                        color: Colors.lightBlue,
                       )
                     : null,
                 title: Text(
                   element,
                   style: TextStyle(
-                    fontWeight: state.major.value == element
-                        ? FontWeight.bold
-                        : null,
+                    color:
+                        state.user.major == element ? Colors.lightBlue : null,
+                    fontWeight:
+                        state.user.major == element ? FontWeight.bold : null,
                   ),
                 ),
                 onTap: () {

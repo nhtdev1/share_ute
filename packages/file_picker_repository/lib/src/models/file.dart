@@ -29,5 +29,21 @@ class File extends Equatable {
     fileSize: '',
   );
 
+  File copyWith({
+    String path,
+    String fileName,
+    String fileExtension,
+    String fileSize,
+  }) {
+    return File(
+      path: path ?? this.path,
+      fileName: fileName ?? this.fileName,
+      fileExtension: fileExtension ?? this.fileExtension,
+      fileSize: fileSize ?? this.fileSize,
+    );
+  }
+
+  bool get isEmpty => path.isEmpty;
+
   bool get isNotEmpty => path.isNotEmpty;
 }

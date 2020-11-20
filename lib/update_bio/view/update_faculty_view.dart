@@ -18,7 +18,7 @@ class UpdateFacultyView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<UpdateBioCubit, UpdateBioState>(
       buildWhen: (previous, current) =>
-          previous.faculty.value != current.faculty.value,
+          previous.user.faculty != current.user.faculty,
       builder: (context, state) {
         List<Widget> tiles = List();
         data.forEach((element) {
@@ -34,7 +34,7 @@ class UpdateFacultyView extends StatelessWidget {
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20.0),
-                        border: state.faculty.value == element
+                        border: state.user.faculty == element
                             ? Border.all(
                                 color: Colors.lightBlue,
                                 width: 1.5,
@@ -55,7 +55,7 @@ class UpdateFacultyView extends StatelessWidget {
                         ),
                       ),
                     ),
-                    if (state.faculty.value == element)
+                    if (state.user.faculty == element)
                       Positioned(
                         top: 5.0,
                         right: 5.0,
@@ -69,7 +69,7 @@ class UpdateFacultyView extends StatelessWidget {
                   ],
                 ),
                 onTap: () {
-                  if (state.faculty.value != element) {
+                  if (state.user.faculty != element) {
                     context.read<UpdateBioCubit>().facultyChanged(element);
                   } else {
                     context.read<UpdateBioCubit>().facultyChanged('');
@@ -93,7 +93,7 @@ class UpdateFacultyView extends StatelessWidget {
               shrinkWrap: true,
               childAspectRatio: (MediaQuery.of(context).size.width / 2) /
                   ((MediaQuery.of(context).size.height -
-                      AppBar().preferredSize.height) /
+                          AppBar().preferredSize.height) /
                       4),
               crossAxisCount: 1,
               mainAxisSpacing: 10.0,

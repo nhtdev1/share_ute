@@ -9,22 +9,22 @@ enum FirestoreUserStatus {
 
 class FirestoreUserState extends Equatable {
   const FirestoreUserState._({
-    this.user = FirestoreUser.empty,
+    this.user = User.empty,
     this.status = FirestoreUserStatus.unknown,
   });
 
-  final FirestoreUser user;
+  final User user;
   final FirestoreUserStatus status;
 
   const FirestoreUserState.unknown() : this._();
 
-  const FirestoreUserState.updatedUser(FirestoreUser user)
+  const FirestoreUserState.updatedUser(User user)
       : this._(status: FirestoreUserStatus.updatedUser, user: user);
 
   const FirestoreUserState.authenticatedWithNewUser()
       : this._(status: FirestoreUserStatus.authenticatedWithNewUser);
 
-  const FirestoreUserState.authenticatedWithOldUser(FirestoreUser user)
+  const FirestoreUserState.authenticatedWithOldUser(User user)
       : this._(
             status: FirestoreUserStatus.authenticatedWithOldUser, user: user);
 

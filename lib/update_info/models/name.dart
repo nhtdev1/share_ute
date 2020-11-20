@@ -19,4 +19,9 @@ class Name extends FormzInput<String, NameValidationError> {
   NameValidationError validator(String value) {
     return _nameRegExp.hasMatch(value) == true ? null : NameValidationError.invalid;
   }
+
+  bool get isEmpty => value.isEmpty;
+
+  bool get isNotEmpty => value.isNotEmpty;
+
 }

@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:formz/formz.dart';
 import 'package:meta/meta.dart';
 import 'package:share_ute/firestore_user/firestore_user.dart';
 import 'package:user_repository/user_repository.dart';
@@ -16,55 +15,75 @@ class UpdateBioCubit extends Cubit<UpdateBioState> {
         _firestoreUserRepository = firestoreUserRepository,
         super(
           UpdateBioState(
-            year: Year.dirty(firestoreUserBloc.state.user.year),
-            faculty: Faculty.dirty(firestoreUserBloc.state.user.faculty),
-            major: Major.dirty(firestoreUserBloc.state.user.major),
-            hobbies: Hobbies.dirty(firestoreUserBloc.state.user.hobbies),
+            user: User(
+              year: firestoreUserBloc.state.user.year,
+              faculty: firestoreUserBloc.state.user.faculty,
+              major: firestoreUserBloc.state.user.major,
+              hobbies: firestoreUserBloc.state.user.hobbies,
+            ),
           ),
         );
 
   final FirestoreUserRepository _firestoreUserRepository;
 
   void yearChanged(String value) {
-    final year = Year.dirty(value);
-    emit(state.copyWith(
-      year: year,
-    ));
+    emit(
+      state.copyWith(
+        user: state.user.copyWith(
+          year: value,
+        ),
+        bioStatus: BioStatus.yearChanged,
+      ),
+    );
   }
 
   void facultyChanged(String value) {
-    final faculty = Faculty.dirty(value);
-    emit(state.copyWith(
-      faculty: faculty,
-    ));
+    emit(
+      state.copyWith(
+        user: state.user.copyWith(
+          faculty: value,
+        ),
+        bioStatus: BioStatus.facultyChanged,
+      ),
+    );
   }
 
   void majorChanged(String value) {
-    final major = Major.dirty(value);
-    emit(state.copyWith(
-      major: major,
-    ));
+    emit(
+      state.copyWith(
+        user: state.user.copyWith(
+          major: value,
+        ),
+        bioStatus: BioStatus.majorChanged,
+      ),
+    );
   }
 
   void hobbiesChanged(List<String> value) {
-    final hobbies = Hobbies.dirty(value);
-    emit(state.copyWith(
-      hobbies: hobbies,
-    ));
+    emit(
+      state.copyWith(
+        user: state.user.copyWith(
+          hobbies: value,
+        ),
+        bioStatus: BioStatus.hobbiesChanged,
+      ),
+    );
   }
 
   Future<void> updateBioUser() async {
-    emit(state.copyWith(status: FormzStatus.submissionInProgress));
-    try {
-      await _firestoreUserRepository.updateUserBio(
-        year: state.year.value,
-        faculty: state.faculty.value,
-        major: state.major.value,
-        hobbies: state.hobbies.value,
-      );
-      emit(state.copyWith(status: FormzStatus.submissionSuccess));
-    } on Exception {
-      emit(state.copyWith(status: FormzStatus.submissionFailure));
-    }
+    emit(
+        state.copyWith(updateProgress: UpdateBioProgress.submissionInProgress));
+    final result = await _firestoreUserRepository.updateUserBio(
+      user: state.user,
+    );
+    result
+        ? emit(
+            state.copyWith(updateProgress: UpdateBioProgress.submissionSuccess))
+        : emit(state.copyWith(
+            updateProgress: UpdateBioProgress.submissionFailure));
+    emit(state.copyWith(
+      bioStatus: BioStatus.unchanged,
+      updateProgress: UpdateBioProgress.unknown,
+    ));
   }
 }

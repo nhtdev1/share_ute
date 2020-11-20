@@ -18,7 +18,7 @@ PageViewModel _buildYearPageModel({Widget image, PageDecoration pageDecoration})
     decoration: pageDecoration,
     bodyWidget: BlocBuilder<IntroductionCubit, IntroductionState>(
       buildWhen: (previous, current) =>
-          previous.year.value != current.year.value,
+          previous.user.year != current.user.year,
       builder: (context, state) {
         List<Widget> choices = List();
         yearList.forEach((element) {
@@ -26,7 +26,7 @@ PageViewModel _buildYearPageModel({Widget image, PageDecoration pageDecoration})
             padding: const EdgeInsets.all(2.0),
             child: ChoiceChip(
               label: Text(element),
-              selected: state.year.value == element,
+              selected: state.user.year == element,
               onSelected: (selected) {
                 context.read<IntroductionCubit>().yearChanged(element);
               },

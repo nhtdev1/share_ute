@@ -22,24 +22,24 @@ class UpdateHobbiesView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<UpdateBioCubit, UpdateBioState>(
       buildWhen: (previous, current) =>
-          previous.hobbies.value != current.hobbies.value,
+          previous.user.hobbies != current.user.hobbies,
       builder: (context, state) {
         List<Widget> tiles = List();
         data.forEach((element) {
           tiles.add(Container(
             padding: const EdgeInsets.all(2.0),
             child: ChoiceChip(
-              avatar: state.hobbies.value.contains(element)
+              avatar: state.user.hobbies.contains(element)
                   ? Icon(
                       Icons.check_circle_outline,
                       color: Colors.lightBlueAccent,
                     )
                   : null,
               label: Text(element),
-              selected: state.hobbies.value.contains(element),
+              selected: state.user.hobbies.contains(element),
               onSelected: (selected) {
                 List<String> temp = [];
-                state.hobbies.value.forEach((element) {
+                state.user.hobbies.forEach((element) {
                   temp.add(element);
                 });
                 temp.contains(element)

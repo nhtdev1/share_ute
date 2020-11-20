@@ -32,27 +32,36 @@ class UploadPostCubit extends Cubit<UploadPostState> {
   }
 
   void accessModifiersChanged(String value) {
-    emit(state.copyWith(
-      post: state.post.copyWith(
-        public: value == 'Công khai' ? 'true' : 'false',
+    emit(
+      state.copyWith(
+        post: state.post.copyWith(
+          public: value == 'Công khai' ? 'true' : 'false',
+        ),
+        postStatus: PostStatus.changed,
       ),
-    ));
+    );
   }
 
   void postTitleChanged(String value) {
-    emit(state.copyWith(
-      post: state.post.copyWith(
-        postTitle: value,
+    emit(
+      state.copyWith(
+        post: state.post.copyWith(
+          postTitle: value,
+        ),
+        postStatus: PostStatus.changed,
       ),
-    ));
+    );
   }
 
   void postTagsChanged(List<String> value) {
-    emit(state.copyWith(
-      post: state.post.copyWith(
-        postTags: value,
+    emit(
+      state.copyWith(
+        post: state.post.copyWith(
+          postTags: value,
+        ),
+        postStatus: PostStatus.changed,
       ),
-    ));
+    );
   }
 
   void yearChanged(String value) {
@@ -60,6 +69,7 @@ class UploadPostCubit extends Cubit<UploadPostState> {
       post: state.post.copyWith(
         postYear: value,
       ),
+      postStatus: PostStatus.changed,
     ));
   }
 
@@ -68,6 +78,7 @@ class UploadPostCubit extends Cubit<UploadPostState> {
       post: state.post.copyWith(
         credit: value,
       ),
+      postStatus: PostStatus.changed,
     ));
   }
 
@@ -76,6 +87,7 @@ class UploadPostCubit extends Cubit<UploadPostState> {
       post: state.post.copyWith(
         semester: value,
       ),
+      postStatus: PostStatus.changed,
     ));
   }
 
@@ -84,6 +96,7 @@ class UploadPostCubit extends Cubit<UploadPostState> {
       post: state.post.copyWith(
         major: value,
       ),
+      postStatus: PostStatus.changed,
     ));
   }
 
@@ -92,21 +105,37 @@ class UploadPostCubit extends Cubit<UploadPostState> {
       post: state.post.copyWith(
         lecturer: value,
       ),
+      postStatus: PostStatus.changed,
     ));
   }
 
   Future<void> pickOriginalFile() async {
+    emit(state.copyWith(
+      originalFileStatus: FileStatus.pickFileInProgress,
+    ));
     final file = await _filePickerRepository.pickFile();
-    file != File.empty
-        ? emit(state.copyWith(
-            post: state.post.copyWith(
-              originalFile: file,
-            ),
-            originalFileStatus: FileStatus.pickedWithAcceptableSize,
-          ))
-        : emit(state.copyWith(
-            originalFileStatus: FileStatus.error,
-          ));
+    if (file.isNotEmpty) {
+      if (int.parse(file.fileSize) > 25000) {
+        emit(state.copyWith(
+          originalFileStatus: FileStatus.pickedWithOverSize,
+        ));
+      } else {
+        emit(state.copyWith(
+          post: state.post.copyWith(
+            originalFile: file,
+          ),
+          originalFileStatus: FileStatus.pickedWithAcceptableSize,
+          postStatus: PostStatus.changed,
+        ));
+      }
+      emit(state.copyWith(
+        originalFileStatus: FileStatus.unknown,
+      ));
+    } else {
+      emit(state.copyWith(
+        originalFileStatus: FileStatus.pickedError,
+      ));
+    }
   }
 
   void clearOriginalFile() {
@@ -115,17 +144,37 @@ class UploadPostCubit extends Cubit<UploadPostState> {
         originalFile: File.empty,
       ),
       originalFileStatus: FileStatus.cleared,
+      postStatus: PostStatus.changed,
     ));
   }
 
   Future<void> pickSolutionFile() async {
-    final file = await _filePickerRepository.pickFile();
     emit(state.copyWith(
-      post: state.post.copyWith(
-        solutionFile: file,
-      ),
-      solutionFileStatus: FileStatus.pickedWithAcceptableSize,
+      solutionFileStatus: FileStatus.pickFileInProgress,
     ));
+    final file = await _filePickerRepository.pickFile();
+    if (file.isNotEmpty) {
+      if (int.parse(file.fileSize) > 25000) {
+        emit(state.copyWith(
+          solutionFileStatus: FileStatus.pickedWithOverSize,
+        ));
+      } else {
+        emit(state.copyWith(
+          post: state.post.copyWith(
+            solutionFile: file,
+          ),
+          solutionFileStatus: FileStatus.pickedWithAcceptableSize,
+          postStatus: PostStatus.changed,
+        ));
+      }
+      emit(state.copyWith(
+        solutionFileStatus: FileStatus.unknown,
+      ));
+    } else {
+      emit(state.copyWith(
+        solutionFileStatus: FileStatus.pickedError,
+      ));
+    }
   }
 
   void clearSolutionFile() {
@@ -134,6 +183,7 @@ class UploadPostCubit extends Cubit<UploadPostState> {
         solutionFile: File.empty,
       ),
       solutionFileStatus: FileStatus.cleared,
+      postStatus: PostStatus.changed,
     ));
   }
 
@@ -154,25 +204,25 @@ class UploadPostCubit extends Cubit<UploadPostState> {
           );
           if (result == true) {
             emit(state.copyWith(
-              postStatus: PostStatus.success,
+              uploadPostProgress: UploadPostProgress.submissionSuccess,
             ));
           } else {
             emit(state.copyWith(
-              postStatus: PostStatus.error,
+              uploadPostProgress: UploadPostProgress.submissionFailure,
             ));
           }
         } else if (taskSnapshot.state == TaskState.running) {
           emit(state.copyWith(
-            postStatus: PostStatus.running,
+            uploadPostProgress: UploadPostProgress.submissionInProgress,
           ));
         } else if (taskSnapshot.state == TaskState.error) {
           emit(state.copyWith(
-            postStatus: PostStatus.error,
+            uploadPostProgress: UploadPostProgress.submissionFailure,
           ));
         }
       } else {
         emit(state.copyWith(
-          postStatus: PostStatus.error,
+          uploadPostProgress: UploadPostProgress.submissionFailure,
         ));
       }
     });

@@ -8,7 +8,7 @@ class UploadPostForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<UploadPostCubit, UploadPostState>(
       listener: (context, state) {
-        if (state.postStatus == PostStatus.error) {
+        if (state.uploadPostProgress == UploadPostProgress.submissionFailure) {
           Scaffold.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
@@ -19,7 +19,8 @@ class UploadPostForm extends StatelessWidget {
                 content: Text('Tạo bài đăng thất bại!'),
               ),
             );
-        } else if (state.postStatus == PostStatus.success) {
+        } else if (state.uploadPostProgress ==
+            UploadPostProgress.submissionSuccess) {
           Scaffold.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
@@ -30,8 +31,7 @@ class UploadPostForm extends StatelessWidget {
                 content: Text('Tạo bài đăng thành công!'),
               ),
             );
-        } else if (state.originalFileStatus == FileStatus.pickedWithOverSize ||
-            state.solutionFileStatus == FileStatus.pickedWithOverSize) {
+        } else if (state.originalFileStatus == FileStatus.pickedWithOverSize) {
           Scaffold.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
@@ -39,7 +39,7 @@ class UploadPostForm extends StatelessWidget {
                 elevation: 10.0,
                 backgroundColor: Colors.blue,
                 behavior: SnackBarBehavior.floating,
-                content: Text('Không thể upload file lớn hơn 20mb!'),
+                content: Text('Không thể upload file lớn hơn 25mb!'),
               ),
             );
         }
@@ -87,7 +87,7 @@ class _ModifiersDropDown extends StatelessWidget {
           previous.post.public != current.post.public,
       builder: (context, state) {
         return Padding(
-          padding: const EdgeInsets.only(left: 15.0),
+          padding: const EdgeInsets.only(left: 10.0),
           child: DropdownButton<String>(
             value: state.post.public == 'true' ? 'Công khai' : 'Riêng tư',
             icon: Icon(Icons.arrow_drop_down),
@@ -119,11 +119,17 @@ class _PostButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<UploadPostCubit, UploadPostState>(
       builder: (context, state) {
-        if (state.postStatus == PostStatus.running) {
-          return SizedBox(
-            child: CircularProgressIndicator(
-              strokeWidth: 1.0,
-            ),
+        if (state.uploadPostProgress ==
+            UploadPostProgress.submissionInProgress) {
+          return Row(
+            children: [
+              CircularProgressIndicator(
+                strokeWidth: 1,
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+            ],
           );
         }
         if (state.post.isNotEmpty)
@@ -142,7 +148,7 @@ class _PostButton extends StatelessWidget {
               },
             ),
           );
-        return Container();
+        return SizedBox();
       },
     );
   }
@@ -160,16 +166,17 @@ class _TitleInput extends StatelessWidget {
           key: const Key('uploadPostForm_titleInput_textField'),
           style: TextStyle(
             fontSize: 20.0,
-            color: Colors.black87,
+            color: Colors.black54,
           ),
           keyboardType: TextInputType.multiline,
           maxLines: 10,
           minLines: 10,
           onChanged: (title) =>
-              context.read<UploadPostCubit>().postTitleChanged(title),
+              context.read<UploadPostCubit>().postTitleChanged(title.trim()),
           decoration: InputDecoration(
             hintStyle: TextStyle(
               fontSize: 20,
+              color: Colors.black54,
             ),
             hintText: 'Mô tả về tài liệu của bạn...',
             fillColor: Colors.white,
@@ -191,41 +198,58 @@ class _PickOriginalFile extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<UploadPostCubit, UploadPostState>(
         buildWhen: (previous, current) =>
-            previous.post.originalFile != current.post.originalFile,
+            previous.originalFileStatus != current.originalFileStatus,
         builder: (context, state) {
           return Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
                 width: MediaQuery.of(context).size.width * 1 / 8,
-                child: Icon(Icons.attach_file),
+                child: Icon(
+                  Icons.attach_file,
+                  color: Colors.black54,
+                ),
               ),
               GestureDetector(
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: Text(
-                    state.post.originalFile.isNotEmpty
-                        ? state.post.originalFile.fileName
-                        : 'Chọn tài liệu',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontSize: 15,
-                      letterSpacing: 1.0,
-                      height: 1.5,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 5 / 8,
+                    child: Text(
+                      state.post.originalFile.isNotEmpty
+                          ? state.post.originalFile.fileName
+                          : 'Chọn tài liệu',
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 15,
+                        letterSpacing: 1.0,
+                        height: 1.5,
+                      ),
+                      maxLines: 5,
                     ),
                   ),
                 ),
                 onTap: () => context.read<UploadPostCubit>().pickOriginalFile(),
               ),
               Spacer(),
-              if (state.post.originalFile.isNotEmpty)
-                IconButton(
-                  icon: Icon(
-                    Icons.clear,
-                  ),
-                  onPressed: () =>
-                      context.read<UploadPostCubit>().clearOriginalFile(),
-                ),
+              state.originalFileStatus == FileStatus.pickFileInProgress
+                  ? CircularProgressIndicator(
+                      strokeWidth: 1,
+                    )
+                  : state.post.originalFile.isNotEmpty
+                      ? IconButton(
+                          icon: Icon(
+                            Icons.clear,
+                            color: Colors.black54,
+                          ),
+                          onPressed: () => context
+                              .read<UploadPostCubit>()
+                              .clearOriginalFile(),
+                        )
+                      : SizedBox(),
+              const SizedBox(
+                width: 10,
+              ),
             ],
           );
         });
@@ -240,17 +264,21 @@ class _TagsRow extends StatelessWidget {
             previous.post.postTags != current.post.postTags,
         builder: (context, state) {
           return Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
                 width: MediaQuery.of(context).size.width * 1 / 8,
-                child: Icon(Icons.label_outline),
+                child: Icon(
+                  Icons.label_outline,
+                  color: Colors.black54,
+                ),
               ),
               Expanded(
                 child: GestureDetector(
                   child: ListView(
                     padding: const EdgeInsets.all(10.0),
                     shrinkWrap: true,
+                    physics: const ClampingScrollPhysics(),
                     children: [
                       _buildTags(state, context),
                       if (!state.post.postTags.isNotEmpty)
@@ -327,11 +355,14 @@ class _OptionalRow extends StatelessWidget {
       buildWhen: (previous, current) => previous.post != current.post,
       builder: (context, state) {
         return Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
               width: MediaQuery.of(context).size.width * 1 / 8,
-              child: Icon(Icons.more_horiz_outlined),
+              child: Icon(
+                Icons.more_horiz_outlined,
+                color: Colors.black54,
+              ),
             ),
             Expanded(
               child: GestureDetector(
@@ -341,7 +372,7 @@ class _OptionalRow extends StatelessWidget {
                   children: [
                     Container(
                       child: Text(
-                        state.post.isNotEmpty
+                        state.post.hasOptionalInfo
                             ? 'Đã bổ sung thêm thông tin'
                             : 'Thêm thông tin (không bắt buộc)',
                         style: TextStyle(

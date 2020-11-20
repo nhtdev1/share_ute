@@ -9,16 +9,32 @@ import 'package:image_picker/image_picker.dart';
 class FilePickerRepository {
   final imagePicker = ImagePicker();
 
-  Future<PickedFile> pickImageFromCamera() async {
-    return imagePicker.getImage(source: ImageSource.camera);
+  Future<file_picker.File> pickImageFromCamera() async {
+    final result = await imagePicker.getImage(source: ImageSource.camera);
+    if (result != null) {
+      return file_picker.File(
+        path: result.path,
+      );
+    } else {
+      return file_picker.File.empty;
+    }
   }
 
-  Future<PickedFile> pickImageFromGallery() async {
-    return imagePicker.getImage(source: ImageSource.gallery);
+  Future<file_picker.File> pickImageFromGallery() async {
+    final result = await imagePicker.getImage(source: ImageSource.gallery);
+    if (result != null) {
+      final size = await result.readAsBytes();
+      return file_picker.File(
+        path: result.path,
+        fileSize: size.length.toString(),
+      );
+    } else {
+      return file_picker.File.empty;
+    }
   }
 
-  Future<File> cropImage(String path) async {
-    return ImageCropper.cropImage(
+  Future<file_picker.File> cropImage(String path) async {
+    final result = await ImageCropper.cropImage(
       sourcePath: path,
       aspectRatioPresets: [
         CropAspectRatioPreset.square,
@@ -33,6 +49,16 @@ class FilePickerRepository {
           initAspectRatio: CropAspectRatioPreset.original,
           lockAspectRatio: false),
     );
+
+    if (result != null) {
+      final size = await result.readAsBytes();
+      return file_picker.File(
+        path: result.path,
+        fileSize: size.length.toString(),
+      );
+    } else {
+      return file_picker.File.empty;
+    }
   }
 
   Future<file_picker.File> pickFile() async {

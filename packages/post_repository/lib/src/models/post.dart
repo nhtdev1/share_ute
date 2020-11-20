@@ -95,4 +95,12 @@ class Post extends Equatable {
   }
 
   bool get isNotEmpty => postTitle.isNotEmpty && originalFile.isNotEmpty;
+
+  bool get hasOptionalInfo =>
+      solutionFile.isNotEmpty ||
+      postYear.isNotEmpty ||
+      semester.isNotEmpty ||
+      credit.isNotEmpty ||
+      major.isNotEmpty ||
+      lecturer.isNotEmpty;
 }

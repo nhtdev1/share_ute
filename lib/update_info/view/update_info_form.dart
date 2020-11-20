@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_picker/Picker.dart';
+import 'package:share_ute/firestore_user/firestore_user.dart';
 import 'package:share_ute/update_info/update_info.dart';
 import 'package:formz/formz.dart';
 
@@ -13,13 +14,23 @@ class UpdateInfoForm extends StatelessWidget {
           Scaffold.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
-              const SnackBar(content: Text('Cập nhật thất bại!')),
+              const SnackBar(
+                elevation: 10.0,
+                backgroundColor: Colors.blue,
+                behavior: SnackBarBehavior.floating,
+                content: Text('Cập nhật thông tin thất bại'),
+              ),
             );
         } else if (state.status.isSubmissionSuccess) {
           Scaffold.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
-              const SnackBar(content: Text('Cập nhật thông tin thành công!')),
+              const SnackBar(
+                elevation: 10.0,
+                backgroundColor: Colors.blue,
+                behavior: SnackBarBehavior.floating,
+                content: Text('Cập nhật thông tin thành công'),
+              ),
             );
         }
       },
@@ -49,7 +60,7 @@ class UpdateInfoForm extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Text(
-                      'blv.tu97@gmail.com',
+                      context.watch<FirestoreUserBloc>().state.user.email,
                       style: TextStyle(
                         fontSize: 16,
                       ),
@@ -147,14 +158,14 @@ class _BirthdayPicker extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Text(
-                  state.birthday.date == '' ? 'Không rõ' : state.birthday.date,
+                  state.birthday.isEmpty ? 'Không rõ' : state.birthday.value,
                   style: TextStyle(
                     fontSize: 16,
                   ),
                 ),
               ),
               onTap: () {
-                showPickerDate(context, state.birthday.date);
+                showPickerDate(context, state.birthday.value);
               },
             )
           ],
@@ -166,7 +177,11 @@ class _BirthdayPicker extends StatelessWidget {
   showPickerDate(BuildContext context, String bd) {
     final now = DateTime.now();
     if (bd == '')
-      bd = now.day.toString() +"/"+ now.month.toString() +"/"+ now.year.toString();
+      bd = now.day.toString() +
+          "/" +
+          now.month.toString() +
+          "/" +
+          now.year.toString();
     List<int> b = bd.split("/").map<int>((e) => int.parse(e)).toList();
     Picker(
         hideHeader: true,
@@ -192,7 +207,7 @@ class _MobileInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<UpdateInfoCubit, UpdateInfoState>(
-      buildWhen: (previous, current) => previous.mobile != current.mobile,
+      buildWhen: (previous, current) => previous.phone != current.phone,
       builder: (context, state) {
         return Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -220,15 +235,16 @@ class _MobileInput extends StatelessWidget {
                 ),
                 key: const Key('updateForm_mobileInput_textField'),
                 onChanged: (mobile) =>
-                    context.read<UpdateInfoCubit>().mobileChanged(mobile),
+                    context.read<UpdateInfoCubit>().phoneChanged(mobile),
                 keyboardType: TextInputType.phone,
                 decoration: InputDecoration(
                     hintStyle: TextStyle(
                       fontSize: 16,
                       color: Theme.of(context).primaryColor,
                     ),
-                    hintText: state.mobile.value,
-                    errorText: state.mobile.invalid ? 'số điện thoại đang trống' : null,
+                    hintText: state.phone.value,
+                    errorText:
+                        state.phone.invalid ? 'số điện thoại đang trống' : null,
                     border: InputBorder.none),
               ),
             ),
@@ -243,33 +259,34 @@ class _UpdateButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<UpdateInfoCubit, UpdateInfoState>(
-      buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
-        return state.status.isSubmissionInProgress
-            ? Center(
-                child: const CircularProgressIndicator(
-                  strokeWidth: 1,
+        if (state.status.isSubmissionInProgress) {
+          return Center(
+            child: const CircularProgressIndicator(
+              strokeWidth: 2,
+            ),
+          );
+        }
+        if (state.status.isValidated &&
+            state.infoStatus == InfoStatus.changed) {
+          return Center(
+            child: RaisedButton(
+              key: const Key('updateForm_continue_raisedButton'),
+              color: Colors.blue.withOpacity(0.8),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Text(
+                'Cập nhật',
+                style: TextStyle(
+                  color: Colors.white,
                 ),
-              )
-            : Center(
-                child: RaisedButton(
-                  key: const Key('updateForm_continue_raisedButton'),
-                  color: Colors.blue.withOpacity(0.8),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Text(
-                    'Cập nhật',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                  onPressed: state.status.isValidated
-                      ? () =>
-                          context.read<UpdateInfoCubit>().updateFirestoreUser()
-                      : null,
-                ),
-              );
+              ),
+              onPressed: () => context.read<UpdateInfoCubit>().updateUser(),
+            ),
+          );
+        }
+        return Container();
       },
     );
   }

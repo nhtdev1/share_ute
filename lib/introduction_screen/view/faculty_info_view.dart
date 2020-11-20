@@ -11,25 +11,26 @@ PageViewModel _buildFacultyPageModel(
     title: "Khoa của bạn là?",
     bodyWidget: BlocBuilder<IntroductionCubit, IntroductionState>(
       buildWhen: (previous, current) =>
-          previous.faculty.value != current.faculty.value,
+          previous.user.faculty != current.user.faculty,
       builder: (context, state) {
         List<Widget> faculties = List();
         facultyList.forEach((element) {
           faculties.add(Card(
             child: Center(
               child: ListTile(
-                trailing: state.faculty.value == element
+                trailing: state.user.faculty == element
                     ? Icon(
                         Icons.check_circle_rounded,
-                        color: Colors.lightGreenAccent,
+                        color: Colors.lightBlue,
                       )
                     : null,
                 title: Text(
                   element,
                   style: TextStyle(
-                    fontWeight: state.faculty.value == element
-                        ? FontWeight.bold
-                        : null,
+                    color:
+                        state.user.faculty == element ? Colors.lightBlue : null,
+                    fontWeight:
+                        state.user.faculty == element ? FontWeight.bold : null,
                   ),
                 ),
                 onTap: () {

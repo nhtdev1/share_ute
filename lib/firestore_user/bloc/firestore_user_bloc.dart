@@ -24,7 +24,7 @@ class FirestoreUserBloc extends Bloc<FirestoreUserEvent, FirestoreUserState> {
 
   final FirestoreUserRepository _firestoreUserRepository;
 
-  StreamSubscription<FirestoreUser> _userSubscription;
+  StreamSubscription<User> _userSubscription;
 
   @override
   Future<void> close() {
@@ -42,7 +42,7 @@ class FirestoreUserBloc extends Bloc<FirestoreUserEvent, FirestoreUserState> {
   FirestoreUserState _mapFirestoreUserChangedToState(
     FirestoreUserChanged event,
   ) {
-    if (event.user != FirestoreUser.empty) {
+    if (event.user != User.empty) {
       return state.status == FirestoreUserStatus.authenticatedWithOldUser
       || state.status == FirestoreUserStatus.updatedUser
           ? FirestoreUserState.updatedUser(event.user)

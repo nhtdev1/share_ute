@@ -25,8 +25,8 @@ class UpdateInfoPage extends StatelessWidget {
         padding: const EdgeInsets.all(10.0),
         child: BlocProvider<UpdateInfoCubit>(
           create: (BuildContext context) => UpdateInfoCubit(
-            context.read<FirestoreUserRepository>(),
-            context.read<FirestoreUserBloc>(),
+            firestoreUserRepository: context.read<FirestoreUserRepository>(),
+            firestoreUserBloc: context.read<FirestoreUserBloc>(),
           ),
           child: UpdateInfoForm(),
         ),

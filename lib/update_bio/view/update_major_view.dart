@@ -50,7 +50,7 @@ class UpdateMajorView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<UpdateBioCubit, UpdateBioState>(
       buildWhen: (previous, current) =>
-          previous.major.value != current.major.value,
+          previous.user.major != current.user.major,
       builder: (context, state) {
         List<Widget> tiles = List();
         data.forEach((element) {
@@ -62,7 +62,7 @@ class UpdateMajorView extends StatelessWidget {
               child: GestureDetector(
                 child: Container(
                   decoration: BoxDecoration(
-                    border: state.major.value == element
+                    border: state.user.major == element
                         ? Border.all(
                             color: Colors.lightBlue,
                             width: 1.5,
@@ -77,12 +77,12 @@ class UpdateMajorView extends StatelessWidget {
                         fontSize: 16,
                         letterSpacing: 1.0,
                         height: 1.5,
-                        fontWeight: state.major.value == element
+                        fontWeight: state.user.major == element
                             ? FontWeight.bold
                             : null,
                       ),
                     ),
-                    trailing: state.major.value == element
+                    trailing: state.user.major == element
                         ? IconButton(
                             icon: Icon(
                               Icons.check_circle,
@@ -93,7 +93,7 @@ class UpdateMajorView extends StatelessWidget {
                   ),
                 ),
                 onTap: () {
-                  if (state.major.value != element) {
+                  if (state.user.major != element) {
                     context.read<UpdateBioCubit>().majorChanged(element);
                   } else {
                     context.read<UpdateBioCubit>().majorChanged('');

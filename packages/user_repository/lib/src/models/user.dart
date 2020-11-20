@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-class FirestoreUser extends Equatable {
-  const FirestoreUser({
+class User extends Equatable {
+  const User({
     this.email,
     this.name,
     this.birthday,
@@ -34,7 +34,7 @@ class FirestoreUser extends Equatable {
 
   final List<String> hobbies;
 
-  static const empty = FirestoreUser(
+  static const empty = User(
     email: '',
     name: '',
     birthday: '',
@@ -48,10 +48,19 @@ class FirestoreUser extends Equatable {
 
   @override
   // TODO: implement props
-  List<Object> get props =>
-      [email, name, birthday, phone, photo, year, faculty, major, hobbies];
+  List<Object> get props => [
+        email,
+        name,
+        birthday,
+        phone,
+        photo,
+        year,
+        faculty,
+        major,
+        hobbies,
+      ];
 
-  FirestoreUser copyWith({
+  User copyWith({
     String email,
     String name,
     String birthday,
@@ -62,7 +71,7 @@ class FirestoreUser extends Equatable {
     String major,
     List<String> hobbies,
   }) {
-    return FirestoreUser(
+    return User(
       email: email ?? this.email,
       name: name ?? this.name,
       birthday: birthday ?? this.birthday,

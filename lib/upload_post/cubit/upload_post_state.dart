@@ -1,18 +1,25 @@
 part of 'upload_post_cubit.dart';
 
-enum FileStatus {
+enum PostStatus {
   unknown,
-  error,
-  cleared,
-  pickedWithOverSize,
-  pickedWithAcceptableSize,
+  unchanged,
+  changed,
 }
 
-enum PostStatus {
-  running,
-  success,
-  error,
+enum FileStatus {
   unknown,
+  cleared,
+  pickFileInProgress,
+  pickedWithOverSize,
+  pickedWithAcceptableSize,
+  pickedError,
+}
+
+enum UploadPostProgress {
+  unknown,
+  submissionInProgress,
+  submissionSuccess,
+  submissionFailure,
 }
 
 class UploadPostState extends Equatable {
@@ -21,12 +28,14 @@ class UploadPostState extends Equatable {
     this.postStatus = PostStatus.unknown,
     this.originalFileStatus = FileStatus.unknown,
     this.solutionFileStatus = FileStatus.unknown,
+    this.uploadPostProgress = UploadPostProgress.unknown,
   });
 
   final Post post;
   final PostStatus postStatus;
   final FileStatus originalFileStatus;
   final FileStatus solutionFileStatus;
+  final UploadPostProgress uploadPostProgress;
 
   @override
   // TODO: implement props
@@ -35,6 +44,7 @@ class UploadPostState extends Equatable {
         postStatus,
         originalFileStatus,
         solutionFileStatus,
+        uploadPostProgress,
       ];
 
   UploadPostState copyWith({
@@ -42,12 +52,14 @@ class UploadPostState extends Equatable {
     PostStatus postStatus,
     FileStatus originalFileStatus,
     FileStatus solutionFileStatus,
+    UploadPostProgress uploadPostProgress,
   }) {
     return UploadPostState(
       post: post ?? this.post,
       postStatus: postStatus ?? this.postStatus,
       originalFileStatus: originalFileStatus ?? this.originalFileStatus,
       solutionFileStatus: solutionFileStatus ?? this.solutionFileStatus,
+      uploadPostProgress: uploadPostProgress ?? this.uploadPostProgress,
     );
   }
 }

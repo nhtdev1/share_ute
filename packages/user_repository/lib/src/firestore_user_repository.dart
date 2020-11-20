@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 
-import 'models/models.dart';
+import 'models/user.dart' as firestore_user;
 
 class FirestoreUserRepository {
   FirestoreUserRepository({
@@ -13,18 +13,18 @@ class FirestoreUserRepository {
   final FirebaseFirestore _firebaseFirestore;
   final firebase_auth.FirebaseAuth _firebaseAuth;
 
-  Stream<FirestoreUser> get user {
+  Stream<firestore_user.User> get user {
     return _firebaseFirestore
         .collection('users')
         .doc(_firebaseAuth.currentUser.uid)
         .snapshots()
         .map((snapshot) {
       if (snapshot.exists) {
-        return FirestoreUser(
+        return firestore_user.User(
           name: snapshot['displayName'],
           email: snapshot['email'],
           birthday: snapshot['birthday'],
-          phone: snapshot['mobile'],
+          phone: snapshot['phone'],
           photo: snapshot['photoURL'],
           year: snapshot['year'],
           faculty: snapshot['faculty'],
@@ -33,81 +33,84 @@ class FirestoreUserRepository {
         );
       }
 
-      return FirestoreUser.empty;
+      return firestore_user.User.empty;
     });
   }
 
-  Future<void> updateUser({
-    String name,
-    String birthday,
-    String mobile,
+  Future<bool> updateUserInfo({
+    firestore_user.User user,
   }) async {
-    return _firebaseFirestore
-        .collection('users')
-        .doc(_firebaseAuth.currentUser.uid)
-        .update({
-          'displayName': name,
-          'birthday': birthday,
-          'mobile': mobile,
-        })
-        .then((value) => print('User info updated successfully!'))
-        .catchError((onError) => print('Failed to update user info:$onError'));
+    try {
+      await _firebaseFirestore
+          .collection('users')
+          .doc(_firebaseAuth.currentUser.uid)
+          .update({
+        'displayName': user.name,
+        'birthday': user.birthday,
+        'phone': user.phone,
+      });
+      return true;
+    } on Exception {
+      return false;
+    }
   }
 
-  Future<void> updateUserBio({
-    String year,
-    String faculty,
-    String major,
-    List<String> hobbies,
-  }) {
-    return _firebaseFirestore
-        .collection('users')
-        .doc(_firebaseAuth.currentUser.uid)
-        .update({
-          'year': year,
-          'faculty': faculty,
-          'major': major,
-          'hobbies': hobbies,
-        })
-        .then((value) => print('User bio updated successfully!'))
-        .catchError((onError) => print('Failed to update user bio: $onError'));
-  }
-
-  Future<void> createUser({
-    String year,
-    String faculty,
-    String major,
-    List<String> hobbies,
-  }) {
-    return _firebaseFirestore
-        .collection('users')
-        .doc(_firebaseAuth.currentUser.uid)
-        .set({
-          'email': _firebaseAuth.currentUser.email,
-          'displayName': _firebaseAuth.currentUser.displayName,
-          'photoURL': _firebaseAuth.currentUser.photoURL,
-          'birthday': '',
-          'mobile': '',
-          'year': year ?? '',
-          'faculty': faculty ?? '',
-          'major': major ?? '',
-          'hobbies': hobbies ?? '',
-        })
-        .then((value) => print('Create user on firestore successfully!'))
-        .catchError((onError) => print('Failed to create user: $onError'));
-  }
-
-  Future<void> updateAvatarUrl({
-    String url,
+  Future<bool> updateUserBio({
+    firestore_user.User user,
   }) async {
-    return _firebaseFirestore
-        .collection('users')
-        .doc(_firebaseAuth.currentUser.uid)
-        .update({
-          'photoURL': url,
-        })
-        .then((value) => print('User avatar updated successfully!'))
-        .catchError(
-            (onError) => print('Failed to update user avatar:$onError'));
+    try {
+      await _firebaseFirestore
+          .collection('users')
+          .doc(_firebaseAuth.currentUser.uid)
+          .update({
+        'year': user.year,
+        'faculty': user.faculty,
+        'major': user.major,
+        'hobbies': user.hobbies,
+      });
+      return true;
+    } on Exception {
+      return false;
+    }
+  }
+
+  Future<bool> createUser({
+    firestore_user.User user,
+  }) async {
+    try {
+      await _firebaseFirestore
+          .collection('users')
+          .doc(_firebaseAuth.currentUser.uid)
+          .set({
+        'email': _firebaseAuth.currentUser.email,
+        'displayName': _firebaseAuth.currentUser.displayName,
+        'photoURL': _firebaseAuth.currentUser.photoURL,
+        'birthday': user.birthday,
+        'phone': user.phone,
+        'year': user.year,
+        'faculty': user.faculty,
+        'major': user.major,
+        'hobbies': user.hobbies,
+      });
+      return true;
+    } on Exception {
+      return false;
+    }
+  }
+
+  Future<bool> updateUserAvatar({
+    String photoURL,
+  }) async {
+    try {
+      await _firebaseFirestore
+          .collection('users')
+          .doc(_firebaseAuth.currentUser.uid)
+          .update({
+        'photoURL': photoURL,
+      });
+      return true;
+    } on Exception {
+      return false;
+    }
   }
 }
