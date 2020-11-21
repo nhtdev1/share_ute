@@ -10,10 +10,10 @@ class UploadOptionalView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
-          color: Colors.grey,
+          color: Colors.black54,
         ),
-        backgroundColor: Colors.white,
-        elevation: 0.5,
+        backgroundColor: Colors.lightBlue,
+        elevation: 0.0,
       ),
       body: BlocListener<UploadPostCubit, UploadPostState>(
         listener: (context, state) {
@@ -145,7 +145,7 @@ class _YearRow extends StatelessWidget {
                 width: MediaQuery.of(context).size.width * 1 / 8,
                 child: Icon(
                   Icons.label_important_outline,
-                  color: Colors.grey,
+                  color: Colors.black54,
                 ),
               ),
               GestureDetector(
@@ -186,7 +186,7 @@ class _YearRow extends StatelessWidget {
                       context.read<UploadPostCubit>().yearChanged(''),
                 ),
               const SizedBox(
-                width: 5,
+                width: 10,
               ),
             ],
           );
@@ -214,7 +214,7 @@ class _SemesterRow extends StatelessWidget {
                 width: MediaQuery.of(context).size.width * 1 / 8,
                 child: Icon(
                   Icons.label_important_outline,
-                  color: Colors.grey,
+                  color: Colors.black54,
                 ),
               ),
               _buildSemester(context, state),
@@ -287,7 +287,7 @@ class _CreditsRow extends StatelessWidget {
                 width: MediaQuery.of(context).size.width * 1 / 8,
                 child: Icon(
                   Icons.label_important_outline,
-                  color: Colors.grey,
+                  color: Colors.black54,
                 ),
               ),
               _buildCredits(context, state),
@@ -352,7 +352,7 @@ class _MajorRow extends StatelessWidget {
                 width: MediaQuery.of(context).size.width * 1 / 8,
                 child: Icon(
                   Icons.label_important_outline,
-                  color: Colors.grey,
+                  color: Colors.black54,
                 ),
               ),
               GestureDetector(
@@ -393,7 +393,7 @@ class _MajorRow extends StatelessWidget {
                       context.read<UploadPostCubit>().majorChanged(''),
                 ),
               const SizedBox(
-                width: 5,
+                width: 10,
               ),
             ],
           );
@@ -415,7 +415,7 @@ class _LecturersInput extends StatelessWidget {
               width: MediaQuery.of(context).size.width * 1 / 8,
               child: Icon(
                 Icons.label_important_outline,
-                color: Colors.grey,
+                color: Colors.black54,
               ),
             ),
             const SizedBox(

@@ -108,10 +108,10 @@ class UploadMajorView extends StatelessWidget {
           child: Scaffold(
             appBar: AppBar(
               iconTheme: IconThemeData(
-                color: Colors.grey,
+                color: Colors.black54,
               ),
-              backgroundColor: Colors.white,
-              elevation: 0.5,
+              backgroundColor: Colors.lightBlue,
+              elevation: 0.0,
             ),
             body: ListView(
               padding: const EdgeInsets.symmetric(

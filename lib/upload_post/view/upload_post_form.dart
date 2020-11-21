@@ -6,6 +6,7 @@ import 'package:share_ute/upload_post/view/upload_tags_view.dart';
 class UploadPostForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
     return BlocListener<UploadPostCubit, UploadPostState>(
       listener: (context, state) {
         if (state.uploadPostProgress == UploadPostProgress.submissionFailure) {
@@ -21,16 +22,7 @@ class UploadPostForm extends StatelessWidget {
             );
         } else if (state.uploadPostProgress ==
             UploadPostProgress.submissionSuccess) {
-          Scaffold.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              const SnackBar(
-                elevation: 10.0,
-                backgroundColor: Colors.blue,
-                behavior: SnackBarBehavior.floating,
-                content: Text('Tạo bài đăng thành công!'),
-              ),
-            );
+          Navigator.pop(context);
         } else if (state.originalFileStatus == FileStatus.pickedWithOverSize) {
           Scaffold.of(context)
             ..hideCurrentSnackBar()
@@ -174,6 +166,7 @@ class _TitleInput extends StatelessWidget {
           onChanged: (title) =>
               context.read<UploadPostCubit>().postTitleChanged(title.trim()),
           decoration: InputDecoration(
+            contentPadding: const EdgeInsets.all(10.0),
             hintStyle: TextStyle(
               fontSize: 20,
               color: Colors.black54,
@@ -234,7 +227,7 @@ class _PickOriginalFile extends StatelessWidget {
               Spacer(),
               state.originalFileStatus == FileStatus.pickFileInProgress
                   ? CircularProgressIndicator(
-                      strokeWidth: 1,
+                      strokeWidth: 1.5,
                     )
                   : state.post.originalFile.isNotEmpty
                       ? IconButton(
@@ -281,7 +274,7 @@ class _TagsRow extends StatelessWidget {
                     physics: const ClampingScrollPhysics(),
                     children: [
                       _buildTags(state, context),
-                      if (!state.post.postTags.isNotEmpty)
+                      if (state.post.postTags.isEmpty)
                         Container(
                           child: Text(
                             'Gán nhãn cho tài liệu giúp nó được tìm kiếm dễ dàng hơn',

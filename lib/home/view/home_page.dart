@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_ute/firestore_user/firestore_user.dart';
 import 'package:share_ute/home/view/view.dart';
 import 'package:share_ute/introduction_screen/introduction_screen.dart';
+import 'package:share_ute/notification/notification.dart';
 import 'package:share_ute/splash/splash.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -15,11 +16,26 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<FirestoreUserBloc>(
-      create: (_) => FirestoreUserBloc(
-        firestoreUserRepository:
-        context.read<FirestoreUserRepository>(),
-      ),
+    // return BlocProvider<FirestoreUserBloc>(
+    //   create: (_) => FirestoreUserBloc(
+    //     firestoreUserRepository:
+    //     context.read<FirestoreUserRepository>(),
+    //   ),
+    //   child: HomeView(),
+    // );
+
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<FirestoreUserBloc>(
+          create: (context) => FirestoreUserBloc(
+            firestoreUserRepository:
+            context.read<FirestoreUserRepository>(),
+          ),
+        ),
+        BlocProvider<NotificationCubit>(
+          create: (context) => NotificationCubit(),
+        ),
+      ],
       child: HomeView(),
     );
   }

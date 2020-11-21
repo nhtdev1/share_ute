@@ -6,19 +6,19 @@ class PostRepository {
   PostRepository({
     FirebaseFirestore firebaseFirestore,
     firebase_auth.FirebaseAuth firebaseAuth,
-  })  : _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance,
+  })
+      : _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance,
         _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance;
 
   final FirebaseFirestore _firebaseFirestore;
   final firebase_auth.FirebaseAuth _firebaseAuth;
 
-  Future<bool> createPost({
+  Future<String> createPost({
     Post post,
     String originalFileURL,
   }) async {
-    final dateCreated = DateTime.now().toString();
     try {
-      await _firebaseFirestore.collection('posts').add({
+      final result = await _firebaseFirestore.collection('posts').add({
         'uid': _firebaseAuth.currentUser.uid,
         'public': post.public,
         'postTitle': post.postTitle,
@@ -34,11 +34,38 @@ class PostRepository {
         'credit': post.credit,
         'major': post.major,
         'lecturer': post.lecturer,
-        'dateCreated': dateCreated,
+        'dateCreated': post.dateCreated,
       });
-      return true;
+      return result.id;
     } on Exception {
-      return false;
+      return "";
+    }
+  }
+
+  Future<String> createSolutionFile({
+    String postID,
+    Post post,
+    String solutionFileURL,
+  }) async {
+    try {
+      final result = await _firebaseFirestore.collection('posts')
+          .doc(postID)
+          .collection('solutions')
+          .add({
+      'uid': _firebaseAuth.currentUser.uid,
+      'postID': postID,
+      'title': '',
+      'like': '0',
+      'disLike': '0',
+      'solutionFileURL': solutionFileURL,
+      'fileName': post.solutionFile.fileName,
+      'fileExtension': post.solutionFile.fileExtension,
+      'fileSize': post.solutionFile.fileSize,
+      'dateCreated': post.dateCreated,
+      });
+      return result.id;
+    } on Exception {
+      return "";
     }
   }
 }

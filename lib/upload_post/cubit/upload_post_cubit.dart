@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:file_picker_repository/file_picker_repository.dart';
 import 'package:post_repository/post_repository.dart';
+import 'package:share_ute/notification/notification.dart';
 import 'package:storage_repository/storage_repository.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -14,15 +15,20 @@ class UploadPostCubit extends Cubit<UploadPostState> {
     FilePickerRepository filePickerRepository,
     StorageRepository storageRepository,
     PostRepository postRepository,
+    NotificationCubit notificationCubit,
   })  : assert(filePickerRepository != null),
         _storageRepository = storageRepository,
         _filePickerRepository = filePickerRepository,
         _postRepository = postRepository,
+        _notificationCubit = notificationCubit,
         super(const UploadPostState());
 
   final FilePickerRepository _filePickerRepository;
   final StorageRepository _storageRepository;
   final PostRepository _postRepository;
+
+  //
+  final NotificationCubit _notificationCubit;
   StreamSubscription<TaskSnapshot> _storageSubscription;
 
   @override
@@ -198,11 +204,18 @@ class UploadPostCubit extends Cubit<UploadPostState> {
           final originalFileURL = await _storageRepository
               .getDownloadURL(taskSnapshot.metadata.fullPath);
 
-          final result = await _postRepository.createPost(
-            post: state.post,
+          final postID = await _postRepository.createPost(
+            post: state.post.copyWith(
+              dateCreated: taskSnapshot
+                  .metadata.timeCreated.millisecondsSinceEpoch
+                  .toString(),
+            ),
             originalFileURL: originalFileURL,
           );
-          if (result == true) {
+          if (postID.isNotEmpty) {
+            uploadSolutionFile(postID);
+
+            _notificationCubit.postCreated(state.post);
             emit(state.copyWith(
               uploadPostProgress: UploadPostProgress.submissionSuccess,
             ));
@@ -226,5 +239,15 @@ class UploadPostCubit extends Cubit<UploadPostState> {
         ));
       }
     });
+  }
+
+  Future<void> uploadSolutionFile(String postID) async {
+    final fullPath = await _storageRepository.uploadFile(post: state.post);
+    final solutionFileURL = await _storageRepository.getDownloadURL(fullPath);
+    await _postRepository.createSolutionFile(
+      postID: postID,
+      post: state.post,
+      solutionFileURL: solutionFileURL,
+    );
   }
 }

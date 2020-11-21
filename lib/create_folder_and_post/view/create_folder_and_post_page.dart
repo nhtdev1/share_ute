@@ -90,12 +90,11 @@ class CreateFolderAndPostPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    onTap: () async {
-                      await Navigator.push(
+                    onTap: () {
+                      Navigator.pushReplacement(
                         context,
                         UploadPostPage.route(),
                       );
-                      Navigator.pop(context);
                     },
                   ),
                 ],

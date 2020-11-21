@@ -26,16 +26,38 @@ class StorageRepository {
         .snapshotEvents;
   }
 
+  // Upload a file of post to fire storage
   Stream<TaskSnapshot> uploadDocument({
     Post post,
   }) {
+    final dateCreated = DateTime.now().millisecondsSinceEpoch.toString();
     String filePath = 'posts/${_firebaseAuth.currentUser.uid}/'
-        'original/${DateTime.now()}_${post.originalFile.fileName}';
+        'original/${dateCreated}_${post.originalFile.fileName}';
     return _firebaseStorage
         .ref()
         .child(filePath)
         .putFile(File(post.originalFile.path))
         .snapshotEvents;
+  }
+
+  // Upload a file of post to fire storage
+  Future<String> uploadFile({
+    Post post,
+  }) async {
+    File file = File(post.solutionFile.path);
+    final dateCreated = DateTime.now().millisecondsSinceEpoch.toString();
+    String filePath = 'posts/${_firebaseAuth.currentUser.uid}/'
+        'solution/${dateCreated}_${post.solutionFile.fileName}';
+    try {
+      final result = await _firebaseStorage
+          .ref()
+          .child(filePath)
+          .putFile(file);
+      return result.metadata.fullPath;
+    } on FirebaseException catch (e) {
+      print(e);
+      return "";
+    }
   }
 
   Future<String> getDownloadURL(String url) async {

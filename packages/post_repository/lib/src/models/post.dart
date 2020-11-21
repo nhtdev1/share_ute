@@ -15,6 +15,7 @@ class Post extends Equatable {
     this.credit,
     this.major,
     this.lecturer,
+    this.dateCreated,
   });
 
   final String public;
@@ -23,6 +24,7 @@ class Post extends Equatable {
   final String dislike;
   final List<String> postTags;
   final File originalFile;
+  final String dateCreated;
 
   // optional
   final File solutionFile;
@@ -34,7 +36,8 @@ class Post extends Equatable {
 
   @override
   // TODO: implement props
-  List<Object> get props => [
+  List<Object> get props =>
+      [
         public,
         postTitle,
         like,
@@ -47,6 +50,7 @@ class Post extends Equatable {
         credit,
         major,
         lecturer,
+        dateCreated,
       ];
 
   static const empty = Post(
@@ -62,6 +66,7 @@ class Post extends Equatable {
     credit: '',
     major: '',
     lecturer: '',
+    dateCreated: '',
   );
 
   Post copyWith({
@@ -77,6 +82,7 @@ class Post extends Equatable {
     String credit,
     String major,
     String lecturer,
+    String dateCreated,
   }) {
     return Post(
       public: public ?? this.public,
@@ -91,6 +97,7 @@ class Post extends Equatable {
       credit: credit ?? this.credit,
       major: major ?? this.major,
       lecturer: lecturer ?? this.lecturer,
+      dateCreated: dateCreated ?? this.dateCreated,
     );
   }
 
@@ -98,9 +105,9 @@ class Post extends Equatable {
 
   bool get hasOptionalInfo =>
       solutionFile.isNotEmpty ||
-      postYear.isNotEmpty ||
-      semester.isNotEmpty ||
-      credit.isNotEmpty ||
-      major.isNotEmpty ||
-      lecturer.isNotEmpty;
+          postYear.isNotEmpty ||
+          semester.isNotEmpty ||
+          credit.isNotEmpty ||
+          major.isNotEmpty ||
+          lecturer.isNotEmpty;
 }

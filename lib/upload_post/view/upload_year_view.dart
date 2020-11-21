@@ -95,10 +95,9 @@ class UploadYearView extends StatelessWidget {
           child: Scaffold(
             appBar: AppBar(
               iconTheme: IconThemeData(
-                color: Colors.grey,
+                color: Colors.black54,
               ),
-              backgroundColor: Colors.transparent,
-              shadowColor: Color(0x802196F3),
+              backgroundColor: Colors.lightBlue,
               elevation: 0.0,
             ),
             body: GridView.count(
