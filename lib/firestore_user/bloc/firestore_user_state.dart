@@ -30,5 +30,5 @@ class FirestoreUserState extends Equatable {
 
   @override
   // TODO: implement props
-  List<Object> get props => [user];
+  List<Object> get props => [user,status];
 }

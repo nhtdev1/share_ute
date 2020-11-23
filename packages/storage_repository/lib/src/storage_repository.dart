@@ -55,7 +55,6 @@ class StorageRepository {
           .putFile(file);
       return result.metadata.fullPath;
     } on FirebaseException catch (e) {
-      print(e);
       return "";
     }
   }

@@ -16,20 +16,11 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return BlocProvider<FirestoreUserBloc>(
-    //   create: (_) => FirestoreUserBloc(
-    //     firestoreUserRepository:
-    //     context.read<FirestoreUserRepository>(),
-    //   ),
-    //   child: HomeView(),
-    // );
-
     return MultiBlocProvider(
       providers: [
         BlocProvider<FirestoreUserBloc>(
           create: (context) => FirestoreUserBloc(
-            firestoreUserRepository:
-            context.read<FirestoreUserRepository>(),
+            firestoreUserRepository: context.read<FirestoreUserRepository>(),
           ),
         ),
         BlocProvider<NotificationCubit>(

@@ -3,6 +3,8 @@ import 'package:file_picker_repository/file_picker_repository.dart';
 
 class Post extends Equatable {
   const Post({
+    this.uid,
+    this.postID,
     this.public,
     this.postTitle,
     this.like,
@@ -18,6 +20,8 @@ class Post extends Equatable {
     this.dateCreated,
   });
 
+  final String uid;
+  final String postID;
   final String public;
   final String postTitle;
   final String like;
@@ -36,8 +40,9 @@ class Post extends Equatable {
 
   @override
   // TODO: implement props
-  List<Object> get props =>
-      [
+  List<Object> get props => [
+        uid,
+        postID,
         public,
         postTitle,
         like,
@@ -54,6 +59,8 @@ class Post extends Equatable {
       ];
 
   static const empty = Post(
+    uid: '',
+    postID: '',
     public: 'true',
     postTitle: '',
     like: '0',
@@ -70,6 +77,8 @@ class Post extends Equatable {
   );
 
   Post copyWith({
+    String uid,
+    String postID,
     String public,
     String postTitle,
     String like,
@@ -85,6 +94,8 @@ class Post extends Equatable {
     String dateCreated,
   }) {
     return Post(
+      uid: uid ?? this.uid,
+      postID: postID ?? this.postID,
       public: public ?? this.public,
       postTitle: postTitle ?? this.postTitle,
       like: like ?? this.like,
@@ -105,9 +116,9 @@ class Post extends Equatable {
 
   bool get hasOptionalInfo =>
       solutionFile.isNotEmpty ||
-          postYear.isNotEmpty ||
-          semester.isNotEmpty ||
-          credit.isNotEmpty ||
-          major.isNotEmpty ||
-          lecturer.isNotEmpty;
+      postYear.isNotEmpty ||
+      semester.isNotEmpty ||
+      credit.isNotEmpty ||
+      major.isNotEmpty ||
+      lecturer.isNotEmpty;
 }

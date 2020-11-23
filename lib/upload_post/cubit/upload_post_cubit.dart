@@ -201,6 +201,7 @@ class UploadPostCubit extends Cubit<UploadPostState> {
         .listen((taskSnapshot) async {
       if (taskSnapshot != null) {
         if (taskSnapshot.state == TaskState.success) {
+          // Get file's url in post stored in fire storage
           final originalFileURL = await _storageRepository
               .getDownloadURL(taskSnapshot.metadata.fullPath);
 
@@ -212,10 +213,18 @@ class UploadPostCubit extends Cubit<UploadPostState> {
             ),
             originalFileURL: originalFileURL,
           );
-          if (postID.isNotEmpty) {
-            uploadSolutionFile(postID);
 
-            _notificationCubit.postCreated(state.post);
+          // Create post successfully!
+          if (postID.isNotEmpty) {
+            if(state.post.solutionFile.isNotEmpty) {
+              uploadSolutionFile(state.post.copyWith(
+                postID: postID,
+              ));
+            }
+
+            _notificationCubit.postCreated(state.post.copyWith(
+              postID: postID,
+            ));
             emit(state.copyWith(
               uploadPostProgress: UploadPostProgress.submissionSuccess,
             ));
@@ -241,13 +250,14 @@ class UploadPostCubit extends Cubit<UploadPostState> {
     });
   }
 
-  Future<void> uploadSolutionFile(String postID) async {
-    final fullPath = await _storageRepository.uploadFile(post: state.post);
-    final solutionFileURL = await _storageRepository.getDownloadURL(fullPath);
-    await _postRepository.createSolutionFile(
-      postID: postID,
-      post: state.post,
-      solutionFileURL: solutionFileURL,
-    );
+  Future<void> uploadSolutionFile(Post post) async {
+    final fullPath = await _storageRepository.uploadFile(post: post);
+    if (fullPath.isNotEmpty) {
+      final solutionFileURL = await _storageRepository.getDownloadURL(fullPath);
+      await _postRepository.createSolutionFile(
+        post: post,
+        solutionFileURL: solutionFileURL,
+      );
+    }
   }
 }

@@ -18,6 +18,7 @@ class Document {
   int like;
   int dislike;
 
+
   static final List<Document> randomList = [
     Document(
         fileUrl:

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_ute/create_folder_and_post/create_folder_and_post.dart';
+import 'package:share_ute/document/view/document_page.dart';
 import 'package:share_ute/drawer/drawer.dart';
 import 'package:share_ute/main_screen/main_screen.dart';
 import 'package:share_ute/notification/notification.dart';
@@ -44,156 +45,6 @@ class _HomeFormState extends State<HomeForm>
     super.dispose();
   }
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Container(
-  //     color: AppTheme.nearlyWhite,
-  //     child: SafeArea(
-  //       top: false,
-  //       bottom: false,
-  //       child: Scaffold(
-  //         backgroundColor: AppTheme.nearlyWhite,
-  //         body: NestedScrollView(
-  //           controller: _scrollController,
-  //           headerSliverBuilder: (context, innerBoxIsScrolled) {
-  //             return <Widget>[
-  //               // SliverAppBar custom SearchBar
-  //               SliverAppBar(
-  //                 iconTheme:
-  //                     new IconThemeData(color: CupertinoColors.systemGrey),
-  //                 toolbarHeight: 80,
-  //                 pinned: innerBoxIsScrolled == true ? false : true,
-  //                 floating: true,
-  //                 backgroundColor: CupertinoColors.white,
-  //                 title: Container(
-  //                   child: Material(
-  //                     elevation: 8,
-  //                     borderRadius: BorderRadius.all(Radius.circular(7.0)),
-  //                     child: Container(
-  //                       height: 45,
-  //                       child: Row(
-  //                         children: [
-  //                           const SizedBox(
-  //                             width: 15,
-  //                           ),
-  //                           Expanded(
-  //                             child: InkWell(
-  //                               child: TextFormField(
-  //                                 enabled: false,
-  //                                 textAlign: TextAlign.start,
-  //                                 style: TextStyle(
-  //                                     fontSize: 16, fontFamily: 'WorkSans'),
-  //                                 decoration: InputDecoration(
-  //                                   hintText: "Search for Documents",
-  //                                   border: InputBorder.none,
-  //                                 ),
-  //                               ),
-  //                               onTap: () async {
-  //                                 await showSearch(
-  //                                     context: context, delegate: SearchPage());
-  //                               },
-  //                             ),
-  //                           )
-  //                         ],
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 ),
-  //               )
-  //             ];
-  //           },
-  //           body: Container(
-  //             child: PageView(
-  //               controller: _pageController,
-  //               children: [
-  //                 ListPost(),
-  //                 RecentPage(),
-  //                 // UploadPage(),
-  //                 MyFolderPage(),
-  //               ],
-  //               onPageChanged: (index) {
-  //                 setState(() {
-  //                   currentIndex = index;
-  //                 });
-  //               },
-  //             ),
-  //           ),
-  //         ),
-  //         bottomNavigationBar: BottomNavigationBar(
-  //           backgroundColor: AppTheme.notWhite,
-  //           type: BottomNavigationBarType.fixed,
-  //           selectedItemColor: CupertinoColors.activeBlue,
-  //           currentIndex: currentIndex,
-  //           items: const <BottomNavigationBarItem>[
-  //             BottomNavigationBarItem(
-  //               label: 'Trang chủ',
-  //               icon: Icon(
-  //                 const IconData(63715,
-  //                     fontFamily: CupertinoIcons.iconFont,
-  //                     fontPackage: CupertinoIcons.iconFontPackage),
-  //               ),
-  //             ),
-  //             BottomNavigationBarItem(
-  //               label: 'Gần đây',
-  //               icon: Icon(
-  //                 const IconData(0xf4be,
-  //                     fontFamily: CupertinoIcons.iconFont,
-  //                     fontPackage: CupertinoIcons.iconFontPackage),
-  //               ),
-  //             ),
-  //             // BottomNavigationBarItem(
-  //             //     label: 'Tải lên',
-  //             //     icon: Icon(
-  //             //       const IconData(0xf8c6,
-  //             //           fontFamily: CupertinoIcons.iconFont,
-  //             //           fontPackage: CupertinoIcons.iconFontPackage),
-  //             //     ),),
-  //             BottomNavigationBarItem(
-  //               label: 'Thư mục',
-  //               icon: Icon(
-  //                 const IconData(0xf434,
-  //                     fontFamily: CupertinoIcons.iconFont,
-  //                     fontPackage: CupertinoIcons.iconFontPackage),
-  //               ),
-  //             ),
-  //           ],
-  //           onTap: (index) {
-  //             setState(() {
-  //               currentIndex = index;
-  //             });
-  //
-  //             _pageController.jumpToPage(index);
-  //           },
-  //         ),
-  //         drawer: DrawerWidget(),
-  //         floatingActionButton: Padding(
-  //           padding: EdgeInsets.only(bottom: 15),
-  //           child: FloatingActionButton(
-  //             backgroundColor: Colors.white,
-  //             elevation: 2,
-  //             child: RadiantGradientMask(
-  //               child: Icon(
-  //                 const IconData(
-  //                   0xf489,
-  //                   fontFamily: CupertinoIcons.iconFont,
-  //                   fontPackage: CupertinoIcons.iconFontPackage,
-  //                 ),
-  //                 size: 40.0,
-  //               ),
-  //             ),
-  //             onPressed: () {
-  //               showModalBottomSheet(
-  //                 context: context,
-  //                 builder: (_) => CreateFolderAndPostPage(),
-  //               );
-  //             },
-  //           ),
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -207,7 +58,7 @@ class _HomeFormState extends State<HomeForm>
               Scaffold.of(context)
                 ..hideCurrentSnackBar()
                 ..showSnackBar(
-                   SnackBar(
+                  SnackBar(
                     backgroundColor: Colors.lightBlue,
                     behavior: SnackBarBehavior.fixed,
                     content: Text(
@@ -216,13 +67,16 @@ class _HomeFormState extends State<HomeForm>
                         fontSize: 16,
                       ),
                     ),
-                     action: SnackBarAction(
-                       label: 'Xem',
-                       onPressed: (){
-
-                       },
-                       textColor: Colors.white,
-                     ),
+                    action: SnackBarAction(
+                      label: 'Xem',
+                      textColor: Colors.white,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          DocumentPage.route(),
+                        );
+                      },
+                    ),
                   ),
                 );
             }
@@ -258,7 +112,7 @@ class _HomeFormState extends State<HomeForm>
                                   style: TextStyle(
                                       fontSize: 16, fontFamily: 'WorkSans'),
                                   decoration: InputDecoration(
-                                    hintText: "Search for Documents",
+                                    hintText: "Tìm kiếm tài liệu của bạn",
                                     border: InputBorder.none,
                                   ),
                                 ),
@@ -282,7 +136,6 @@ class _HomeFormState extends State<HomeForm>
                 children: [
                   ListPost(),
                   RecentPage(),
-                  // UploadPage(),
                   MyFolderPage(),
                 ],
                 onPageChanged: (index) {
@@ -316,13 +169,6 @@ class _HomeFormState extends State<HomeForm>
                     fontPackage: CupertinoIcons.iconFontPackage),
               ),
             ),
-            // BottomNavigationBarItem(
-            //     label: 'Tải lên',
-            //     icon: Icon(
-            //       const IconData(0xf8c6,
-            //           fontFamily: CupertinoIcons.iconFont,
-            //           fontPackage: CupertinoIcons.iconFontPackage),
-            //     ),),
             BottomNavigationBarItem(
               label: 'Thư mục',
               icon: Icon(
@@ -336,7 +182,6 @@ class _HomeFormState extends State<HomeForm>
             setState(() {
               currentIndex = index;
             });
-
             _pageController.jumpToPage(index);
           },
         ),
@@ -361,7 +206,6 @@ class _HomeFormState extends State<HomeForm>
                 context: context,
                 builder: (_) => CreateFolderAndPostPage(),
               );
-
             },
           ),
         ),

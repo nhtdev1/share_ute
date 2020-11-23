@@ -1,22 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:share_ute/document_info_screen/view/view.dart';
-import 'package:share_ute/main_screen/main_screen.dart';
+import 'package:share_ute/document_info/document_info.dart';
+import 'package:share_ute/document_solution/document_solution.dart';
 
-class DocumentInfoPage extends StatelessWidget {
-  const DocumentInfoPage({this.document});
-
-  final Document document;
-
-  static Route route() {
-    return MaterialPageRoute<void>(builder: (_) => DocumentInfoPage());
-  }
-
+class DocumentForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: DefaultTabController(
-        length: 2,
+        length: 3,
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: CupertinoColors.white,
@@ -28,7 +20,7 @@ class DocumentInfoPage extends StatelessWidget {
                 color: CupertinoColors.black,
               ),
               onPressed: () {
-                Navigator.pop(context,false);
+                Navigator.pop(context);
               },
             ),
             bottom: TabBar(
@@ -50,15 +42,26 @@ class DocumentInfoPage extends StatelessWidget {
                     color: CupertinoColors.darkBackgroundGray,
                   ),
                 ),
+                Tab(
+                  icon: Icon(
+                    const IconData(0xf5a4,
+                        fontFamily: CupertinoIcons.iconFont,
+                        fontPackage: CupertinoIcons.iconFontPackage),
+                    color: CupertinoColors.darkBackgroundGray,
+                  ),
+                ),
               ],
             ),
           ),
           body: TabBarView(
             children: [
-              DocumentInfoView(
-                document: document,
-              ),
-              DistributionView()
+              const DocumentInfoPage(),
+              const DocumentSolutionPage(),
+              Container(
+                child: Center(
+                  child: Text('Chưa có'),
+                ),
+              )
             ],
           ),
         ),
