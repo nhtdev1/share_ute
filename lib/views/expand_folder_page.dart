@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:share_ute/models/file.dart';
-import 'package:share_ute/search_screen/search_screen.dart';
+import 'package:share_ute/search/search.dart';
 import 'package:share_ute/widgets/folder_bottom_actions_sheet.dart';
 import 'package:share_ute/widgets/folder_create_bottom_sheet.dart';
 import 'package:share_ute/widgets/folder_sortby_bottom_sheet.dart';
@@ -87,18 +87,20 @@ class _ExpandFolderPageState extends State<ExpandFolderPage> {
                       fontPackage: CupertinoIcons.iconFontPackage),
                   color: CupertinoColors.systemGrey,
                 ),
-                onPressed: () async {
-                  final results =
-                      showSearch(context: context, delegate: SearchPage());
+                onPressed: () {
+                  showSearch(context: context, delegate: SearchPage());
                 },
               ),
               CupertinoButton(
                 child: Icon(
-                  const IconData(0xf8da,
-                      fontFamily: CupertinoIcons.iconFont,
-                      fontPackage: CupertinoIcons.iconFontPackage),
+                  const IconData(
+                    0xf8da,
+                    fontFamily: CupertinoIcons.iconFont,
+                    fontPackage: CupertinoIcons.iconFontPackage,
+                  ),
                   color: CupertinoColors.systemGrey,
                 ),
+                onPressed: () {},
               )
             ],
           ),

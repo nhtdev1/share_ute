@@ -32,9 +32,9 @@ class FolderBottomActionsSheet extends StatefulWidget {
 }
 
 class _FolderBottomActionsSheet extends State<FolderBottomActionsSheet> {
-  var PADDING_LEFT = 15.0;
-  var PADDING_TOP = 10.0;
-  var PADDING_BOT = 10.0;
+  var paddingLeft = 15.0;
+  var paddingTop = 10.0;
+  var paddingBot = 10.0;
 
   @override
   Widget build(BuildContext context) {
@@ -67,9 +67,7 @@ class _FolderBottomActionsSheet extends State<FolderBottomActionsSheet> {
             children: [
               Container(
                 padding: EdgeInsets.only(
-                    left: PADDING_LEFT,
-                    top: PADDING_TOP + 5,
-                    bottom: PADDING_BOT),
+                    left: paddingLeft, top: paddingTop + 5, bottom: paddingBot),
                 child: Row(
                   children: [
                     Icon(
@@ -105,7 +103,7 @@ class _FolderBottomActionsSheet extends State<FolderBottomActionsSheet> {
             children: [
               Container(
                 padding: EdgeInsets.only(
-                    left: PADDING_LEFT, top: PADDING_TOP, bottom: PADDING_BOT),
+                    left: paddingLeft, top: paddingTop, bottom: paddingBot),
                 child: GestureDetector(
                   child: Row(
                     children: [
@@ -137,9 +135,7 @@ class _FolderBottomActionsSheet extends State<FolderBottomActionsSheet> {
             children: [
               Container(
                   padding: EdgeInsets.only(
-                      left: PADDING_LEFT,
-                      top: PADDING_TOP,
-                      bottom: PADDING_BOT),
+                      left: paddingLeft, top: paddingTop, bottom: paddingBot),
                   child: GestureDetector(
                     child: Row(
                       children: [
@@ -178,9 +174,7 @@ class _FolderBottomActionsSheet extends State<FolderBottomActionsSheet> {
             children: [
               Container(
                   padding: EdgeInsets.only(
-                      left: PADDING_LEFT,
-                      top: PADDING_TOP,
-                      bottom: PADDING_BOT),
+                      left: paddingLeft, top: paddingTop, bottom: paddingBot),
                   child: GestureDetector(
                     child: Row(
                       children: [
@@ -213,7 +207,7 @@ class _FolderBottomActionsSheet extends State<FolderBottomActionsSheet> {
             children: [
               Container(
                 padding: EdgeInsets.only(
-                    left: PADDING_LEFT, top: PADDING_TOP, bottom: PADDING_BOT),
+                    left: paddingLeft, top: paddingTop, bottom: paddingBot),
                 child: Row(
                   children: [
                     Icon(
@@ -247,7 +241,7 @@ class _FolderBottomActionsSheet extends State<FolderBottomActionsSheet> {
             children: [
               Container(
                 padding: EdgeInsets.only(
-                    left: PADDING_LEFT, top: PADDING_TOP, bottom: PADDING_BOT),
+                    left: paddingLeft, top: paddingTop, bottom: paddingBot),
                 child: GestureDetector(
                     child: Row(
                       children: [
@@ -289,7 +283,7 @@ class _FolderBottomActionsSheet extends State<FolderBottomActionsSheet> {
             children: [
               Container(
                 padding: EdgeInsets.only(
-                    left: PADDING_LEFT, top: PADDING_TOP, bottom: PADDING_BOT),
+                    left: paddingLeft, top: paddingTop, bottom: paddingBot),
                 child: Row(
                   children: [
                     Icon(
@@ -318,7 +312,7 @@ class _FolderBottomActionsSheet extends State<FolderBottomActionsSheet> {
             children: [
               Container(
                 padding: EdgeInsets.only(
-                    left: PADDING_LEFT, top: PADDING_TOP, bottom: PADDING_BOT),
+                    left: paddingLeft, top: paddingTop, bottom: paddingBot),
                 child: Row(
                   children: [
                     Icon(
@@ -347,7 +341,7 @@ class _FolderBottomActionsSheet extends State<FolderBottomActionsSheet> {
             children: [
               Container(
                 padding: EdgeInsets.only(
-                    left: PADDING_LEFT, top: PADDING_TOP, bottom: PADDING_BOT),
+                    left: paddingLeft, top: paddingTop, bottom: paddingBot),
                 child: GestureDetector(
                   child: Row(
                     children: [

@@ -2,28 +2,32 @@ part of 'notification_cubit.dart';
 
 enum NotificationStatus {
   unknown,
-  postCreated,
+  newPostCreated,
 }
 
 class NotificationState extends Equatable {
   const NotificationState({
-    this.post = Post.empty,
+    this.currentPost = Post.empty,
+    this.userOfCurrentPost = User.empty,
     this.status = NotificationStatus.unknown,
   });
 
-  final Post post;
+  //Current post which is viewed by guest/user
+  final Post currentPost;
+  final User userOfCurrentPost;
   final NotificationStatus status;
 
   @override
-  // TODO: implement props
-  List<Object> get props => [post, status];
+  List<Object> get props => [currentPost, userOfCurrentPost, status];
 
   NotificationState copyWith({
-    Post post,
+    Post currentPost,
+    User userOfCurrentPost,
     NotificationStatus status,
   }) {
     return NotificationState(
-      post: post ?? this.post,
+      currentPost: currentPost ?? this.currentPost,
+      userOfCurrentPost: userOfCurrentPost ?? this.userOfCurrentPost,
       status: status ?? this.status,
     );
   }

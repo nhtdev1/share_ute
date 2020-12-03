@@ -12,7 +12,6 @@ class LoginState extends Equatable {
   final FormzStatus status;
 
   @override
-  // TODO: implement props
   List<Object> get props => [email, password, status];
 
   LoginState copyWith({

@@ -23,8 +23,7 @@ class UpdateYearView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<UpdateBioCubit, UpdateBioState>(
-      buildWhen: (previous, current) =>
-          previous.user.year != current.user.year,
+      buildWhen: (previous, current) => previous.user.year != current.user.year,
       builder: (context, state) {
         List<Widget> tiles = List();
         data.forEach((element) {
@@ -64,7 +63,7 @@ class UpdateYearView extends StatelessWidget {
                         ),
                       ),
                     ),
-                    if (state.user.year== element)
+                    if (state.user.year == element)
                       Positioned(
                         top: 5.0,
                         right: 5.0,
@@ -73,6 +72,7 @@ class UpdateYearView extends StatelessWidget {
                             Icons.check_circle,
                             color: Colors.lightBlue,
                           ),
+                          onPressed: () {},
                         ),
                       ),
                   ],

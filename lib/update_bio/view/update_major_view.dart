@@ -88,6 +88,7 @@ class UpdateMajorView extends StatelessWidget {
                               Icons.check_circle,
                               color: Colors.lightBlue,
                             ),
+                            onPressed: () {},
                           )
                         : null,
                   ),

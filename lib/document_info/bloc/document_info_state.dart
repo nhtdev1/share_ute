@@ -1,44 +1,106 @@
 part of 'document_info_bloc.dart';
 
-enum DocumentInfoStatus { like, unlike, dislike, unDislike, unknown }
+enum DocumentInfoStatus {
+  ownerLiked,
+  ownerUnliked,
+  ownerDisliked,
+  ownerUndisliked,
+  guestLiked,
+  guestUnliked,
+  guestDisliked,
+  guestUndisliked,
+  unknown,
+  dataChanged,
+}
 
 class DocumentInfoState extends Equatable {
-  const DocumentInfoState._({
+  const DocumentInfoState({
     this.post = Post.empty,
+    this.userOfPost = User.empty,
     this.status = DocumentInfoStatus.unknown,
   });
 
   final Post post;
-
+  final User userOfPost;
   final DocumentInfoStatus status;
 
-  const DocumentInfoState.unknown():this._();
+  const DocumentInfoState.unknown() : this();
 
-  const DocumentInfoState.postChanged(Post post):this._(
-    post: post,
-  );
+  const DocumentInfoState.postChanged({Post post, User user})
+      : this(
+          status: DocumentInfoStatus.dataChanged,
+          post: post,
+          userOfPost: user,
+        );
 
-  const DocumentInfoState.like(Post post):this._(
-    status: DocumentInfoStatus.like,
-    post: post,
-  );
+  const DocumentInfoState.ownerLiked({Post post, User user})
+      : this(
+          status: DocumentInfoStatus.ownerLiked,
+          post: post,
+          userOfPost: user,
+        );
 
-  const DocumentInfoState.unlike(Post post):this._(
-    status: DocumentInfoStatus.unlike,
-    post: post,
-  );
+  const DocumentInfoState.ownerUnliked({Post post, User user})
+      : this(
+          status: DocumentInfoStatus.ownerUnliked,
+          post: post,
+          userOfPost: user,
+        );
 
-  const DocumentInfoState.dislike(Post post):this._(
-    status: DocumentInfoStatus.dislike,
-    post: post,
-  );
+  const DocumentInfoState.ownerDisliked({Post post, User user})
+      : this(
+          status: DocumentInfoStatus.ownerDisliked,
+          post: post,
+          userOfPost: user,
+        );
 
-  const DocumentInfoState.unDislike(Post post):this._(
-    status: DocumentInfoStatus.unDislike,
-    post: post,
-  );
+  const DocumentInfoState.ownerUndisliked({Post post, User user})
+      : this(
+          status: DocumentInfoStatus.ownerUndisliked,
+          post: post,
+          userOfPost: user,
+        );
+  //
+  const DocumentInfoState.guestLiked({Post post, User user})
+      : this(
+          status: DocumentInfoStatus.guestLiked,
+          post: post,
+          userOfPost: user,
+        );
+
+  const DocumentInfoState.guestUnliked({Post post, User user})
+      : this(
+          status: DocumentInfoStatus.guestUnliked,
+          post: post,
+          userOfPost: user,
+        );
+
+  const DocumentInfoState.guestDisliked({Post post, User user})
+      : this(
+          status: DocumentInfoStatus.guestDisliked,
+          post: post,
+          userOfPost: user,
+        );
+
+  const DocumentInfoState.guestUndisliked({Post post, User user})
+      : this(
+          status: DocumentInfoStatus.guestUndisliked,
+          post: post,
+          userOfPost: user,
+        );
 
   @override
-  // TODO: implement props
-  List<Object> get props => [post, status];
+  List<Object> get props => [post, userOfPost, status];
+
+  DocumentInfoState copyWith({
+    Post post,
+    User userOfPost,
+    DocumentInfoStatus status,
+  }) {
+    return DocumentInfoState(
+      post: post ?? this.post,
+      userOfPost: userOfPost ?? this.post,
+      status: status ?? this.status,
+    );
+  }
 }

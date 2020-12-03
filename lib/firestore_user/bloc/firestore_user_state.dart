@@ -29,6 +29,5 @@ class FirestoreUserState extends Equatable {
             status: FirestoreUserStatus.authenticatedWithOldUser, user: user);
 
   @override
-  // TODO: implement props
-  List<Object> get props => [user,status];
+  List<Object> get props => [user, status];
 }

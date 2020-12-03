@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:post_repository/post_repository.dart';
 import 'package:share_ute/firestore_user/firestore_user.dart';
 import 'package:share_ute/home/view/view.dart';
 import 'package:share_ute/introduction_screen/introduction_screen.dart';
@@ -27,7 +28,10 @@ class HomePage extends StatelessWidget {
           create: (context) => NotificationCubit(),
         ),
       ],
-      child: HomeView(),
+      child: RepositoryProvider(
+        create: (context) => PostRepository(),
+        child: HomeView(),
+      ),
     );
   }
 }

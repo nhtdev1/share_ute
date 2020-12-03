@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:share_ute/widgets/folder_bottom_actions_sheet.dart';
-import 'package:share_ute/widgets/folder_create_bottom_sheet.dart';
 import 'package:share_ute/widgets/folder_sortby_bottom_sheet.dart';
 import 'package:share_ute/models/file.dart';
 

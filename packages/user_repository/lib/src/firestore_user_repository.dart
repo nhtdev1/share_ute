@@ -113,4 +113,23 @@ class FirestoreUserRepository {
       return false;
     }
   }
+
+  Future<firestore_user.User> findUserById(String id) async {
+    final snapshot = await _firebaseFirestore.collection('users').doc(id).get();
+    if (snapshot.exists) {
+      return firestore_user.User(
+        email: snapshot.data()['email'],
+        name: snapshot.data()['displayName'],
+        birthday: snapshot.data()['birthday'],
+        phone: snapshot.data()['photo'],
+        photo: snapshot.data()['photoURL'],
+        year: snapshot.data()['year'],
+        faculty: snapshot.data()['faculty'],
+        major: snapshot.data()['major'],
+        hobbies: List<String>.from(snapshot['hobbies']),
+      );
+    } else {
+      return firestore_user.User.empty;
+    }
+  }
 }

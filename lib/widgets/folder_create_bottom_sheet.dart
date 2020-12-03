@@ -26,10 +26,8 @@ class FolderCreateBottomSheet extends StatefulWidget {
 }
 
 class _FolderCreateBottomSheet extends State<FolderCreateBottomSheet> {
-  TextEditingController _folderNameController = new TextEditingController();
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
     return Container(
       child: new Wrap(
         children: <Widget>[
@@ -88,12 +86,12 @@ class _FolderCreateBottomSheet extends State<FolderCreateBottomSheet> {
                       showDialog(
                           context: context,
                           builder: (_) => PopupInput(
-                            title: "New Folder",
-                            hintText: "Untitled folder",
-                            text: "Untitled folder",
-                            action: ACTION_TYPE.CANCEL_CREATE,
-                            callback: widget.bloc.createFolder,
-                          ));
+                                title: "New Folder",
+                                hintText: "Untitled folder",
+                                text: "Untitled folder",
+                                action: ACTION_TYPE.CANCEL_CREATE,
+                                callback: widget.bloc.createFolder,
+                              ));
                     },
                   ),
                   Padding(

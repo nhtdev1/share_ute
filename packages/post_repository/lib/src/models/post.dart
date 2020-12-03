@@ -24,8 +24,8 @@ class Post extends Equatable {
   final String postID;
   final String public;
   final String postTitle;
-  final String like;
-  final String dislike;
+  final List<String> like;
+  final List<String> dislike;
   final List<String> postTags;
   final File originalFile;
   final String dateCreated;
@@ -39,7 +39,6 @@ class Post extends Equatable {
   final String lecturer;
 
   @override
-  // TODO: implement props
   List<Object> get props => [
         uid,
         postID,
@@ -63,8 +62,8 @@ class Post extends Equatable {
     postID: '',
     public: 'true',
     postTitle: '',
-    like: '0',
-    dislike: '0',
+    like: [],
+    dislike: [],
     postTags: [],
     originalFile: File.empty,
     solutionFile: File.empty,
@@ -81,8 +80,8 @@ class Post extends Equatable {
     String postID,
     String public,
     String postTitle,
-    String like,
-    String dislike,
+    List<String> like,
+    List<String> dislike,
     List<String> postTags,
     File originalFile,
     File solutionFile,

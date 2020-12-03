@@ -29,7 +29,6 @@ class UpdateAvatarState extends Equatable {
   final UpdateAvatarProgress updateAvatarProgress;
 
   @override
-  // TODO: implement props
   List<Object> get props => [
         file,
         avatarStatus,

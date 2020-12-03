@@ -24,8 +24,7 @@ class FolderBloc {
   int get getLength => _data.length;
   List<File> get getData => _data;
 
-  void init(
-      {List<File> data = null, SORT_BY type = null, bool isIncrement = null}) {
+  void init({List<File> data, SORT_BY type, bool isIncrement}) {
     data == null ? _data = _repository.getFileData() : _data = data;
     _listDataController.sink.add(true);
 
@@ -41,6 +40,7 @@ class FolderBloc {
 
   /// Lấy danh sách con của 1 folder thông qua id của folder đó
   List<File> getChildOf({@required String folderId}) {
+    // ignore: todo
     //TODO: Xử lí khi có dữ liệu
     return _repository.getFileData();
   }
@@ -69,6 +69,7 @@ class FolderBloc {
   }
 
   /// Hàm câp nhật 1 file/folder
+  // ignore: missing_return
   bool updateItem({
     @required String id,
     bool isStarred,
@@ -79,7 +80,7 @@ class FolderBloc {
       if (item.id == id) {
         item.isSharing = isSharing == null ? item.isSharing : isSharing;
         item.isAddStarted = isStarred == null ? item.isAddStarted : isStarred;
-        if(name != null && name != ""){
+        if (name != null && name != "") {
           item.fileName = name;
           _listDataController.sink.add(true);
         }
@@ -88,7 +89,7 @@ class FolderBloc {
   }
 
   /// Hàm xóa 1 file/folder
-  bool removeItem(String id){
+  bool removeItem(String id) {
     for (var item in _data) {
       if (item.id == id) {
         _data.remove(item);
@@ -100,10 +101,10 @@ class FolderBloc {
   }
 
   List<String> indexItemChose = new List<String>();
-  void selected(String id){
-    if(indexItemChose.contains(id)){
+  void selected(String id) {
+    if (indexItemChose.contains(id)) {
       indexItemChose.remove(id);
-    }else{
+    } else {
       indexItemChose.add(id);
     }
     _listDataController.sink.add(true);
@@ -118,7 +119,6 @@ class FolderBloc {
     _sortTypeController.sink.add(true);
     _listDataController.sink.add(true);
   }
-
 
   /// Thuật toán bubble sort
   List<File> _sorted(List<File> data, SORT_BY type, bool isIncrement) {

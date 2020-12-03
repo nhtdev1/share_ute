@@ -56,12 +56,10 @@ class DocumentForm extends StatelessWidget {
           body: TabBarView(
             children: [
               const DocumentInfoPage(),
-              const DocumentSolutionPage(),
-              Container(
-                child: Center(
-                  child: Text('Chưa có'),
-                ),
-              )
+              DocumentSolutionPage(),
+              const Center(
+                child: Text('Chưa có'),
+              ),
             ],
           ),
         ),

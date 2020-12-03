@@ -1,18 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:share_ute/create_folder_and_post/create_folder_and_post.dart';
 import 'package:share_ute/document/view/document_page.dart';
-import 'package:share_ute/drawer/drawer.dart';
+import 'package:share_ute/home/widgets/widgets.dart';
 import 'package:share_ute/main_screen/main_screen.dart';
 import 'package:share_ute/notification/notification.dart';
-import 'package:share_ute/search_screen/search_screen.dart';
+import 'package:share_ute/search/search.dart';
 import 'package:share_ute/theme.dart';
-import 'package:share_ute/upload_post/upload_post.dart';
-import 'package:share_ute/upload_screen/upload_screen.dart';
 import 'package:share_ute/views/folder_page.dart';
 import 'package:share_ute/views/recent_page.dart';
-import 'package:share_ute/widgets/folder_create_bottom_sheet.dart';
 
 class HomeForm extends StatefulWidget {
   const HomeForm({Key key}) : super(key: key);
@@ -54,7 +50,9 @@ class _HomeFormState extends State<HomeForm>
         backgroundColor: AppTheme.nearlyWhite,
         body: BlocListener<NotificationCubit, NotificationState>(
           listener: (context, state) {
-            if (state.status == NotificationStatus.postCreated) {
+            // When a new post is created, NotificationState will notify this
+            // to home_dart and it redirect to DocumentPage
+            if (state.status == NotificationStatus.newPostCreated) {
               Scaffold.of(context)
                 ..hideCurrentSnackBar()
                 ..showSnackBar(
@@ -116,8 +114,8 @@ class _HomeFormState extends State<HomeForm>
                                     border: InputBorder.none,
                                   ),
                                 ),
-                                onTap: () async {
-                                  await showSearch(
+                                onTap: () {
+                                  showSearch(
                                       context: context, delegate: SearchPage());
                                 },
                               ),
@@ -186,49 +184,8 @@ class _HomeFormState extends State<HomeForm>
           },
         ),
         drawer: DrawerWidget(),
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.only(bottom: 10.0),
-          child: FloatingActionButton(
-            backgroundColor: Colors.white,
-            elevation: 2.0,
-            child: RadiantGradientMask(
-              child: Icon(
-                const IconData(
-                  0xf489,
-                  fontFamily: CupertinoIcons.iconFont,
-                  fontPackage: CupertinoIcons.iconFontPackage,
-                ),
-                size: 30.0,
-              ),
-            ),
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                builder: (_) => CreateFolderAndPostPage(),
-              );
-            },
-          ),
-        ),
+        floatingActionButton: FloatingButtonWidget(),
       ),
-    );
-  }
-}
-
-class RadiantGradientMask extends StatelessWidget {
-  RadiantGradientMask({this.child});
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return ShaderMask(
-      shaderCallback: (bounds) => LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment(0.8, 0.0),
-        colors: [const Color(0xffee0000), const Color(0xffeeee00)],
-        tileMode: TileMode.repeated,
-      ).createShader(bounds),
-      child: child,
     );
   }
 }

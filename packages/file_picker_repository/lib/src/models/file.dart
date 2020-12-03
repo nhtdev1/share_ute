@@ -14,7 +14,6 @@ class File extends Equatable {
   final String fileSize;
 
   @override
-  // TODO: implement props
   List<Object> get props => [
         path,
         fileName,

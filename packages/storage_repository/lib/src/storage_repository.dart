@@ -26,35 +26,27 @@ class StorageRepository {
         .snapshotEvents;
   }
 
-  // Upload a file of post to fire storage
+  // Store a file of post to firestorage
   Stream<TaskSnapshot> uploadDocument({
     Post post,
   }) {
-    final dateCreated = DateTime.now().millisecondsSinceEpoch.toString();
-    String filePath = 'posts/${_firebaseAuth.currentUser.uid}/'
-        'original/${dateCreated}_${post.originalFile.fileName}';
-    return _firebaseStorage
-        .ref()
-        .child(filePath)
-        .putFile(File(post.originalFile.path))
-        .snapshotEvents;
+    File file = File(post.originalFile.path);
+    String path = 'posts/${_firebaseAuth.currentUser.uid}/'
+        'original/${post.dateCreated}_${post.originalFile.fileName}';
+    return _firebaseStorage.ref().child(path).putFile(file).snapshotEvents;
   }
 
-  // Upload a file of post to fire storage
+  // Store a solution of post to fire storage
   Future<String> uploadFile({
     Post post,
   }) async {
     File file = File(post.solutionFile.path);
-    final dateCreated = DateTime.now().millisecondsSinceEpoch.toString();
-    String filePath = 'posts/${_firebaseAuth.currentUser.uid}/'
-        'solution/${dateCreated}_${post.solutionFile.fileName}';
+    String path = 'posts/${_firebaseAuth.currentUser.uid}/'
+        'solution/${post.dateCreated}_${post.solutionFile.fileName}';
     try {
-      final result = await _firebaseStorage
-          .ref()
-          .child(filePath)
-          .putFile(file);
+      final result = await _firebaseStorage.ref().child(path).putFile(file);
       return result.metadata.fullPath;
-    } on FirebaseException catch (e) {
+    } on Exception {
       return "";
     }
   }

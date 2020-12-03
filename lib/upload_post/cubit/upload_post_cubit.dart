@@ -7,6 +7,7 @@ import 'package:post_repository/post_repository.dart';
 import 'package:share_ute/notification/notification.dart';
 import 'package:storage_repository/storage_repository.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:user_repository/user_repository.dart';
 
 part 'upload_post_state.dart';
 
@@ -15,19 +16,20 @@ class UploadPostCubit extends Cubit<UploadPostState> {
     FilePickerRepository filePickerRepository,
     StorageRepository storageRepository,
     PostRepository postRepository,
+    FirestoreUserRepository firestoreUserRepository,
     NotificationCubit notificationCubit,
   })  : assert(filePickerRepository != null),
         _storageRepository = storageRepository,
         _filePickerRepository = filePickerRepository,
         _postRepository = postRepository,
+        _firestoreUserRepository = firestoreUserRepository,
         _notificationCubit = notificationCubit,
         super(const UploadPostState());
 
   final FilePickerRepository _filePickerRepository;
   final StorageRepository _storageRepository;
   final PostRepository _postRepository;
-
-  //
+  final FirestoreUserRepository _firestoreUserRepository;
   final NotificationCubit _notificationCubit;
   StreamSubscription<TaskSnapshot> _storageSubscription;
 
@@ -194,37 +196,44 @@ class UploadPostCubit extends Cubit<UploadPostState> {
   }
 
   void uploadPost() {
+    final dateCreated = DateTime.now().millisecondsSinceEpoch.toString();
     _storageSubscription = _storageRepository
         .uploadDocument(
-      post: state.post,
+      post: state.post.copyWith(
+        dateCreated: dateCreated,
+      ),
     )
         .listen((taskSnapshot) async {
       if (taskSnapshot != null) {
         if (taskSnapshot.state == TaskState.success) {
-          // Get file's url in post stored in fire storage
+          // Get file's url of a post which stored in firestorage
           final originalFileURL = await _storageRepository
               .getDownloadURL(taskSnapshot.metadata.fullPath);
 
-          final postID = await _postRepository.createPost(
+          // Create a post to firestore
+          final post = await _postRepository.createPost(
             post: state.post.copyWith(
-              dateCreated: taskSnapshot
-                  .metadata.timeCreated.millisecondsSinceEpoch
-                  .toString(),
+              originalFile: state.post.originalFile.copyWith(
+                path: originalFileURL,
+              ),
+              dateCreated: dateCreated,
             ),
-            originalFileURL: originalFileURL,
           );
 
+          final userOfPost =
+              await _firestoreUserRepository.findUserById(post.uid);
+
           // Create post successfully!
-          if (postID.isNotEmpty) {
-            if(state.post.solutionFile.isNotEmpty) {
-              uploadSolutionFile(state.post.copyWith(
-                postID: postID,
-              ));
+          if (post != Post.empty) {
+            // Upload solution of post to firestore
+            if (state.post.solutionFile.isNotEmpty) {
+              uploadSolutionFile(post);
             }
 
-            _notificationCubit.postCreated(state.post.copyWith(
-              postID: postID,
-            ));
+            // Notify to app that a new post is created
+            _notificationCubit.newPostCreated(
+                post: post, userOfPost: userOfPost);
+
             emit(state.copyWith(
               uploadPostProgress: UploadPostProgress.submissionSuccess,
             ));
@@ -251,10 +260,10 @@ class UploadPostCubit extends Cubit<UploadPostState> {
   }
 
   Future<void> uploadSolutionFile(Post post) async {
-    final fullPath = await _storageRepository.uploadFile(post: post);
-    if (fullPath.isNotEmpty) {
-      final solutionFileURL = await _storageRepository.getDownloadURL(fullPath);
-      await _postRepository.createSolutionFile(
+    final path = await _storageRepository.uploadFile(post: post);
+    if (path.isNotEmpty) {
+      final solutionFileURL = await _storageRepository.getDownloadURL(path);
+      _postRepository.createSolutionFile(
         post: post,
         solutionFileURL: solutionFileURL,
       );

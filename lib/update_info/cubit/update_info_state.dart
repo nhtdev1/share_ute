@@ -22,7 +22,6 @@ class UpdateInfoState extends Equatable {
   final InfoStatus infoStatus;
 
   @override
-  // TODO: implement props
   List<Object> get props => [
         name,
         birthday,
@@ -46,5 +45,4 @@ class UpdateInfoState extends Equatable {
       infoStatus: infoStatus ?? this.infoStatus,
     );
   }
-
 }

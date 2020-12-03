@@ -4,12 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:share_ute/main_screen/main_screen.dart';
 
-class ListPost extends StatefulWidget {
-  @override
-  _ListPostState createState() => _ListPostState();
-}
+class ListPost extends StatelessWidget {
+  const ListPost({Key key}) : super(key: key);
 
-class _ListPostState extends State<ListPost> {
+  static Route route() {
+    return MaterialPageRoute<void>(builder: (context) => const ListPost());
+  }
+
   @override
   Widget build(BuildContext context) {
     return MediaQuery.removePadding(
@@ -59,8 +60,8 @@ class _ListPostState extends State<ListPost> {
                           ),
                           color: CupertinoColors.label,
                         ),
-                        onPressed: () async {
-                          await showCupertinoModalPopup(
+                        onPressed: () {
+                          showCupertinoModalPopup(
                             context: context,
                             builder: (context) => CupertinoActionSheet(
                               title: Text(
@@ -148,9 +149,7 @@ class _ListPostState extends State<ListPost> {
                         ),
                       ),
                     ),
-                    onTap: () {
-
-                    },
+                    onTap: () {},
                   ),
                 ),
 

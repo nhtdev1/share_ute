@@ -209,6 +209,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.11"
+  flutter_reaction_button:
+    dependency: "direct main"
+    description:
+      name: flutter_reaction_button
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.6+1"
   flutter_tags:
     dependency: "direct main"
     description:
@@ -262,7 +269,7 @@ packages:
     source: hosted
     version: "0.9.2"
   http:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: http
       url: "https://pub.dartlang.org"
@@ -297,7 +304,7 @@ packages:
     source: hosted
     version: "1.1.1"
   intl:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: intl
       url: "https://pub.dartlang.org"
@@ -396,6 +403,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.3.2+2"
+  pull_to_refresh:
+    dependency: "direct main"
+    description:
+      name: pull_to_refresh
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.6.3"
   quiver:
     dependency: transitive
     description:
@@ -403,11 +417,25 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.5"
+  rxdart:
+    dependency: "direct main"
+    description:
+      name: rxdart
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.23.1"
   sky_engine:
     dependency: transitive
     description: flutter
     source: sdk
     version: "0.0.99"
+  solution_repository:
+    dependency: "direct main"
+    description:
+      path: "packages/solution_repository"
+      relative: true
+    source: path
+    version: "1.0.0"
   source_span:
     dependency: transitive
     description:

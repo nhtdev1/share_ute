@@ -25,13 +25,13 @@ class TagsView extends StatelessWidget {
 }
 
 class _TagNameInput extends StatelessWidget {
-  TextEditingController _controller = TextEditingController();
+  final TextEditingController _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TagBloc, TagState>(
       builder: (context, state) {
-        _controller.text = _controller.text +" "+state.tagSuggestion.title;
+        _controller.text = _controller.text + " " + state.tagSuggestion.title;
         return TextFormField(
           controller: _controller,
           key: const Key('_tagNameInput_textField'),
@@ -116,7 +116,7 @@ class _ListSuggestions extends StatelessWidget {
         .showDialog(context);
   }
 
-  List<String> years = [
+  final List<String> years = [
     "Năm 2013 - 2014",
     "Năm 2014 - 2015",
     "Năm 2015 - 2016",

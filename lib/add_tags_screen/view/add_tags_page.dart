@@ -8,6 +8,7 @@ class AddTagsPage extends SearchDelegate<String> {
   List<Widget> buildActions(BuildContext context) {
     return [
       CupertinoButton(
+        onPressed: () {},
         child: Icon(
           const IconData(0xf71e,
               fontFamily: CupertinoIcons.iconFont,
@@ -41,51 +42,52 @@ class AddTagsPage extends SearchDelegate<String> {
   @override
   Widget buildSuggestions(BuildContext context) {
     return Container(
-        child:  ListView(
-          children: TagSuggestion.suggestions
-              .map<ListTile>((e) => e.type == TagSuggestionType.DIVIDER
+        child: ListView(
+      children: TagSuggestion.suggestions
+          .map<ListTile>((e) => e.type == TagSuggestionType.DIVIDER
               ? ListTile(
-            title: Text(e.title),
-          )
+                  title: Text(e.title),
+                )
               : e.type == TagSuggestionType.YEAR
-              ? ListTile(
-            title: Text(e.title),
-            leading: e.icon,
-            onTap: () {
-              showYearsPicker(context, e);
-            },
-          )
-              : e.type == TagSuggestionType.LECTURER
-              ? Column(
-            children: [
-              Text(e.title),
-              TextFormField(
-                maxLines: 10,
-                minLines: 10,
-                decoration:
-                InputDecoration(hintText: 'Nguyễn Văn A'),
-              )
-            ],
-          )
-              : ListTile(
-            title: Text(e.title),
-            onTap: () {},
-          ))
-              .toList(),
-        ));
+                  ? ListTile(
+                      title: Text(e.title),
+                      leading: e.icon,
+                      onTap: () {
+                        showYearsPicker(context, e);
+                      },
+                    )
+                  : e.type == TagSuggestionType.LECTURER
+                      ? Column(
+                          children: [
+                            Text(e.title),
+                            TextFormField(
+                              maxLines: 10,
+                              minLines: 10,
+                              decoration:
+                                  InputDecoration(hintText: 'Nguyễn Văn A'),
+                            )
+                          ],
+                        )
+                      : ListTile(
+                          title: Text(e.title),
+                          onTap: () {},
+                        ))
+          .toList(),
+    ));
   }
 
   showYearsPicker(BuildContext context, TagSuggestion tagSuggestion) {
     Picker(
-        adapter: PickerDataAdapter<String>(pickerdata: years),
-        hideHeader: true,
-        title: Text('Chọn năm của tài liệu'),
-        onConfirm: (picker, value) {
-          // print(value.toString());
-          // tagSuggestion.title = picker.adapter.text.toString();
-          // tagSuggestion.title =
-          //     tagSuggestion.title.substring(1, tagSuggestion.title.length - 1);
-        }).showDialog(context);
+            adapter: PickerDataAdapter<String>(pickerdata: years),
+            hideHeader: true,
+            title: Text('Chọn năm của tài liệu'),
+            onConfirm: (picker, value) {
+              // print(value.toString());
+              // tagSuggestion.title = picker.adapter.text.toString();
+              // tagSuggestion.title =
+              //     tagSuggestion.title.substring(1, tagSuggestion.title.length - 1);
+            })
+        .showDialog(context);
   }
 
   List<String> years = [

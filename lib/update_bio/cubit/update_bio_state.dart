@@ -28,7 +28,6 @@ class UpdateBioState extends Equatable {
   final UpdateBioProgress updateProgress;
 
   @override
-  // TODO: implement props
   List<Object> get props => [user, bioStatus, updateProgress];
 
   UpdateBioState copyWith({

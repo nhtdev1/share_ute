@@ -4,6 +4,7 @@ abstract class AuthenticationEvent extends Equatable {
   const AuthenticationEvent();
 
   @override
+  // ignore: todo
   // TODO: implement props
   List<Object> get props => [];
 }
@@ -16,6 +17,7 @@ class AuthenticationUserChanged extends AuthenticationEvent {
   final User user;
 
   @override
+  // ignore: todo
   // TODO: implement props
   List<Object> get props => [user];
 }

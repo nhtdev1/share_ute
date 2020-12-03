@@ -20,9 +20,7 @@ class _UploadPageState extends State<UploadPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-
-      ),
+      appBar: AppBar(),
       body: Container(
         child: ListView(
           children: [
@@ -75,10 +73,12 @@ class _UploadPageState extends State<UploadPage> {
                   child: Text(
                     'Đăng',
                     style: TextStyle(
-                        color: _post
-                            ? CupertinoColors.activeBlue
-                            : CupertinoColors.systemGrey3),
+                      color: _post
+                          ? CupertinoColors.activeBlue
+                          : CupertinoColors.systemGrey3,
+                    ),
                   ),
+                  onPressed: () {},
                 )
               ],
             ),
@@ -124,14 +124,12 @@ class _UploadPageState extends State<UploadPage> {
                     ),
                     Text(
                       'Chọn tài liệu',
-                      style: TextStyle(
-                          fontSize: 16, color: CupertinoColors.label),
+                      style:
+                          TextStyle(fontSize: 16, color: CupertinoColors.label),
                     ),
                   ],
                 ),
-                onTap: () {
-
-                },
+                onTap: () {},
               ),
             ),
             Divider(
@@ -150,8 +148,8 @@ class _UploadPageState extends State<UploadPage> {
                     ),
                     Text(
                       'Thêm nhãn',
-                      style: TextStyle(
-                          fontSize: 16, color: CupertinoColors.label),
+                      style:
+                          TextStyle(fontSize: 16, color: CupertinoColors.label),
                     ),
                   ],
                 ),

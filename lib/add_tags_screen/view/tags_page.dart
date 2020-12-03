@@ -20,6 +20,7 @@ class TagsPage extends StatelessWidget {
         backgroundColor: CupertinoColors.white,
         actions: [
           CupertinoButton(
+            onPressed: () {},
             child: Text('DONE'),
           )
         ],
@@ -38,7 +39,7 @@ class TagsPage extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: BlocProvider(
-          create: (context){
+          create: (context) {
             return TagBloc();
           },
           child: TagsView(),

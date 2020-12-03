@@ -216,11 +216,10 @@ class FolderRepository {
         fileImage: fileImg,
         isFolder: isFolder,
         dateCreated: datCreate);
-    //TODO: Ghi vao db
     return file;
   }
 
-  bool editFile() {}
-  bool deleteFile() {}
-  bool getFile() {}
+  // bool editFile() {}
+  // bool deleteFile() {}
+  // bool getFile() {}
 }

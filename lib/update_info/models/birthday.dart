@@ -10,7 +10,6 @@ class Birthday extends Equatable {
   const Birthday.dirty([String value = '']) : this._(value: value);
 
   @override
-  // TODO: implement props
   List<Object> get props => [value];
 
   bool get isEmpty => value.isEmpty;

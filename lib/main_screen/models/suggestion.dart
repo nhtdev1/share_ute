@@ -119,7 +119,7 @@ class Suggestion {
         enable: true),
   ];
 
-  static final string_suggestions = [
+  static final stringSuggestions = [
     'Đề thi toán cao cấp A1',
     'Đề thi toán cao cấp A2',
     'Đề thi toán cao cấp A3',

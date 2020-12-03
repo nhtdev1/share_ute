@@ -6,7 +6,6 @@ import 'package:share_ute/upload_post/view/upload_tags_view.dart';
 class UploadPostForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     return BlocListener<UploadPostCubit, UploadPostState>(
       listener: (context, state) {
         if (state.uploadPostProgress == UploadPostProgress.submissionFailure) {
@@ -17,7 +16,9 @@ class UploadPostForm extends StatelessWidget {
                 elevation: 10.0,
                 backgroundColor: Colors.blue,
                 behavior: SnackBarBehavior.floating,
-                content: Text('Tạo bài đăng thất bại!'),
+                content: Text(
+                  'Tạo bài đăng thất bại!',
+                ),
               ),
             );
         } else if (state.uploadPostProgress ==
@@ -31,7 +32,9 @@ class UploadPostForm extends StatelessWidget {
                 elevation: 10.0,
                 backgroundColor: Colors.blue,
                 behavior: SnackBarBehavior.floating,
-                content: Text('Không thể upload file lớn hơn 25mb!'),
+                content: Text(
+                  'Không thể upload file lớn hơn 25mb!',
+                ),
               ),
             );
         }

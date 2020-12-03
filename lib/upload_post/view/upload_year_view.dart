@@ -73,15 +73,14 @@ class UploadYearView extends StatelessWidget {
                             Icons.check_circle,
                             color: Colors.lightBlue,
                           ),
+                          onPressed: () {},
                         ),
                       ),
                   ],
                 ),
                 onTap: () {
                   if (state.post.postYear != element) {
-                    context
-                        .read<UploadPostCubit>()
-                        .yearChanged(element);
+                    context.read<UploadPostCubit>().yearChanged(element);
                   } else {
                     context.read<UploadPostCubit>().yearChanged('');
                   }

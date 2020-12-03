@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_ute/update_bio/update_bio.dart';
-import 'package:formz/formz.dart';
 import 'package:share_ute/update_bio/view/update_hobbies_view.dart';
-import 'package:user_repository/user_repository.dart';
 
 class UpdateBioForm extends StatelessWidget {
   @override
@@ -321,34 +319,34 @@ class _UpdateButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<UpdateBioCubit, UpdateBioState>(
         builder: (context, state) {
-          if (state.updateProgress == UpdateBioProgress.submissionInProgress) {
-            return Center(
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
+      if (state.updateProgress == UpdateBioProgress.submissionInProgress) {
+        return Center(
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+          ),
+        );
+      }
+      if (state.bioStatus != BioStatus.unknown &&
+          state.bioStatus != BioStatus.unchanged) {
+        return Center(
+          child: RaisedButton(
+            color: Colors.blue.withOpacity(0.8),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: Text(
+              'Cập nhật',
+              style: TextStyle(
+                color: Colors.white,
               ),
-            );
-          }
-          if (state.bioStatus != BioStatus.unknown &&
-              state.bioStatus != BioStatus.unchanged) {
-            return Center(
-              child: RaisedButton(
-                color: Colors.blue.withOpacity(0.8),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: Text(
-                  'Cập nhật',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-                onPressed: () {
-                  context.read<UpdateBioCubit>().updateBioUser();
-                },
-              ),
-            );
-          }
-          return Container();
-        });
+            ),
+            onPressed: () {
+              context.read<UpdateBioCubit>().updateBioUser();
+            },
+          ),
+        );
+      }
+      return Container();
+    });
   }
 }

@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:share_ute/blocs/folder_bloc.dart';
-import 'package:share_ute/search_screen/view/search_page.dart';
+import 'package:share_ute/search/search.dart';
 import 'package:share_ute/widgets/folder_bottom_actions_sheet.dart';
-import 'package:share_ute/widgets/folder_create_bottom_sheet.dart';
 import 'package:share_ute/widgets/folder_sortby_bottom_sheet.dart';
 import 'package:share_ute/models/file.dart';
 
@@ -106,9 +105,8 @@ class _FolderPageState extends State<FolderPage> {
                           fontPackage: CupertinoIcons.iconFontPackage),
                       color: CupertinoColors.systemGrey,
                     ),
-                    onPressed: () async {
-                      final results =
-                          showSearch(context: context, delegate: SearchPage());
+                    onPressed: ()  {
+                      showSearch(context: context, delegate: SearchPage());
                     },
                   ),
                   CupertinoButton(
@@ -125,26 +123,6 @@ class _FolderPageState extends State<FolderPage> {
                 ],
               )
             : null,
-        // floatingActionButton: Padding(
-        //   padding: EdgeInsets.only(bottom: 15),
-        //   child: FloatingActionButton(
-        //     tooltip: "Create new folder",
-        //     backgroundColor: Colors.white,
-        //     elevation: 2,
-        //     child: Icon(
-        //       Icons.add,
-        //       color: Colors.blue[900],
-        //     ),
-        //     onPressed: () {
-        //       showModalBottomSheet(
-        //           context: context,
-        //           builder: (builderContext) => FolderCreateBottomSheet(
-        //                 context: context,
-        //                 bloc: _bloc,
-        //               ));
-        //     },
-        //   ),
-        // ),
         body: Column(
           children: <Widget>[
             Padding(

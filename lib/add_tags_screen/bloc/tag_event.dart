@@ -4,6 +4,7 @@ abstract class TagEvent extends Equatable {
   const TagEvent();
 
   @override
+  // ignore: todo
   // TODO: implement props
   List<Object> get props => [];
 }
@@ -14,6 +15,7 @@ class TagInputChanged extends TagEvent {
   final String tagInputData;
 
   @override
+  // ignore: todo
   // TODO: implement props
   List<Object> get props => [tagInputData];
 }
@@ -24,6 +26,7 @@ class TagSuggestionSelected extends TagEvent {
   final TagSuggestion tagSuggestion;
 
   @override
+  // ignore: todo
   // TODO: implement props
   List<Object> get props => [tagSuggestion];
 }

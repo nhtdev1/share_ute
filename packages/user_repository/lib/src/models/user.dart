@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class User extends Equatable {
   const User({
+    this.id,
     this.email,
     this.name,
     this.birthday,
@@ -12,6 +13,8 @@ class User extends Equatable {
     this.major,
     this.hobbies,
   });
+
+  final String id;
 
   // The current user's email address
   final String email;
@@ -35,6 +38,7 @@ class User extends Equatable {
   final List<String> hobbies;
 
   static const empty = User(
+    id: '',
     email: '',
     name: '',
     birthday: '',
@@ -47,8 +51,8 @@ class User extends Equatable {
   );
 
   @override
-  // TODO: implement props
   List<Object> get props => [
+        id,
         email,
         name,
         birthday,
@@ -61,6 +65,7 @@ class User extends Equatable {
       ];
 
   User copyWith({
+    String id,
     String email,
     String name,
     String birthday,
@@ -72,6 +77,7 @@ class User extends Equatable {
     List<String> hobbies,
   }) {
     return User(
+      id: id ?? this.id,
       email: email ?? this.email,
       name: name ?? this.name,
       birthday: birthday ?? this.birthday,

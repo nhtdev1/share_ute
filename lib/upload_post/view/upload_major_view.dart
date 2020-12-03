@@ -88,6 +88,7 @@ class UploadMajorView extends StatelessWidget {
                               Icons.check_circle,
                               color: Colors.lightBlue,
                             ),
+                            onPressed: () {},
                           )
                         : null,
                   ),

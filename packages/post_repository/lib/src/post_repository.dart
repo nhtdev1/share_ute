@@ -15,9 +15,8 @@ class PostRepository {
 
   // Create a post to fire store, return id of post if create post successfully
   // else return none-id
-  Future<String> createPost({
+  Future<Post> createPost({
     Post post,
-    String originalFileURL,
   }) async {
     try {
       final result = await _firebaseFirestore.collection('posts').add({
@@ -26,7 +25,7 @@ class PostRepository {
         'postTitle': post.postTitle,
         'like': post.like,
         'disLike': post.dislike,
-        'originalFileURL': originalFileURL,
+        'originalFileURL': post.originalFile.path,
         'fileName': post.originalFile.fileName,
         'fileExtension': post.originalFile.fileExtension,
         'fileSize': post.originalFile.fileSize,
@@ -39,9 +38,12 @@ class PostRepository {
         'dateCreated': post.dateCreated,
       });
 
-      return result.id;
+      return post.copyWith(
+        postID: result.id,
+        uid: _firebaseAuth.currentUser.uid,
+      );
     } on Exception {
-      return "";
+      return Post.empty;
     }
   }
 
@@ -56,8 +58,8 @@ class PostRepository {
           uid: snapshot['uid'],
           public: snapshot['public'],
           postTitle: snapshot['postTitle'],
-          like: snapshot['like'],
-          dislike: snapshot['disLike'],
+          like: List<String>.from(snapshot['like']),
+          dislike: List<String>.from(snapshot['disLike']),
           originalFile: File(
             path: snapshot['originalFileURL'],
             fileName: snapshot['fileName'],
@@ -89,8 +91,8 @@ class PostRepository {
           .add({
         'uid': _firebaseAuth.currentUser.uid,
         'title': '',
-        'like': '0',
-        'disLike': '0',
+        'like': post.like,
+        'disLike': post.dislike,
         'solutionFileURL': solutionFileURL,
         'fileName': post.solutionFile.fileName,
         'fileExtension': post.solutionFile.fileExtension,
@@ -101,5 +103,163 @@ class PostRepository {
     } on Exception {
       return "";
     }
+  }
+
+  Future<bool> updateLike({
+    String postID,
+    List<String> like,
+  }) async {
+    try {
+      await _firebaseFirestore.collection('posts').doc(postID).update({
+        'like': like,
+      });
+      return true;
+    } on Exception {
+      return false;
+    }
+  }
+
+  // Get all emotion document of a post in emotions collection
+  Stream<List<Emotion>> emotions(
+    String postID,
+  ) {
+    return _firebaseFirestore
+        .collection('posts')
+        .doc(postID)
+        .collection('emotions')
+        .snapshots()
+        .map((snapshot) {
+      final List<Emotion> emotions = [];
+      snapshot.docs.forEach((doc) {
+        emotions.add(Emotion(
+          postID: doc['postID'],
+          uid: doc['uid'],
+          id: doc['id'],
+        ));
+      });
+
+      return emotions;
+    });
+  }
+
+  Future<String> addEmotion({
+    Emotion emotion,
+  }) async {
+    try {
+      final result = await _firebaseFirestore
+          .collection('posts')
+          .doc(emotion.postID)
+          .collection('emotions')
+          .add({
+        'postID': emotion.postID,
+        'uid': emotion.uid,
+        'id': emotion.id,
+      });
+      return result.id;
+    } on Exception {
+      return "";
+    }
+  }
+
+  Future<List<Emotion>> findEmotion(
+    Emotion emotion,
+  ) async {
+    final snapshot = await _firebaseFirestore
+        .collection('posts')
+        .doc(emotion.postID)
+        .collection('emotions')
+        .where('uid', isEqualTo: emotion.uid)
+        .get();
+
+    final List<Emotion> emotions = [];
+    snapshot.docs.forEach((doc) {
+      emotions.add(Emotion(
+        id: doc.id,
+        postID: doc['postID'],
+        uid: doc['uid'],
+      ));
+    });
+    return emotions;
+  }
+
+  Future<void> removeEmotion(
+    Emotion emotion,
+  ) async {
+    return _firebaseFirestore
+        .collection('posts')
+        .doc(emotion.postID)
+        .collection('emotions')
+        .doc(emotion.id)
+        .delete()
+        .then((value) =>
+            print("Emotion:${emotion.id} of post:${emotion.postID} deleted"))
+        .catchError((error) => print(
+            "Error: $error. Failed to delete emotion:${emotion.id} of post:${emotion.postID}"));
+  }
+
+  Future<void> setEmotion(
+    Emotion emotion,
+  ) {
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+
+    final document = _firebaseFirestore
+        .collection('posts')
+        .doc(emotion.postID)
+        .collection('emotions')
+        .doc();
+
+    batch.set(document, {
+      'postID': emotion.postID,
+      'uid': emotion.uid,
+      'id': emotion.id,
+    });
+
+    return batch.commit();
+  }
+
+  Future<void> deleteEmotion(
+    Emotion emotion,
+  ) {
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+
+    return _firebaseFirestore
+        .collection('posts')
+        .doc(emotion.postID)
+        .collection('emotions')
+        .get()
+        .then((querySnapshot) {
+      querySnapshot.docs.forEach((document) {
+        if (emotion.uid == document['uid']) {
+          batch.delete(document.reference);
+        }
+      });
+
+      return batch.commit();
+    });
+  }
+
+  Future<void> updateEmotion(
+    Emotion emotion,
+  ) {
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+
+    return _firebaseFirestore
+        .collection('posts')
+        .doc(emotion.postID)
+        .collection('emotions')
+        .get()
+        .then((querySnapshot) {
+      querySnapshot.docs.forEach((document) {
+        if (emotion.uid == document['uid']) {
+          batch.update(document.reference, {
+            'postID': emotion.postID,
+            'uid': emotion.uid,
+            'id': emotion.id,
+          });
+        }
+      });
+
+      return batch.commit();
+    });
   }
 }

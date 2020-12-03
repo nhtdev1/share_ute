@@ -42,7 +42,7 @@ class SearchPage extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final results = Suggestion.string_suggestions
+    final results = Suggestion.stringSuggestions
         .where((element) => element.toLowerCase().contains(query));
     final suggestions = Suggestion.suggestions;
     return query.trim() == ''

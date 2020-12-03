@@ -38,7 +38,6 @@ class UploadPostState extends Equatable {
   final UploadPostProgress uploadPostProgress;
 
   @override
-  // TODO: implement props
   List<Object> get props => [
         post,
         postStatus,
