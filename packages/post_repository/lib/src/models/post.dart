@@ -4,6 +4,7 @@ import 'package:file_picker_repository/file_picker_repository.dart';
 class Post extends Equatable {
   const Post({
     this.uid,
+    this.photoURL,
     this.postID,
     this.public,
     this.postTitle,
@@ -21,6 +22,7 @@ class Post extends Equatable {
   });
 
   final String uid;
+  final String photoURL;
   final String postID;
   final String public;
   final String postTitle;
@@ -41,6 +43,7 @@ class Post extends Equatable {
   @override
   List<Object> get props => [
         uid,
+        photoURL,
         postID,
         public,
         postTitle,
@@ -59,6 +62,7 @@ class Post extends Equatable {
 
   static const empty = Post(
     uid: '',
+    photoURL: '',
     postID: '',
     public: 'true',
     postTitle: '',
@@ -77,6 +81,7 @@ class Post extends Equatable {
 
   Post copyWith({
     String uid,
+    String photoURL,
     String postID,
     String public,
     String postTitle,
@@ -94,6 +99,7 @@ class Post extends Equatable {
   }) {
     return Post(
       uid: uid ?? this.uid,
+      photoURL: photoURL ?? this.photoURL,
       postID: postID ?? this.postID,
       public: public ?? this.public,
       postTitle: postTitle ?? this.postTitle,

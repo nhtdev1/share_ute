@@ -240,6 +240,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  solution_repository:
+    dependency: "direct main"
+    description:
+      path: "../solution_repository"
+      relative: true
+    source: path
+    version: "1.0.0"
   source_span:
     dependency: transitive
     description:

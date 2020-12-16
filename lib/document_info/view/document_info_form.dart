@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:share_ute/document/document.dart';
 import 'package:share_ute/document_info/widgets/widgets.dart';
+import 'package:share_ute/notification/notification.dart';
 
 class DocumentInfoForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final post = context.watch<DocumentCubit>().state.post;
+    final post = context.watch<NotificationCubit>().state.currentPost;
     return Container(
       color: CupertinoColors.white,
       child: Stack(
@@ -18,7 +18,7 @@ class DocumentInfoForm extends StatelessWidget {
           EmotionIcons(),
           EmotionTitle(),
           EmotionButton(),
-          UserAvatar(),
+          UserAvatar(post),
           Container(
             margin: EdgeInsets.only(
                 top: (MediaQuery.of(context).size.width / 1.2) - 5.0),

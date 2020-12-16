@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:share_ute/document/document.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:post_repository/post_repository.dart';
 
 class UserAvatar extends StatelessWidget {
+  UserAvatar(this.post);
+
+  final Post post;
+
   @override
   Widget build(BuildContext context) {
-    final user = context.watch<DocumentCubit>().state.userOfPost;
     return Positioned(
       top: (MediaQuery.of(context).size.width / 1.2) - 24.0 - 25.0,
       right: 15,
@@ -18,8 +20,9 @@ class UserAvatar extends StatelessWidget {
         ),
         child: ClipRRect(
           borderRadius: const BorderRadius.all(Radius.circular(60.0)),
-          child:
-              user.photo.isNotEmpty ? Image.network(user.photo) : Container(),
+          child: post.photoURL.isNotEmpty
+              ? Image.network(post.photoURL)
+              : Container(),
         ),
       ),
     );

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:post_repository/post_repository.dart';
+import 'package:solution_repository/solution_repository.dart';
 
 class StorageRepository {
   StorageRepository({
@@ -33,6 +34,16 @@ class StorageRepository {
     File file = File(post.originalFile.path);
     String path = 'posts/${_firebaseAuth.currentUser.uid}/'
         'original/${post.dateCreated}_${post.originalFile.fileName}';
+    return _firebaseStorage.ref().child(path).putFile(file).snapshotEvents;
+  }
+
+// Store a solution of post to fire storage
+  Stream<TaskSnapshot> uploadSolution({
+    Solution solution,
+  }) {
+    File file = File(solution.solutionFile.path);
+    String path = 'posts/${_firebaseAuth.currentUser.uid}/'
+        'solution/${solution.dateCreated}_${solution.solutionFile.fileName}';
     return _firebaseStorage.ref().child(path).putFile(file).snapshotEvents;
   }
 

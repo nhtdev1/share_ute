@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker_repository/file_picker_repository.dart';
-import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:post_repository/src/models/models.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 
 class PostRepository {
   PostRepository({
@@ -12,7 +12,6 @@ class PostRepository {
 
   final FirebaseFirestore _firebaseFirestore;
   final firebase_auth.FirebaseAuth _firebaseAuth;
-
   // Create a post to fire store, return id of post if create post successfully
   // else return none-id
   Future<Post> createPost({
@@ -21,6 +20,7 @@ class PostRepository {
     try {
       final result = await _firebaseFirestore.collection('posts').add({
         'uid': _firebaseAuth.currentUser.uid,
+        'photoURL': post.photoURL,
         'public': post.public,
         'postTitle': post.postTitle,
         'like': post.like,
@@ -40,7 +40,6 @@ class PostRepository {
 
       return post.copyWith(
         postID: result.id,
-        uid: _firebaseAuth.currentUser.uid,
       );
     } on Exception {
       return Post.empty;
@@ -81,7 +80,6 @@ class PostRepository {
 
   Future<String> createSolutionFile({
     Post post,
-    String solutionFileURL,
   }) async {
     try {
       final result = await _firebaseFirestore
@@ -90,10 +88,9 @@ class PostRepository {
           .collection('solutions')
           .add({
         'uid': _firebaseAuth.currentUser.uid,
+        'photoURL': post.photoURL,
         'title': '',
-        'like': post.like,
-        'disLike': post.dislike,
-        'solutionFileURL': solutionFileURL,
+        'solutionFileURL': post.solutionFile.path,
         'fileName': post.solutionFile.fileName,
         'fileExtension': post.solutionFile.fileExtension,
         'fileSize': post.solutionFile.fileSize,
@@ -101,7 +98,7 @@ class PostRepository {
       });
       return result.id;
     } on Exception {
-      return "";
+      return '';
     }
   }
 

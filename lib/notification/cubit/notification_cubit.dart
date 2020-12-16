@@ -10,11 +10,9 @@ class NotificationCubit extends Cubit<NotificationState> {
 
   void newPostCreated({
     Post post,
-    User userOfPost,
   }) {
     emit(state.copyWith(
       currentPost: post,
-      userOfCurrentPost: userOfPost,
       status: NotificationStatus.newPostCreated,
     ));
   }

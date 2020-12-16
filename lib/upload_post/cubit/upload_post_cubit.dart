@@ -4,10 +4,10 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:file_picker_repository/file_picker_repository.dart';
 import 'package:post_repository/post_repository.dart';
+import 'package:share_ute/firestore_user/firestore_user.dart';
 import 'package:share_ute/notification/notification.dart';
 import 'package:storage_repository/storage_repository.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:user_repository/user_repository.dart';
 
 part 'upload_post_state.dart';
 
@@ -16,20 +16,20 @@ class UploadPostCubit extends Cubit<UploadPostState> {
     FilePickerRepository filePickerRepository,
     StorageRepository storageRepository,
     PostRepository postRepository,
-    FirestoreUserRepository firestoreUserRepository,
+    FirestoreUserBloc firestoreUserBloc,
     NotificationCubit notificationCubit,
   })  : assert(filePickerRepository != null),
         _storageRepository = storageRepository,
         _filePickerRepository = filePickerRepository,
         _postRepository = postRepository,
-        _firestoreUserRepository = firestoreUserRepository,
+        _firestoreUserBloc = firestoreUserBloc,
         _notificationCubit = notificationCubit,
         super(const UploadPostState());
 
   final FilePickerRepository _filePickerRepository;
   final StorageRepository _storageRepository;
   final PostRepository _postRepository;
-  final FirestoreUserRepository _firestoreUserRepository;
+  final FirestoreUserBloc _firestoreUserBloc;
   final NotificationCubit _notificationCubit;
   StreamSubscription<TaskSnapshot> _storageSubscription;
 
@@ -197,12 +197,12 @@ class UploadPostCubit extends Cubit<UploadPostState> {
 
   void uploadPost() {
     final dateCreated = DateTime.now().millisecondsSinceEpoch.toString();
+    final copyPost = state.post.copyWith(
+      photoURL: _firestoreUserBloc.state.user.photo,
+      dateCreated: dateCreated,
+    );
     _storageSubscription = _storageRepository
-        .uploadDocument(
-      post: state.post.copyWith(
-        dateCreated: dateCreated,
-      ),
-    )
+        .uploadDocument(post: copyPost)
         .listen((taskSnapshot) async {
       if (taskSnapshot != null) {
         if (taskSnapshot.state == TaskState.success) {
@@ -211,28 +211,23 @@ class UploadPostCubit extends Cubit<UploadPostState> {
               .getDownloadURL(taskSnapshot.metadata.fullPath);
 
           // Create a post to firestore
-          final post = await _postRepository.createPost(
-            post: state.post.copyWith(
+          final result = await _postRepository.createPost(
+            post: copyPost.copyWith(
               originalFile: state.post.originalFile.copyWith(
                 path: originalFileURL,
               ),
-              dateCreated: dateCreated,
             ),
           );
 
-          final userOfPost =
-              await _firestoreUserRepository.findUserById(post.uid);
-
           // Create post successfully!
-          if (post != Post.empty) {
+          if (result != Post.empty) {
             // Upload solution of post to firestore
             if (state.post.solutionFile.isNotEmpty) {
-              uploadSolutionFile(post);
+              uploadSolutionFile(result);
             }
 
             // Notify to app that a new post is created
-            _notificationCubit.newPostCreated(
-                post: post, userOfPost: userOfPost);
+            _notificationCubit.newPostCreated(post: result);
 
             emit(state.copyWith(
               uploadPostProgress: UploadPostProgress.submissionSuccess,
@@ -264,8 +259,11 @@ class UploadPostCubit extends Cubit<UploadPostState> {
     if (path.isNotEmpty) {
       final solutionFileURL = await _storageRepository.getDownloadURL(path);
       _postRepository.createSolutionFile(
-        post: post,
-        solutionFileURL: solutionFileURL,
+        post: post.copyWith(
+          solutionFile: post.solutionFile.copyWith(
+            path: solutionFileURL,
+          ),
+        ),
       );
     }
   }

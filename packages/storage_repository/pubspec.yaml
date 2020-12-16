@@ -11,3 +11,5 @@ dependencies:
   firebase_auth: ^0.18.1+2
   post_repository:
     path: ../post_repository
+  solution_repository:
+    path: ../solution_repository

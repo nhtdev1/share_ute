@@ -1,24 +1,24 @@
-part of 'solution_bloc.dart';
+part of 'document_solution_bloc.dart';
 
-enum SolutionStatus { initial, success, failure }
+enum DocumentSolutionStatus { initial, success, failure }
 
-class SolutionState extends Equatable {
-  const SolutionState({
-    this.status = SolutionStatus.initial,
+class DocumentSolutionState extends Equatable {
+  const DocumentSolutionState({
+    this.status = DocumentSolutionStatus.initial,
     this.solutions = const <Solution>[],
     this.hasReachedMax = false,
   });
 
-  final SolutionStatus status;
+  final DocumentSolutionStatus status;
   final List<Solution> solutions;
   final bool hasReachedMax;
 
-  SolutionState copyWith({
-    SolutionStatus status,
+  DocumentSolutionState copyWith({
+    DocumentSolutionStatus status,
     List<Solution> solutions,
     bool hasReachedMax,
   }) {
-    return SolutionState(
+    return DocumentSolutionState(
       status: status ?? this.status,
       solutions: solutions ?? this.solutions,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,

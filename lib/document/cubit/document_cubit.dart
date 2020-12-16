@@ -11,8 +11,9 @@ class DocumentCubit extends Cubit<DocumentState> {
   DocumentCubit({
     @required NotificationCubit notificationCubit,
   })  : assert(notificationCubit != null),
-        super(DocumentState(
-          post: notificationCubit.state.currentPost,
-          userOfPost: notificationCubit.state.userOfCurrentPost,
-        ));
+        super(
+          DocumentState(
+            post: notificationCubit.state.currentPost,
+          ),
+        );
 }

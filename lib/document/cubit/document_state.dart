@@ -3,14 +3,12 @@ part of 'document_cubit.dart';
 class DocumentState extends Equatable {
   const DocumentState({
     this.post = Post.empty,
-    this.userOfPost = User.empty,
   });
 
   final Post post;
-  final User userOfPost;
 
   @override
-  List<Object> get props => [post, userOfPost];
+  List<Object> get props => [post];
 
   DocumentState copyWith({
     Post post,
@@ -18,7 +16,6 @@ class DocumentState extends Equatable {
   }) {
     return DocumentState(
       post: post ?? this.post,
-      userOfPost: userOfPost ?? this.userOfPost,
     );
   }
 }

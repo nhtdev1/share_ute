@@ -5,10 +5,8 @@ import 'package:share_ute/authentication/authentication.dart';
 import 'package:share_ute/document/document.dart';
 import 'package:share_ute/emotion/bloc/emotion_bloc.dart';
 import 'package:share_ute/notification/notification.dart';
-import 'package:share_ute/solutions/solutions.dart';
+import 'package:share_ute/solution_notification/cubit/solution_notification_cubit.dart';
 import 'package:solution_repository/solution_repository.dart';
-
-import 'package:http/http.dart' as http;
 
 class DocumentPage extends StatelessWidget {
   const DocumentPage({Key key}) : super(key: key);
@@ -23,12 +21,6 @@ class DocumentPage extends StatelessWidget {
       providers: [
         BlocProvider(
           lazy: false,
-          create: (context) => DocumentCubit(
-            notificationCubit: context.read<NotificationCubit>(),
-          ),
-        ),
-        BlocProvider(
-          lazy: false,
           create: (context) => EmotionBloc(
             postRepository: context.read<PostRepository>(),
             notificationCubit: context.read<NotificationCubit>(),
@@ -36,11 +28,12 @@ class DocumentPage extends StatelessWidget {
           ),
         ),
         BlocProvider(
-          create: (context) => SolutionBloc(
+          lazy: false,
+          create: (context) => SolutionNotificationCubit(
             solutionRepository: SolutionRepository(),
             notificationCubit: context.read<NotificationCubit>(),
-            httpClient: http.Client(),
-          )..add(SolutionFetched()),
+            authenticationBloc: context.read<AuthenticationBloc>(),
+          ),
         ),
       ],
       child: DocumentForm(),
