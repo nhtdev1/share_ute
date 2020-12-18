@@ -44,6 +44,8 @@ dependencies:
     path: packages/post_repository
   solution_repository:
     path: packages/solution_repository
+  comment_repository:
+    path: packages/comment_repository
   storage_repository:
     path: packages/storage_repository
   file_picker_repository:

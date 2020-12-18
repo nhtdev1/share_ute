@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:share_ute/authentication/authentication.dart';
+import 'package:share_ute/comment_notification/comment_notification.dart';
 import 'package:share_ute/document/document.dart';
-import 'package:share_ute/emotion/bloc/emotion_bloc.dart';
 import 'package:share_ute/notification/notification.dart';
+import 'package:share_ute/react_post/react_post.dart';
 import 'package:share_ute/solution_notification/cubit/solution_notification_cubit.dart';
 import 'package:solution_repository/solution_repository.dart';
+import 'package:comment_repository/comment_repository.dart';
 
 class DocumentPage extends StatelessWidget {
   const DocumentPage({Key key}) : super(key: key);
@@ -19,9 +21,17 @@ class DocumentPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        // BlocProvider(
+        //   lazy: false,
+        //   create: (context) => EmotionBloc(
+        //     postRepository: context.read<PostRepository>(),
+        //     notificationCubit: context.read<NotificationCubit>(),
+        //     authenticationBloc: context.read<AuthenticationBloc>(),
+        //   ),
+        // ),
         BlocProvider(
           lazy: false,
-          create: (context) => EmotionBloc(
+          create: (context) => ReactPostBloc(
             postRepository: context.read<PostRepository>(),
             notificationCubit: context.read<NotificationCubit>(),
             authenticationBloc: context.read<AuthenticationBloc>(),
@@ -33,6 +43,13 @@ class DocumentPage extends StatelessWidget {
             solutionRepository: SolutionRepository(),
             notificationCubit: context.read<NotificationCubit>(),
             authenticationBloc: context.read<AuthenticationBloc>(),
+          ),
+        ),
+        BlocProvider(
+          lazy: false,
+          create: (context) => CommentNotificationCubit(
+            commentRepository: CommentRepository(),
+            notificationCubit: context.read<NotificationCubit>(),
           ),
         ),
       ],

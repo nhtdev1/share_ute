@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:share_ute/document_solution/document_solution.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:share_ute/react_solution/react_solution.dart';
 import 'package:solution_repository/solution_repository.dart';
 
 class DocumentSolutionForm extends StatefulWidget {
@@ -48,7 +49,7 @@ class _DocumentSolutionFormState extends State<DocumentSolutionForm> {
               onRefresh: _onRefresh,
               child: ListView.builder(
                 itemBuilder: (BuildContext context, int index) {
-                  _check();
+                  //_check();
                   return index >= state.solutions.length
                       ? BottomLoader()
                       : SolutionWidget(solution: state.solutions[index]);
@@ -70,16 +71,6 @@ class _DocumentSolutionFormState extends State<DocumentSolutionForm> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
-  }
-
-  void _check() {
-    // Check whether has position object is attached to Scrollcontroller or not
-    if (!_scrollController.hasClients) return;
-    // The maximum in-range value for [pixels] (ứng với chiều dài pixel
-    // tử hiện có trong listview)
-    final maxScroll = _scrollController.position.maxScrollExtent;
-    print("Max scroll $maxScroll");
-    // The current scroll offset of the scrollable widget (Phần bị ẩn đi khi cuộn)
   }
 
   void _onScroll() {
@@ -187,10 +178,13 @@ class SolutionWidget extends StatelessWidget {
                 ),
               ],
             ),
-            //Spacer(),
-            // ReactSolutionPage(
-            //   solution: solution,
-            // ),
+            Spacer(),
+            ReactSolutionPage(
+              solution: solution,
+            ),
+            const SizedBox(
+              width: 15,
+            )
           ],
         ),
       ),

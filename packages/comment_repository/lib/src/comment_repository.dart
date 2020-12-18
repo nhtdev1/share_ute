@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker_repository/file_picker_repository.dart';
-
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:post_repository/post_repository.dart';
 import 'models/models.dart';
 
-class SolutionRepository {
-  SolutionRepository({
+class CommentRepository {
+  CommentRepository({
     FirebaseFirestore firebaseFirestore,
     firebase_auth.FirebaseAuth firebaseAuth,
   })  : _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance,
@@ -15,49 +13,39 @@ class SolutionRepository {
   final FirebaseFirestore _firebaseFirestore;
   final firebase_auth.FirebaseAuth _firebaseAuth;
 
-  Stream<List<Solution>> solution(String postId) {
+  Stream<List<Comment>> comment(String postId) {
     return _firebaseFirestore
-        .collection('posts/$postId/solutions')
+        .collection('posts/$postId/comments')
         .orderBy('dateCreated', descending: false)
         .snapshots()
         .map((snapshot) {
-      final List<Solution> solutions = [];
+      final List<Comment> comments = [];
       snapshot.docs.forEach((doc) {
-        solutions.add(Solution(
-          postID: postId,
-          solutionID: doc.id,
+        comments.add(Comment(
+          postId: postId,
+          commentId: doc.id,
           uid: doc['uid'],
           photoURL: doc['photoURL'],
           title: doc['title'],
-          solutionFile: File(
-            path: doc['solutionFileURL'],
-            fileName: doc['fileName'],
-            fileExtension: doc['fileExtension'],
-            fileSize: doc['fileSize'],
-          ),
           dateCreated: doc['dateCreated'],
         ));
       });
 
-      return solutions;
+      return comments;
     });
   }
 
-  Future<String> createSolutionFile({
-    Solution solution,
+  Future<String> createComment({
+    Comment comment,
   }) async {
     try {
       final result = await _firebaseFirestore
-          .collection('posts/${solution.postID}/solutions')
+          .collection('posts/${comment.postId}/comments')
           .add({
         'uid': _firebaseAuth.currentUser.uid,
-        'photoURL': solution.photoURL,
-        'title': solution.title,
-        'solutionFileURL': solution.solutionFile.path,
-        'fileName': solution.solutionFile.fileName,
-        'fileExtension': solution.solutionFile.fileExtension,
-        'fileSize': solution.solutionFile.fileSize,
-        'dateCreated': solution.dateCreated,
+        'photoURL': comment.photoURL,
+        'title': comment.title,
+        'dateCreated': comment.dateCreated,
       });
       return result.id;
     } on Exception {
@@ -66,70 +54,22 @@ class SolutionRepository {
   }
 
   Future<void> setSolution(
-    Solution solution,
+    Comment comment,
   ) {
     WriteBatch batch = FirebaseFirestore.instance.batch();
 
-    final document = _firebaseFirestore
-        .collection('posts/${solution.postID}/solutions')
-        .doc();
+    final document =
+        _firebaseFirestore.collection('posts/${comment.postId}/comments').doc();
 
     batch.set(document, {
-      'uid': solution.uid,
-      'solutionID': solution.solutionID,
-      'postID': solution.postID,
-      'title': solution.title,
-      'solutionFileURL': solution.solutionFile.path,
-      'fileName': solution.solutionFile.fileName,
-      'fileExtension': solution.solutionFile.fileSize,
-      'fileSize': solution.solutionFile.fileSize,
-      'dateCreated': solution.dateCreated,
+      'uid': comment.uid,
+      'commentId': comment.commentId,
+      'postId': comment.postId,
+      'title': comment.title,
+      'dateCreated': comment.dateCreated,
     });
 
     return batch.commit();
-  }
-
-  Future<List<Solution>> getSolutions(Post post, int limit) async {
-    final snapshot = await _firebaseFirestore
-        .collection('posts/${post.postID}/solutions')
-        .limit(limit)
-        .get();
-
-    return snapshot.docs
-        .map((data) => Solution(
-              uid: data.data()['uid'],
-              solutionID: data.id,
-              postID: post.postID,
-              solutionFile: File(
-                path: data.data()['solutionFileURL'],
-                fileName: data.data()['fileName'],
-                fileExtension: data.data()['fileExtension'],
-                fileSize: data.data()['fileSize'],
-              ),
-              dateCreated: data.data()['dateCreated'],
-            ))
-        .toList();
-  }
-
-  Future<List<Solution>> getAllSolutions(Post post) async {
-    final snapshot = await _firebaseFirestore
-        .collection('posts/${post.postID}/solutions')
-        .get();
-
-    return snapshot.docs
-        .map((data) => Solution(
-              uid: data.data()['uid'],
-              solutionID: data.id,
-              postID: post.postID,
-              solutionFile: File(
-                path: data.data()['solutionFileURL'],
-                fileName: data.data()['fileName'],
-                fileExtension: data.data()['fileExtension'],
-                fileSize: data.data()['fileSize'],
-              ),
-              dateCreated: data.data()['dateCreated'],
-            ))
-        .toList();
   }
 
   Stream<List<Emotion>> emotions(

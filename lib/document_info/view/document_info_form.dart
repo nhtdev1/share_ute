@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_ute/document_info/widgets/widgets.dart';
 import 'package:share_ute/notification/notification.dart';
+import 'package:share_ute/react_post/react_post.dart';
 
 class DocumentInfoForm extends StatelessWidget {
   @override
@@ -15,9 +16,10 @@ class DocumentInfoForm extends StatelessWidget {
           DocumentThumbnail(post),
           _Holder(),
           DocumentDetails(post),
-          EmotionIcons(),
-          EmotionTitle(),
-          EmotionButton(),
+          // EmotionIcons(),
+          // EmotionTitle(),
+          // EmotionButton(),
+          ReactPostPage(),
           UserAvatar(post),
           Container(
             margin: EdgeInsets.only(

@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reaction_button/flutter_reaction_button.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:share_ute/react_solution/react_solution.dart';
+import 'package:share_ute/react_comment/react_comment.dart';
 
 class EmotionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ReactSolutionBloc, ReactSolutionState>(
+    return BlocBuilder<ReactCommentBloc, ReactCommentState>(
       buildWhen: (previous, current) => previous.emotions != current.emotions,
       builder: (context, state) {
         return FlutterReactionButtonCheck(
           onReactionChanged: (reaction, isChecked) {
             context
-                .read<ReactSolutionBloc>()
-                .add(ReactSolutionRequested(reaction.id));
+                .read<ReactCommentBloc>()
+                .add(ReactCommentRequested(reaction.id));
           },
           reactions: <Reaction>[
             Reaction(
@@ -112,8 +112,8 @@ class EmotionButton extends StatelessWidget {
         ),
       );
 
-  _buildselectedReaction(ReactSolutionState state) {
-    if (state.userStatus == ReactSolutionStatus.reactedWithLike) {
+  _buildselectedReaction(ReactCommentState state) {
+    if (state.userStatus == ReactCommentStatus.reactedWithLike) {
       return Reaction(
           id: 1,
           title: _buildTitle('Thích'),
@@ -129,7 +129,7 @@ class EmotionButton extends StatelessWidget {
           ));
     }
 
-    if (state.userStatus == ReactSolutionStatus.reactedWithLove) {
+    if (state.userStatus == ReactCommentStatus.reactedWithLove) {
       return Reaction(
           id: 2,
           title: _buildTitle('Yêu'),
@@ -144,7 +144,7 @@ class EmotionButton extends StatelessWidget {
             ),
           ));
     }
-    if (state.userStatus == ReactSolutionStatus.reactedWithWow) {
+    if (state.userStatus == ReactCommentStatus.reactedWithWow) {
       return Reaction(
           id: 3,
           title: _buildTitle('Ghê'),
@@ -159,7 +159,7 @@ class EmotionButton extends StatelessWidget {
             ),
           ));
     }
-    if (state.userStatus == ReactSolutionStatus.reactedWithAngry) {
+    if (state.userStatus == ReactCommentStatus.reactedWithAngry) {
       return Reaction(
           id: 4,
           title: _buildTitle('Tức'),

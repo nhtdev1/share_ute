@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:share_ute/react_solution/widgets/widgets.dart';
+import 'package:share_ute/react_comment/react_comment.dart';
 
-class ReactSolutionForm extends StatelessWidget {
+class ReactCommentForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -18,6 +18,7 @@ class ReactSolutionForm extends StatelessWidget {
           ],
         ),
         EmotionButton(),
+        Container(),
       ],
     );
   }

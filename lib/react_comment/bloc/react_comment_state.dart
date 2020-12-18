@@ -1,6 +1,6 @@
-part of 'react_post_bloc.dart';
+part of 'react_comment_bloc.dart';
 
-enum ReactPostStatus {
+enum ReactCommentStatus {
   unknown,
   reactedWithLike,
   reactedWithLove,
@@ -8,14 +8,14 @@ enum ReactPostStatus {
   reactedWithAngry,
 }
 
-class ReactPostState extends Equatable {
-  const ReactPostState({
+class ReactCommentState extends Equatable {
+  const ReactCommentState({
     this.emotions = const [],
-    this.userStatus = ReactPostStatus.unknown,
+    this.userStatus = ReactCommentStatus.unknown,
   });
 
   final List<Emotion> emotions;
-  final ReactPostStatus userStatus;
+  final ReactCommentStatus userStatus;
 
   @override
   List<Object> get props => [
@@ -23,11 +23,11 @@ class ReactPostState extends Equatable {
         userStatus,
       ];
 
-  ReactPostState copyWith({
+  ReactCommentState copyWith({
     List<Emotion> emotions,
-    ReactPostStatus userStatus,
+    ReactCommentStatus userStatus,
   }) {
-    return ReactPostState(
+    return ReactCommentState(
       emotions: emotions ?? this.emotions,
       userStatus: userStatus ?? this.userStatus,
     );

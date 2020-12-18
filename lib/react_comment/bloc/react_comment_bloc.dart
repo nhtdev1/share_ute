@@ -4,29 +4,29 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:post_repository/post_repository.dart';
 import 'package:share_ute/authentication/authentication.dart';
-import 'package:solution_repository/solution_repository.dart';
+import 'package:comment_repository/comment_repository.dart';
 
-part 'react_solution_event.dart';
-part 'react_solution_state.dart';
+part 'react_comment_event.dart';
+part 'react_comment_state.dart';
 
-class ReactSolutionBloc extends Bloc<ReactSolutionEvent, ReactSolutionState> {
-  ReactSolutionBloc({
-    SolutionRepository solutionRepository,
+class ReactCommentBloc extends Bloc<ReactCommentEvent, ReactCommentState> {
+  ReactCommentBloc({
+    CommentRepository commentRepository,
     AuthenticationBloc authenticationBloc,
-    Solution solution,
-  })  : assert(solutionRepository != null),
+    Comment comment,
+  })  : assert(commentRepository != null),
         assert(authenticationBloc != null),
-        _solutionRepository = solutionRepository,
+        _commentRepository = commentRepository,
         _authenticationBloc = authenticationBloc,
-        super(const ReactSolutionState()) {
-    _path = '${solution.postID}/solutions/${solution.solutionID}';
+        super(const ReactCommentState()) {
+    _path = '${comment.postId}/comments/${comment.commentId}';
     _reactionSubscription =
-        solutionRepository.emotions(_path).listen((emotions) {
-      add(ReactSolutionChanged(emotions));
+        _commentRepository.emotions(_path).listen((emotions) {
+      add(ReactCommentChanged(emotions));
     });
   }
 
-  final SolutionRepository _solutionRepository;
+  final CommentRepository _commentRepository;
 
   final AuthenticationBloc _authenticationBloc;
   String _path;
@@ -40,31 +40,31 @@ class ReactSolutionBloc extends Bloc<ReactSolutionEvent, ReactSolutionState> {
   }
 
   @override
-  Stream<ReactSolutionState> mapEventToState(ReactSolutionEvent event) async* {
-    if (event is ReactSolutionChanged) {
-      yield _mapReactSolutionChangedToState(event);
-    } else if (event is ReactSolutionRequested) {
+  Stream<ReactCommentState> mapEventToState(ReactCommentEvent event) async* {
+    if (event is ReactCommentChanged) {
+      yield _mapReactCommentChangedToState(event);
+    } else if (event is ReactCommentRequested) {
       // yield await _mapEmotionReactRequestedToState(event);
-      _handleReactSolutionRequested(event);
+      _handleReactCommentRequested(event);
     }
   }
 
   _getUserStatusById(String id) {
     if (id == '1') {
-      return ReactSolutionStatus.reactedWithLike;
+      return ReactCommentStatus.reactedWithLike;
     } else if (id == '2') {
-      return ReactSolutionStatus.reactedWithLove;
+      return ReactCommentStatus.reactedWithLove;
     } else if (id == '3') {
-      return ReactSolutionStatus.reactedWithWow;
+      return ReactCommentStatus.reactedWithWow;
     } else if (id == '4') {
-      return ReactSolutionStatus.reactedWithAngry;
+      return ReactCommentStatus.reactedWithAngry;
     } else {
-      return ReactSolutionStatus.unknown;
+      return ReactCommentStatus.unknown;
     }
   }
 
-  void _handleReactSolutionRequested(
-    ReactSolutionRequested event,
+  void _handleReactCommentRequested(
+    ReactCommentRequested event,
   ) async {
     final uid = _authenticationBloc.state.user.id;
     // Get current emotions of Post
@@ -80,18 +80,18 @@ class ReactSolutionBloc extends Bloc<ReactSolutionEvent, ReactSolutionState> {
     );
 
     if (reactedEmotion == Emotion.empty) {
-      _solutionRepository.setEmotion(_path, e);
+      _commentRepository.setEmotion(_path, e);
     } else {
       if (reactedEmotion.id == event.id.toString()) {
-        _solutionRepository.deleteEmotion(_path, e);
+        _commentRepository.deleteEmotion(_path, e);
       } else {
-        _solutionRepository.updateEmotion(_path, e);
+        _commentRepository.updateEmotion(_path, e);
       }
     }
   }
 
-  ReactSolutionState _mapReactSolutionChangedToState(
-    ReactSolutionChanged event,
+  ReactCommentState _mapReactCommentChangedToState(
+    ReactCommentChanged event,
   ) {
     final emotions = event.emotions.map((e) => e).toList();
 

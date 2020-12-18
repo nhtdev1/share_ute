@@ -13,7 +13,7 @@ class ReactSolutionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<ReactSolutionBloc>(
       create: (context) => ReactSolutionBloc(
-        solutionRepository: context.read<SolutionRepository>(),
+        solutionRepository: SolutionRepository(),
         authenticationBloc: context.read<AuthenticationBloc>(),
         solution: solution,
       ),
