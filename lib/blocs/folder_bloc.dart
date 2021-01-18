@@ -1,18 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
-import 'package:share_ute/models/file.dart';
+import 'package:share_ute/models/folder.dart';
 import 'package:share_ute/widgets/folder_sortby_bottom_sheet.dart';
 import 'package:share_ute/repositories/folder_repository.dart';
-
-import '../models/file.dart';
 
 class FolderBloc {
   StreamController _listDataController = new StreamController();
   StreamController _sortTypeController = new StreamController();
 
-  List<File> _data = new List<File>();
-  FolderRepository _repository = new FolderRepository();
+  List<Folder> _data = List<Folder>();
+  FolderRepository _repository = FolderRepository();
 
   SORT_BY _curSortType;
   bool _isIncrement;
@@ -22,9 +20,9 @@ class FolderBloc {
   SORT_BY get curSortType => _curSortType;
   bool get isIncrement => _isIncrement;
   int get getLength => _data.length;
-  List<File> get getData => _data;
+  List<Folder> get getData => _data;
 
-  void init({List<File> data, SORT_BY type, bool isIncrement}) {
+  void init({List<Folder> data, SORT_BY type, bool isIncrement}) {
     data == null ? _data = _repository.getFileData() : _data = data;
     _listDataController.sink.add(true);
 
@@ -39,7 +37,7 @@ class FolderBloc {
   }
 
   /// Lấy danh sách con của 1 folder thông qua id của folder đó
-  List<File> getChildOf({@required String folderId}) {
+  List<Folder> getChildOf({@required String folderId}) {
     // ignore: todo
     //TODO: Xử lí khi có dữ liệu
     return _repository.getFileData();
@@ -53,13 +51,13 @@ class FolderBloc {
       return false;
     }
     _data.add(
-        _repository.createFile("folder", fileName, "", true, DateTime.now()));
+        _repository.createFolder("folder", fileName, "", true, DateTime.now()));
     _listDataController.sink.add(true);
     return true;
   }
 
   /// Hàm lấy thuộc tính 1 file/folder
-  File getItem(String id) {
+  Folder getItem(String id) {
     for (var item in _data) {
       if (item.id == id) {
         return item;
@@ -121,7 +119,7 @@ class FolderBloc {
   }
 
   /// Thuật toán bubble sort
-  List<File> _sorted(List<File> data, SORT_BY type, bool isIncrement) {
+  List<Folder> _sorted(List<Folder> data, SORT_BY type, bool isIncrement) {
     for (int i = 0; i < data.length; i++) {
       for (int j = 0; j < data.length - i - 1; j++) {
         if (_isGreaterThan(data[j], data[j + 1], type)) {
@@ -134,10 +132,10 @@ class FolderBloc {
     return isIncrement ? data : List.from(data.reversed);
   }
 
-  bool _isGreaterThan(File a, File b, SORT_BY type) {
+  bool _isGreaterThan(Folder a, Folder b, SORT_BY type) {
     /// Folder đứng trước file
-    if (a.isFolder && !b.isFolder) return false;
-    if (!a.isFolder && b.isFolder) return true;
+    if (a.hasChild && !b.hasChild) return false;
+    if (!a.hasChild && b.hasChild) return true;
 
     /// Nếu cùng loại file hoặc folder
     switch (type) {

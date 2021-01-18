@@ -21,6 +21,7 @@ class PostRepository {
       final result = await _firebaseFirestore.collection('posts').add({
         'uid': _firebaseAuth.currentUser.uid,
         'photoURL': post.photoURL,
+        'username': post.username,
         'public': post.public,
         'postTitle': post.postTitle,
         'like': post.like,
@@ -55,6 +56,8 @@ class PostRepository {
       if (snapshot.exists) {
         return Post(
           uid: snapshot['uid'],
+          photoURL: snapshot['photoURL'],
+          username: snapshot['username'],
           public: snapshot['public'],
           postTitle: snapshot['postTitle'],
           like: List<String>.from(snapshot['like']),
@@ -78,6 +81,43 @@ class PostRepository {
     });
   }
 
+  Stream<List<Post>> get posts {
+    return _firebaseFirestore
+        .collection('posts')
+        .orderBy('dateCreated', descending: false)
+        .snapshots()
+        .map((snapshot) {
+      final List<Post> posts = [];
+      snapshot.docs.forEach((doc) {
+        posts.add(Post(
+          postID: doc.id,
+          uid: doc['uid'],
+          photoURL: doc['photoURL'],
+          username: doc['username'],
+          public: doc['public'],
+          postTitle: doc['postTitle'],
+          like: List<String>.from(doc['like']),
+          dislike: List<String>.from(doc['disLike']),
+          originalFile: File(
+            path: doc['originalFileURL'],
+            fileName: doc['fileName'],
+            fileExtension: doc['fileExtension'],
+            fileSize: doc['fileSize'],
+          ),
+          postYear: doc['year'],
+          postTags: List<String>.from(doc['tags']),
+          semester: doc['semester'],
+          credit: doc['credit'],
+          major: doc['major'],
+          lecturer: doc['lecturer'],
+          dateCreated: doc['dateCreated'],
+        ));
+      });
+
+      return posts;
+    });
+  }
+
   Future<String> createSolutionFile({
     Post post,
   }) async {
@@ -89,6 +129,7 @@ class PostRepository {
           .add({
         'uid': _firebaseAuth.currentUser.uid,
         'photoURL': post.photoURL,
+        'username': post.username,
         'title': '',
         'solutionFileURL': post.solutionFile.path,
         'fileName': post.solutionFile.fileName,
@@ -256,6 +297,103 @@ class PostRepository {
         }
       });
 
+      return batch.commit();
+    });
+  }
+
+  // Recent post
+  Stream<List<Post>> get recentPosts {
+    return _firebaseFirestore
+        .collection('users/${_firebaseAuth.currentUser.uid}/recents')
+        .orderBy('dateCreated', descending: false)
+        .snapshots()
+        .map((snapshot) {
+      final List<Post> posts = [];
+      snapshot.docs.forEach((doc) {
+        posts.add(Post(
+          postID: doc['postId'],
+          uid: doc['uid'],
+          photoURL: doc['photoURL'],
+          username: doc['username'],
+          public: doc['public'],
+          postTitle: doc['postTitle'],
+          like: List<String>.from(doc['like']),
+          dislike: List<String>.from(doc['disLike']),
+          originalFile: File(
+            path: doc['originalFileURL'],
+            fileName: doc['fileName'],
+            fileExtension: doc['fileExtension'],
+            fileSize: doc['fileSize'],
+          ),
+          postYear: doc['year'],
+          postTags: List<String>.from(doc['tags']),
+          semester: doc['semester'],
+          credit: doc['credit'],
+          major: doc['major'],
+          lecturer: doc['lecturer'],
+          dateCreated: doc['dateCreated'],
+        ));
+      });
+
+      return posts;
+    });
+  }
+
+  Future<Post> createRecentPost({
+    Post post,
+  }) async {
+    try {
+      final p = await _firebaseFirestore
+          .collection('users/${_firebaseAuth.currentUser.uid}/recents')
+          .where('postId', isEqualTo: post.postID)
+          .get();
+      if (p.docs.isNotEmpty) {
+        return Post.empty;
+      }
+      final result = await _firebaseFirestore
+          .collection('users/${_firebaseAuth.currentUser.uid}/recents')
+          .add({
+        'postId': post.postID,
+        'uid': _firebaseAuth.currentUser.uid,
+        'photoURL': post.photoURL,
+        'username': post.username,
+        'public': post.public,
+        'postTitle': post.postTitle,
+        'like': post.like,
+        'disLike': post.dislike,
+        'originalFileURL': post.originalFile.path,
+        'fileName': post.originalFile.fileName,
+        'fileExtension': post.originalFile.fileExtension,
+        'fileSize': post.originalFile.fileSize,
+        'year': post.postYear,
+        'tags': post.postTags,
+        'semester': post.semester,
+        'credit': post.credit,
+        'major': post.major,
+        'lecturer': post.lecturer,
+        'dateCreated': post.dateCreated,
+      });
+
+      return post.copyWith(
+        postID: result.id,
+      );
+    } on Exception {
+      return Post.empty;
+    }
+  }
+
+  Future<void> removeRecentPost({Post post}) {
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+
+    return _firebaseFirestore
+        .collection('users/${_firebaseAuth.currentUser.uid}/recents')
+        .get()
+        .then((querySnapshot) {
+      querySnapshot.docs.forEach((document) {
+        if (post.postID == document['postId']) {
+          batch.delete(document.reference);
+        }
+      });
       return batch.commit();
     });
   }

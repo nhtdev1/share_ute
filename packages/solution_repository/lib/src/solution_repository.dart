@@ -28,6 +28,7 @@ class SolutionRepository {
           solutionID: doc.id,
           uid: doc['uid'],
           photoURL: doc['photoURL'],
+          username: doc['username'],
           title: doc['title'],
           solutionFile: File(
             path: doc['solutionFileURL'],
@@ -52,6 +53,7 @@ class SolutionRepository {
           .add({
         'uid': _firebaseAuth.currentUser.uid,
         'photoURL': solution.photoURL,
+        'username': solution.username,
         'title': solution.title,
         'solutionFileURL': solution.solutionFile.path,
         'fileName': solution.solutionFile.fileName,
@@ -77,6 +79,7 @@ class SolutionRepository {
     batch.set(document, {
       'uid': solution.uid,
       'solutionID': solution.solutionID,
+      'username': solution.username,
       'postID': solution.postID,
       'title': solution.title,
       'solutionFileURL': solution.solutionFile.path,

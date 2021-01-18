@@ -12,21 +12,23 @@ class User extends Equatable {
     this.faculty,
     this.major,
     this.hobbies,
+    this.postTotal,
+    this.pointTotal,
+    this.dateCreated,
+    this.disabled,
+    this.premium,
   });
 
   final String id;
 
-  // The current user's email address
   final String email;
 
-  // The current user's name (display name)
   final String name;
 
   final String birthday;
 
   final String phone;
 
-  // Url for the current user's photo
   final String photo;
 
   final String year;
@@ -36,6 +38,16 @@ class User extends Equatable {
   final String major;
 
   final List<String> hobbies;
+
+  final String postTotal;
+
+  final String pointTotal;
+
+  final String dateCreated;
+
+  final String disabled;
+
+  final String premium;
 
   static const empty = User(
     id: '',
@@ -48,6 +60,11 @@ class User extends Equatable {
     faculty: '',
     major: '',
     hobbies: [],
+    postTotal: '0',
+    pointTotal: '0',
+    dateCreated: '',
+    disabled: 'false',
+    premium: 'false',
   );
 
   @override
@@ -62,6 +79,11 @@ class User extends Equatable {
         faculty,
         major,
         hobbies,
+        postTotal,
+        pointTotal,
+        dateCreated,
+        disabled,
+        premium,
       ];
 
   User copyWith({
@@ -75,6 +97,11 @@ class User extends Equatable {
     String faculty,
     String major,
     List<String> hobbies,
+    String postTotal,
+    String pointTotal,
+    String dateCreated,
+    String disabled,
+    String premium,
   }) {
     return User(
       id: id ?? this.id,
@@ -87,6 +114,11 @@ class User extends Equatable {
       faculty: faculty ?? this.faculty,
       major: major ?? this.major,
       hobbies: hobbies ?? this.hobbies,
+      postTotal: postTotal ?? this.postTotal,
+      pointTotal: pointTotal ?? this.pointTotal,
+      dateCreated: dateCreated ?? this.dateCreated,
+      disabled: disabled ?? this.disabled,
+      premium: premium ?? this.premium,
     );
   }
 }

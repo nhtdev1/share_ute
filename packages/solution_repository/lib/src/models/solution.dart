@@ -5,6 +5,7 @@ class Solution extends Equatable {
   const Solution({
     this.uid,
     this.photoURL,
+    this.username,
     this.solutionID,
     this.postID,
     this.title,
@@ -14,6 +15,7 @@ class Solution extends Equatable {
 
   final String uid;
   final String photoURL;
+  final String username;
   final String solutionID;
   final String postID;
   final String title;
@@ -24,6 +26,7 @@ class Solution extends Equatable {
   List<Object> get props => [
         uid,
         photoURL,
+        username,
         solutionID,
         postID,
         title,
@@ -34,6 +37,7 @@ class Solution extends Equatable {
   static const empty = Solution(
     uid: '',
     photoURL: '',
+    username: '',
     solutionID: '',
     postID: '',
     title: '',
@@ -44,6 +48,7 @@ class Solution extends Equatable {
   Solution copyWith({
     String uid,
     String photoURL,
+    String username,
     String solutionID,
     String postID,
     String title,
@@ -55,6 +60,7 @@ class Solution extends Equatable {
     return Solution(
       uid: uid ?? this.uid,
       photoURL: photoURL ?? this.photoURL,
+      username: username ?? this.username,
       solutionID: solutionID ?? this.solutionID,
       postID: postID ?? this.postID,
       title: title ?? this.title,

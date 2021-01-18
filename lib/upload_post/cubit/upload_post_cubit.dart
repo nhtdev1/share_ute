@@ -123,10 +123,20 @@ class UploadPostCubit extends Cubit<UploadPostState> {
     ));
     final file = await _filePickerRepository.pickFile();
     if (file.isNotEmpty) {
-      if (int.parse(file.fileSize) > 25000) {
-        emit(state.copyWith(
-          originalFileStatus: FileStatus.pickedWithOverSize,
-        ));
+      if (int.parse(file.fileSize) > 10000) {
+        if (_firestoreUserBloc.state.user.premium == 'false') {
+          emit(state.copyWith(
+            originalFileStatus: FileStatus.pickedWithOverSize,
+          ));
+        } else {
+          emit(state.copyWith(
+            post: state.post.copyWith(
+              originalFile: file,
+            ),
+            originalFileStatus: FileStatus.pickedWithAcceptableSize,
+            postStatus: PostStatus.changed,
+          ));
+        }
       } else {
         emit(state.copyWith(
           post: state.post.copyWith(
@@ -162,10 +172,20 @@ class UploadPostCubit extends Cubit<UploadPostState> {
     ));
     final file = await _filePickerRepository.pickFile();
     if (file.isNotEmpty) {
-      if (int.parse(file.fileSize) > 25000) {
-        emit(state.copyWith(
-          solutionFileStatus: FileStatus.pickedWithOverSize,
-        ));
+      if (int.parse(file.fileSize) > 10000) {
+        if (_firestoreUserBloc.state.user.premium == 'false') {
+          emit(state.copyWith(
+            solutionFileStatus: FileStatus.pickedWithOverSize,
+          ));
+        } else {
+          emit(state.copyWith(
+            post: state.post.copyWith(
+              solutionFile: file,
+            ),
+            solutionFileStatus: FileStatus.pickedWithAcceptableSize,
+            postStatus: PostStatus.changed,
+          ));
+        }
       } else {
         emit(state.copyWith(
           post: state.post.copyWith(
@@ -199,6 +219,7 @@ class UploadPostCubit extends Cubit<UploadPostState> {
     final dateCreated = DateTime.now().millisecondsSinceEpoch.toString();
     final copyPost = state.post.copyWith(
       photoURL: _firestoreUserBloc.state.user.photo,
+      username: _firestoreUserBloc.state.user.name,
       dateCreated: dateCreated,
     );
     _storageSubscription = _storageRepository

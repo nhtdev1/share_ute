@@ -30,6 +30,11 @@ class FirestoreUserRepository {
           faculty: snapshot['faculty'],
           major: snapshot['major'],
           hobbies: List<String>.from(snapshot['hobbies']),
+          postTotal: snapshot['postTotal'],
+          pointTotal: snapshot['pointTotal'],
+          dateCreated: snapshot['dateCreated'],
+          disabled: snapshot['disabled'],
+          premium: snapshot['premium'],
         );
       }
 
@@ -48,6 +53,22 @@ class FirestoreUserRepository {
         'displayName': user.name,
         'birthday': user.birthday,
         'phone': user.phone,
+      });
+      return true;
+    } on Exception {
+      return false;
+    }
+  }
+
+  Future<bool> upgradePremium({
+    firestore_user.User user,
+  }) async {
+    try {
+      await _firebaseFirestore
+          .collection('users')
+          .doc(_firebaseAuth.currentUser.uid)
+          .update({
+        'premium': user.premium,
       });
       return true;
     } on Exception {
@@ -91,6 +112,11 @@ class FirestoreUserRepository {
         'faculty': user.faculty,
         'major': user.major,
         'hobbies': user.hobbies,
+        'postTotal': user.postTotal,
+        'pointTotal': user.pointTotal,
+        'dateCreated': DateTime.now().toString(),
+        'disabled': user.disabled,
+        'premium': user.premium,
       });
       return true;
     } on Exception {
@@ -127,6 +153,11 @@ class FirestoreUserRepository {
         faculty: snapshot.data()['faculty'],
         major: snapshot.data()['major'],
         hobbies: List<String>.from(snapshot['hobbies']),
+        postTotal: snapshot['postTotal'],
+        pointTotal: snapshot['pointTotal'],
+        dateCreated: snapshot['dateCreated'],
+        disabled: snapshot['disabled'],
+        premium: snapshot['premium'],
       );
     } else {
       return firestore_user.User.empty;

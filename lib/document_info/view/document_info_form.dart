@@ -9,6 +9,7 @@ class DocumentInfoForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final post = context.watch<NotificationCubit>().state.currentPost;
+
     return Container(
       color: CupertinoColors.white,
       child: Stack(
@@ -16,9 +17,6 @@ class DocumentInfoForm extends StatelessWidget {
           DocumentThumbnail(post),
           _Holder(),
           DocumentDetails(post),
-          // EmotionIcons(),
-          // EmotionTitle(),
-          // EmotionButton(),
           ReactPostPage(),
           UserAvatar(post),
           Container(

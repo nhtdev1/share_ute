@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:share_ute/models/file.dart';
+import 'package:share_ute/models/folder.dart';
 import 'package:share_ute/search/search.dart';
 import 'package:share_ute/widgets/folder_bottom_actions_sheet.dart';
 import 'package:share_ute/widgets/folder_create_bottom_sheet.dart';
@@ -12,7 +12,7 @@ class ExpandFolderPage extends StatefulWidget {
 
   /// Nếu là folder con
   final String folderTitle;
-  final List<File> data;
+  final List<Folder> data;
   final bool isListView;
 
   const ExpandFolderPage(
@@ -32,7 +32,7 @@ class _ExpandFolderPageState extends State<ExpandFolderPage> {
   bool expandableFolder = true;
   bool isListView;
   SORT_BY curSelection = SORT_BY.Name;
-  List<File> data;
+  List<Folder> data;
   Widget viewMode;
 
   @override
@@ -191,17 +191,18 @@ class _ExpandFolderPageState extends State<ExpandFolderPage> {
             return index < widget.data.length
                 ? _mediaListItem(
                     widget.data[index].fileName,
-                    widget.data[index].isFolder
+                    widget.data[index].hasChild
                         ? CupertinoColors.systemGrey
                         : CupertinoColors.activeBlue,
                     Colors.transparent,
                     widget.data[index].dateCreated.toString().split(' ')[0],
-                    widget.data[index].isFolder
+                    widget.data[index].hasChild
                         ? const IconData(0xf435,
                             fontFamily: CupertinoIcons.iconFont,
                             fontPackage: CupertinoIcons.iconFontPackage)
                         : Icons.insert_drive_file,
-                    isFolder: widget.data[index].isFolder)
+                    isFolder: widget.data[index].hasChild,
+                  )
                 : const SizedBox(
                     height: 15,
                   );
@@ -219,18 +220,19 @@ class _ExpandFolderPageState extends State<ExpandFolderPage> {
               new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
           itemBuilder: (context, index) {
             return _mediaGridItem(
-                widget.data[index].fileName,
-                widget.data[index].isFolder
-                    ? CupertinoColors.systemGrey
-                    : CupertinoColors.activeBlue,
-                Colors.transparent,
-                widget.data[index].dateCreated.toString(),
-                widget.data[index].isFolder
-                    ? const IconData(0xf435,
-                        fontFamily: CupertinoIcons.iconFont,
-                        fontPackage: CupertinoIcons.iconFontPackage)
-                    : Icons.insert_drive_file,
-                isFolder: widget.data[index].isFolder);
+              widget.data[index].fileName,
+              widget.data[index].hasChild
+                  ? CupertinoColors.systemGrey
+                  : CupertinoColors.activeBlue,
+              Colors.transparent,
+              widget.data[index].dateCreated.toString(),
+              widget.data[index].hasChild
+                  ? const IconData(0xf435,
+                      fontFamily: CupertinoIcons.iconFont,
+                      fontPackage: CupertinoIcons.iconFontPackage)
+                  : Icons.insert_drive_file,
+              isFolder: widget.data[index].hasChild,
+            );
           }),
     );
   }

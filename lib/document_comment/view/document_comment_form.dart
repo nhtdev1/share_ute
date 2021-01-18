@@ -1,11 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_ute/document_comment/document_comment.dart';
 import 'package:comment_repository/comment_repository.dart';
 import 'package:share_ute/react_comment/react_comment.dart';
+import 'package:share_ute/system_notification/system_notification.dart';
+import 'package:share_ute/user_rating/user_rating.dart';
 
 class DocumentCommentForm extends StatefulWidget {
   @override
@@ -118,74 +118,144 @@ class CommentWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 1.0,
-      margin: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 1.0),
-      child: Container(
-        padding: const EdgeInsets.only(
-            left: 15.0, right: 15.0, top: 5.0, bottom: 5.0),
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: const BorderRadius.all(Radius.circular(4.0))),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.grey,
-              ),
-              child: ClipRRect(
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(60.0),
-                ),
-                child: Image.network(
-                  comment.photoURL,
-                ),
-              ),
-            ),
-            const SizedBox(
-              width: 15,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Avataar, Name
+          Padding(
+            padding: const EdgeInsets.only(
+                left: 15.0, right: 10.0, top: 2.0, bottom: 2.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  comment.title.isEmpty ? '' : comment.title,
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                Text(
-                  DateFormat('yyyy-MM-dd – kk:mm').format(
-                    DateTime.fromMillisecondsSinceEpoch(
-                      int.parse(comment.dateCreated),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    GestureDetector(
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle, color: Colors.grey),
+                        child: ClipRRect(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(60.0)),
+                          child: Image.network(comment.photoURL),
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          UserRatingPage.route(
+                              comment.username, comment.photoURL),
+                        );
+                      },
                     ),
-                  ),
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontSize: 12,
-                    letterSpacing: 0.27,
-                    color: CupertinoColors.darkBackgroundGray.withOpacity(0.8),
-                  ),
+                    const SizedBox(
+                      width: 10.0,
+                    ),
+                    GestureDetector(
+                      child: Text(
+                        comment.username,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          UserRatingPage.route(
+                              comment.username, comment.photoURL),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                IconButton(
+                  icon: Icon(Icons.expand_more_outlined),
+                  onPressed: () {},
                 ),
               ],
             ),
-            Spacer(),
-            ReactCommentPage(
-              comment: comment,
+          ),
+
+          if (comment.title.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(left: 15.0, right: 15.0),
+              child: Container(
+                padding: const EdgeInsets.all(5.0),
+                decoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(0.4),
+                    borderRadius: const BorderRadius.all(Radius.circular(5.0))),
+                child: Text(comment.title),
+              ),
             ),
-            const SizedBox(
-              width: 15,
-            )
-          ],
-        ),
+          if (comment.gifURL.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 15.0,
+                right: 15.0,
+                top: 3.0,
+              ),
+              child: Container(
+                child: Image.network(comment.gifURL),
+              ),
+            ),
+          Padding(
+            padding: const EdgeInsets.only(
+                left: 15.0, right: 15.0, top: 5, bottom: 3),
+            child: Row(
+              children: [
+                _DateCreated(comment.dateCreated),
+                const SizedBox(
+                  width: 10,
+                ),
+                ReactCommentPage(
+                  comment: comment,
+                ),
+              ],
+            ),
+          )
+        ],
       ),
     );
+  }
+}
+
+class _DateCreated extends StatelessWidget {
+  _DateCreated(this.dateCreated);
+  final String dateCreated;
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SystemNotificationCubit, SystemNotificationState>(
+      buildWhen: (previous, current) => previous.dateTime != current.dateTime,
+      builder: (context, state) {
+        return Text(
+          _builDateCreated(state.dateTime),
+          textAlign: TextAlign.left,
+          style: TextStyle(
+            fontSize: 13,
+            letterSpacing: 0.27,
+            color: Colors.grey,
+          ),
+        );
+      },
+    );
+  }
+
+  _builDateCreated(DateTime now) {
+    final date = DateTime.fromMillisecondsSinceEpoch(
+      int.parse(dateCreated),
+    );
+
+    final seconds = now.difference(date).inSeconds;
+    final minutes = now.difference(date).inMinutes;
+    final hours = now.difference(date).inHours;
+    final days = now.difference(date).inDays;
+    if (seconds < 60) return 'Vừa xong';
+    if (minutes < 60) return '$minutes phút';
+    if (hours < 60) return '$hours giờ';
+    if (days < 30) return '$days ngày';
+    if (days < 365) return '${days / 30} tháng';
+    return '${days / 365} năm';
   }
 }

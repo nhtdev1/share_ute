@@ -7,6 +7,7 @@ import 'package:share_ute/document/document.dart';
 import 'package:share_ute/notification/notification.dart';
 import 'package:share_ute/react_post/react_post.dart';
 import 'package:share_ute/solution_notification/cubit/solution_notification_cubit.dart';
+import 'package:share_ute/system_notification/system_notification.dart';
 import 'package:solution_repository/solution_repository.dart';
 import 'package:comment_repository/comment_repository.dart';
 
@@ -42,7 +43,6 @@ class DocumentPage extends StatelessWidget {
           create: (context) => SolutionNotificationCubit(
             solutionRepository: SolutionRepository(),
             notificationCubit: context.read<NotificationCubit>(),
-            authenticationBloc: context.read<AuthenticationBloc>(),
           ),
         ),
         BlocProvider(
@@ -53,7 +53,15 @@ class DocumentPage extends StatelessWidget {
           ),
         ),
       ],
-      child: DocumentForm(),
+      child: WillPopScope(
+        child: DocumentForm(),
+        onWillPop: () => _onClickedBackButton(context),
+      ),
     );
+  }
+
+  Future<bool> _onClickedBackButton(BuildContext context) {
+    context.read<SystemNotificationCubit>().onClickedBackButton();
+    return Future.value(false);
   }
 }

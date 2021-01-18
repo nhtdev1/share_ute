@@ -37,12 +37,17 @@ class AuthenticationBloc
   StreamSubscription<User> _userSubscription;
 
   @override
-  Stream<AuthenticationState> mapEventToState(AuthenticationEvent event) async*{
-    if(event is AuthenticationUserChanged){
+  Stream<AuthenticationState> mapEventToState(
+      AuthenticationEvent event) async* {
+    if (event is AuthenticationUserChanged) {
       yield _mapAuthenticationUserChangedToState(event);
-    }else if (event is AuthenticationLogoutRequested){
+    } else if (event is AuthenticationLogoutRequested) {
       unawaited(_authenticationRepository.logOut());
     }
+  }
+
+  void logOut() {
+    _authenticationRepository.logOut();
   }
 
   @override

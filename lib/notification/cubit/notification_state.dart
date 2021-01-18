@@ -3,6 +3,10 @@ part of 'notification_cubit.dart';
 enum NotificationStatus {
   unknown,
   newPostCreated,
+  currentPostChanged,
+  newReportCreated,
+  recentPostAdded,
+  premiumRequested,
 }
 
 class NotificationState extends Equatable {
@@ -20,7 +24,6 @@ class NotificationState extends Equatable {
 
   NotificationState copyWith({
     Post currentPost,
-    User userOfCurrentPost,
     NotificationStatus status,
   }) {
     return NotificationState(

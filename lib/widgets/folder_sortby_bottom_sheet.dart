@@ -39,10 +39,10 @@ class FolderSortByBottomSheet extends StatelessWidget {
   final FolderBloc bloc;
   const FolderSortByBottomSheet(
       {Key key,
-        this.context,
-        this.isIncrement,
-        this.curSortSelection,
-        this.bloc})
+      this.context,
+      this.isIncrement,
+      this.curSortSelection,
+      this.bloc})
       : super(key: key);
 
   @override
@@ -57,7 +57,7 @@ class FolderSortByBottomSheet extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(top: 20, left: 15, bottom: 10),
                 child: Text(
-                  "Sort by",
+                  "Sắp xếp theo",
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.black,
@@ -83,33 +83,33 @@ class FolderSortByBottomSheet extends StatelessWidget {
                     width: size.width - 5,
                     decoration: curSortSelection == SORT_BY.Name
                         ? BoxDecoration(
-                        color: Color(0xffC4E2F4),
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(30),
-                            bottomRight: Radius.circular(30)))
+                            color: Color(0xffC4E2F4),
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(30),
+                                bottomRight: Radius.circular(30)))
                         : null,
                     padding: EdgeInsets.only(top: 10, left: 10, bottom: 10),
                     child: Row(
                       children: [
                         curSortSelection == SORT_BY.Name
                             ? Icon(
-                          isIncrement
-                              ? Icons.arrow_upward
-                              : Icons.arrow_downward,
-                          color: Colors.blue[900],
-                          size: 20,
-                        )
+                                isIncrement
+                                    ? Icons.arrow_upward
+                                    : Icons.arrow_downward,
+                                color: Colors.blue[900],
+                                size: 20,
+                              )
                             : Icon(
-                          isIncrement
-                              ? Icons.arrow_upward
-                              : Icons.arrow_downward,
-                          color: Colors.transparent,
-                        ),
+                                isIncrement
+                                    ? Icons.arrow_upward
+                                    : Icons.arrow_downward,
+                                color: Colors.transparent,
+                              ),
                         SizedBox(
                           width: 10,
                         ),
                         Text(
-                          "Name",
+                          "Tên",
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.black,
@@ -133,83 +133,33 @@ class FolderSortByBottomSheet extends StatelessWidget {
                     width: size.width - 5,
                     decoration: curSortSelection == SORT_BY.LastModified
                         ? BoxDecoration(
-                        color: Color(0xffC4E2F4),
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(30),
-                            bottomRight: Radius.circular(30)))
+                            color: Color(0xffC4E2F4),
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(30),
+                                bottomRight: Radius.circular(30)))
                         : null,
                     padding: EdgeInsets.only(top: 10, left: 10, bottom: 10),
                     child: Row(
                       children: [
                         curSortSelection == SORT_BY.LastModified
                             ? Icon(
-                          isIncrement
-                              ? Icons.arrow_upward
-                              : Icons.arrow_downward,
-                          color: Colors.blue[900],
-                          size: 20,
-                        )
+                                isIncrement
+                                    ? Icons.arrow_upward
+                                    : Icons.arrow_downward,
+                                color: Colors.blue[900],
+                                size: 20,
+                              )
                             : Icon(
-                          isIncrement
-                              ? Icons.arrow_upward
-                              : Icons.arrow_downward,
-                          color: Colors.transparent,
-                        ),
+                                isIncrement
+                                    ? Icons.arrow_upward
+                                    : Icons.arrow_downward,
+                                color: Colors.transparent,
+                              ),
                         SizedBox(
                           width: 10,
                         ),
                         Text(
-                          "Last Modified",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                      ],
-                    )),
-              )
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  sortBy(SORT_BY.LastModifiedByMe, isIncrement);
-                },
-                child: Container(
-                    width: size.width - 5,
-                    decoration: curSortSelection == SORT_BY.LastModifiedByMe
-                        ? BoxDecoration(
-                        color: Color(0xffC4E2F4),
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(30),
-                            bottomRight: Radius.circular(30)))
-                        : null,
-                    padding: EdgeInsets.only(top: 10, left: 10, bottom: 10),
-                    child: Row(
-                      children: [
-                        curSortSelection == SORT_BY.LastModifiedByMe
-                            ? Icon(
-                          isIncrement
-                              ? Icons.arrow_upward
-                              : Icons.arrow_downward,
-                          color: Colors.blue[900],
-                          size: 20,
-                        )
-                            : Icon(
-                          isIncrement
-                              ? Icons.arrow_upward
-                              : Icons.arrow_downward,
-                          color: Colors.transparent,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "Last Modified By Me",
+                          "Lần chỉnh sửa cuối",
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.black,
@@ -233,33 +183,33 @@ class FolderSortByBottomSheet extends StatelessWidget {
                     width: size.width - 5,
                     decoration: curSortSelection == SORT_BY.LastOpenedByMe
                         ? BoxDecoration(
-                        color: Color(0xffC4E2F4),
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(30),
-                            bottomRight: Radius.circular(30)))
+                            color: Color(0xffC4E2F4),
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(30),
+                                bottomRight: Radius.circular(30)))
                         : null,
                     padding: EdgeInsets.only(top: 10, left: 10, bottom: 10),
                     child: Row(
                       children: [
                         curSortSelection == SORT_BY.LastOpenedByMe
                             ? Icon(
-                          isIncrement
-                              ? Icons.arrow_upward
-                              : Icons.arrow_downward,
-                          color: Colors.blue[900],
-                          size: 20,
-                        )
+                                isIncrement
+                                    ? Icons.arrow_upward
+                                    : Icons.arrow_downward,
+                                color: Colors.blue[900],
+                                size: 20,
+                              )
                             : Icon(
-                          isIncrement
-                              ? Icons.arrow_upward
-                              : Icons.arrow_downward,
-                          color: Colors.transparent,
-                        ),
+                                isIncrement
+                                    ? Icons.arrow_upward
+                                    : Icons.arrow_downward,
+                                color: Colors.transparent,
+                              ),
                         SizedBox(
                           width: 10,
                         ),
                         Text(
-                          "Last Opened By Me",
+                          "Lần mở cuối cùng",
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.black,
@@ -284,33 +234,33 @@ class FolderSortByBottomSheet extends StatelessWidget {
                     margin: EdgeInsets.only(bottom: 5),
                     decoration: curSortSelection == SORT_BY.StorageUsed
                         ? BoxDecoration(
-                        color: Color(0xffC4E2F4),
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(30),
-                            bottomRight: Radius.circular(30)))
+                            color: Color(0xffC4E2F4),
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(30),
+                                bottomRight: Radius.circular(30)))
                         : null,
                     padding: EdgeInsets.only(top: 10, left: 10, bottom: 10),
                     child: Row(
                       children: [
                         curSortSelection == SORT_BY.StorageUsed
                             ? Icon(
-                          isIncrement
-                              ? Icons.arrow_upward
-                              : Icons.arrow_downward,
-                          color: Colors.blue[900],
-                          size: 20,
-                        )
+                                isIncrement
+                                    ? Icons.arrow_upward
+                                    : Icons.arrow_downward,
+                                color: Colors.blue[900],
+                                size: 20,
+                              )
                             : Icon(
-                          isIncrement
-                              ? Icons.arrow_upward
-                              : Icons.arrow_downward,
-                          color: Colors.transparent,
-                        ),
+                                isIncrement
+                                    ? Icons.arrow_upward
+                                    : Icons.arrow_downward,
+                                color: Colors.transparent,
+                              ),
                         SizedBox(
                           width: 10,
                         ),
                         Text(
-                          "Storage Used",
+                          "Kích thước",
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.black,

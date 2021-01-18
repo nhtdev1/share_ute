@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
-import 'package:share_ute/authentication/authentication.dart';
 import 'package:share_ute/notification/notification.dart';
 import 'package:comment_repository/comment_repository.dart';
 

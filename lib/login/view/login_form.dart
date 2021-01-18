@@ -49,6 +49,10 @@ class LoginForm extends StatelessWidget {
               const SizedBox(
                 height: 4.0,
               ),
+              _FacebookLoginButton(),
+              const SizedBox(
+                height: 4.0,
+              ),
               _SignUpButton(),
             ],
           ),
@@ -134,7 +138,8 @@ class _PasswordInput extends StatelessWidget {
                   color: Theme.of(context).primaryColor,
                 ),
                 hintText: 'Mật khẩu',
-                errorText: state.password.invalid ? 'mật khẩu không hợp lệ' : null,
+                errorText:
+                    state.password.invalid ? 'mật khẩu không hợp lệ' : null,
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                   borderSide: BorderSide(
@@ -189,7 +194,7 @@ class _LoginButton extends StatelessWidget {
                   ),
                 ),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0)),
+                    borderRadius: BorderRadius.circular(5.0)),
                 onPressed: state.status.isValidated
                     ? () => context.watch<LoginCubit>().logInWithCredentials()
                     : null,
@@ -202,24 +207,56 @@ class _LoginButton extends StatelessWidget {
 class _GoogleLoginButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return RaisedButton.icon(
-      padding: const EdgeInsets.all(8.0),
-      color: Colors.lightBlueAccent,
-      key: const Key('loginForm_googleLogin_raisedButton'),
-      onPressed: () => context.read<LoginCubit>().logInWithGoogle(),
-      icon: const Icon(
-        FontAwesomeIcons.google,
-        color: Colors.redAccent,
-      ),
-      label: const Text(
-        'Đăng nhập với Gmail',
-        style: TextStyle(
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 3 / 5,
+      child: RaisedButton.icon(
+        padding: const EdgeInsets.all(8.0),
+        color: Colors.blueAccent,
+        key: const Key('loginForm_googleLogin_raisedButton'),
+        onPressed: () => context.read<LoginCubit>().logInWithGoogle(),
+        icon: const Icon(
+          FontAwesomeIcons.googlePlusSquare,
           color: Colors.white,
-          fontSize: 16,
+        ),
+        label: const Text(
+          '  Đăng nhập với Google  ',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+          ),
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5.0),
         ),
       ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
+    );
+  }
+}
+
+class _FacebookLoginButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 3 / 5,
+      child: RaisedButton.icon(
+        padding: const EdgeInsets.all(8.0),
+        color: Colors.blueAccent,
+        key: const Key('loginForm_facebookLogin_raisedButton'),
+        onPressed: () => context.read<LoginCubit>().logInWithFacebook(),
+        icon: const Icon(
+          FontAwesomeIcons.facebookSquare,
+          color: Colors.white,
+        ),
+        label: const Text(
+          'Đăng nhập với Facebook',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+          ),
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5.0),
+        ),
       ),
     );
   }
@@ -233,7 +270,7 @@ class _SignUpButton extends StatelessWidget {
       child: Text(
         'Tạo tài khoản',
         style: TextStyle(
-          color: Colors.greenAccent.withOpacity(0.8),
+          color: Colors.greenAccent,
         ),
       ),
       onPressed: () => Navigator.of(context).push<void>(SignUpPage.route()),

@@ -4,8 +4,12 @@ import 'package:post_repository/post_repository.dart';
 import 'package:share_ute/firestore_user/firestore_user.dart';
 import 'package:share_ute/home/view/view.dart';
 import 'package:share_ute/introduction_screen/introduction_screen.dart';
+import 'package:share_ute/lock_user/lock_user.dart';
 import 'package:share_ute/notification/notification.dart';
+import 'package:share_ute/post_notification/post_notification.dart';
+import 'package:share_ute/search/search.dart';
 import 'package:share_ute/splash/splash.dart';
+import 'package:share_ute/system_notification/system_notification.dart';
 import 'package:user_repository/user_repository.dart';
 
 class HomePage extends StatelessWidget {
@@ -26,6 +30,19 @@ class HomePage extends StatelessWidget {
         ),
         BlocProvider<NotificationCubit>(
           create: (context) => NotificationCubit(),
+        ),
+        BlocProvider<SystemNotificationCubit>(
+          create: (context) => SystemNotificationCubit(),
+        ),
+        //
+        BlocProvider<PostNotificationCubit>(
+          lazy: false,
+          create: (context) => PostNotificationCubit(
+            postRepository: PostRepository(),
+          ),
+        ),
+        BlocProvider<SearchCubit>(
+          create: (context) => SearchCubit(),
         ),
       ],
       child: RepositoryProvider(
@@ -65,6 +82,13 @@ class _HomeViewState extends State<HomeView> {
                   HomeForm.route(),
                   (route) => false,
                 );
+                break;
+              case FirestoreUserStatus.updatedUser:
+                if (state.user.disabled == 'true')
+                  _navigator.pushAndRemoveUntil(
+                    LockUserPage.route(),
+                    (route) => false,
+                  );
                 break;
               default:
                 break;

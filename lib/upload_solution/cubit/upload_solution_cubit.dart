@@ -94,6 +94,7 @@ class UploadSolutionCubit extends Cubit<UploadSolutionState> {
     final copySolution = state.solution.copyWith(
       postID: _notificationCubit.state.currentPost.postID,
       photoURL: _firestoreUserBloc.state.user.photo,
+      username: _firestoreUserBloc.state.user.name,
       dateCreated: dateCreated,
     );
     _storageSubscription = _storageRepository

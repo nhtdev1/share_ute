@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meta/meta.dart';
 
@@ -13,6 +14,9 @@ class LogInWithEmailAndPasswordFailure implements Exception {}
 // Thrown during the sign in with google process if a failure occurs
 class LogInWithGoogleFailure implements Exception {}
 
+// Thrown during the sign in with facebook process if a failure occurs
+class LogInWithFacebookFailure implements Exception {}
+
 // Thrown during the logout process if a failure occurs
 class LogOutFailure implements Exception {}
 
@@ -22,12 +26,14 @@ class AuthenticationRepository {
   AuthenticationRepository({
     firebase_auth.FirebaseAuth firebaseAuth,
     GoogleSignIn googleSignIn,
+    FacebookLogin facebookLogin,
   })  : _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
-        _googleSignIn = googleSignIn ?? GoogleSignIn.standard();
+        _googleSignIn = googleSignIn ?? GoogleSignIn.standard(),
+        _facebookLogin = facebookLogin ?? FacebookLogin();
 
   final firebase_auth.FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
-
+  final FacebookLogin _facebookLogin;
 
   // Stream of [User] which emit the current user when the authentication state
   // changes. Emits [User.empty] if the user is not authenticated
@@ -72,6 +78,20 @@ class AuthenticationRepository {
     }
   }
 
+  // Starts the Sign In with Facebook Flow
+  // Thrown a [LogInWithFacebookFailure] if an exception occurs
+  Future<void> logInWithFacebook() async {
+    try {
+      final result = await _facebookLogin.logIn(['email']);
+      final _accessToken = result.accessToken.token;
+      final credential =
+          firebase_auth.FacebookAuthProvider.credential(_accessToken);
+      await _firebaseAuth.signInWithCredential(credential);
+    } on Exception {
+      throw LogInWithFacebookFailure();
+    }
+  }
+
   // Signs in with the provided [email] and [password]
   // Thrown a [LogInWithEmailAndPasswordFailure] if an exception occurs
   Future<void> logInWithEmailAndPassword({
@@ -92,7 +112,11 @@ class AuthenticationRepository {
   // Throws a [LogOutFailure] if an exception occurs
   Future<void> logOut() async {
     try {
-      await Future.wait([_firebaseAuth.signOut(), _googleSignIn.signOut()]);
+      await Future.wait([
+        _firebaseAuth.signOut(),
+        _googleSignIn.signOut(),
+        _facebookLogin.logOut(),
+      ]);
     } on Exception {
       throw LogOutFailure();
     }
@@ -103,7 +127,7 @@ extension on firebase_auth.User {
   User toUser({bool isNewUser}) {
     return User(
         id: uid,
-        email: email,
+        email: email ?? '',
         name: displayName,
         photo: photoURL,
         isNewUser: isNewUser);

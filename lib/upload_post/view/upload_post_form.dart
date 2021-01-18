@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:share_ute/upgrade/upgrade.dart';
 import 'package:share_ute/upload_post/upload_post.dart';
 import 'package:share_ute/upload_post/view/upload_tags_view.dart';
 
@@ -28,12 +29,19 @@ class UploadPostForm extends StatelessWidget {
           Scaffold.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
-              const SnackBar(
+              SnackBar(
                 elevation: 10.0,
                 backgroundColor: Colors.blue,
                 behavior: SnackBarBehavior.floating,
                 content: Text(
-                  'Không thể upload file lớn hơn 25mb!',
+                  'Tài khoản chỉ upload file nhỏ hơn 10mb',
+                ),
+                action: SnackBarAction(
+                  label: 'Nâng cấp',
+                  textColor: Colors.white,
+                  onPressed: () {
+                    Navigator.push(context, UpgradePage.route());
+                  },
                 ),
               ),
             );

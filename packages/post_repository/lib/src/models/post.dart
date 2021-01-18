@@ -5,6 +5,7 @@ class Post extends Equatable {
   const Post({
     this.uid,
     this.photoURL,
+    this.username,
     this.postID,
     this.public,
     this.postTitle,
@@ -23,6 +24,7 @@ class Post extends Equatable {
 
   final String uid;
   final String photoURL;
+  final String username;
   final String postID;
   final String public;
   final String postTitle;
@@ -44,6 +46,7 @@ class Post extends Equatable {
   List<Object> get props => [
         uid,
         photoURL,
+        username,
         postID,
         public,
         postTitle,
@@ -63,6 +66,7 @@ class Post extends Equatable {
   static const empty = Post(
     uid: '',
     photoURL: '',
+    username: '',
     postID: '',
     public: 'true',
     postTitle: '',
@@ -82,6 +86,7 @@ class Post extends Equatable {
   Post copyWith({
     String uid,
     String photoURL,
+    String username,
     String postID,
     String public,
     String postTitle,
@@ -100,6 +105,7 @@ class Post extends Equatable {
     return Post(
       uid: uid ?? this.uid,
       photoURL: photoURL ?? this.photoURL,
+      username: username ?? this.username,
       postID: postID ?? this.postID,
       public: public ?? this.public,
       postTitle: postTitle ?? this.postTitle,

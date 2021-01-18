@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:share_ute/blocs/folder_bloc.dart';
-import 'package:share_ute/models/file.dart';
+import 'package:share_ute/models/folder.dart';
 import 'package:share_ute/widgets/folder_components/dialogs.dart';
 import 'package:share_ute/widgets/folder_components/popup_input.dart';
 
@@ -38,21 +38,8 @@ class _FolderBottomActionsSheet extends State<FolderBottomActionsSheet> {
 
   @override
   Widget build(BuildContext context) {
-    File myFile = widget.bloc.getItem(widget.itemId);
+    Folder myFile = widget.bloc.getItem(widget.itemId);
     var size = MediaQuery.of(context).size;
-    void addStarred() {
-      setState(() {
-        myFile.isAddStarted = !myFile.isAddStarted;
-      });
-      widget.bloc.updateItem(id: myFile.id, isStarred: myFile.isAddStarted);
-    }
-
-    void sharing() {
-      setState(() {
-        myFile.isSharing = !myFile.isSharing;
-      });
-      widget.bloc.updateItem(id: myFile.id, isSharing: myFile.isSharing);
-    }
 
     void rename(value) {
       widget.bloc.updateItem(id: myFile.id, name: value);
@@ -60,7 +47,7 @@ class _FolderBottomActionsSheet extends State<FolderBottomActionsSheet> {
 
     /// View
     return Container(
-      child: new Wrap(
+      child: Wrap(
         children: <Widget>[
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -94,148 +81,6 @@ class _FolderBottomActionsSheet extends State<FolderBottomActionsSheet> {
               )
             ],
           ),
-          Divider(
-            color: Colors.black,
-            thickness: 0.5,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                padding: EdgeInsets.only(
-                    left: paddingLeft, top: paddingTop, bottom: paddingBot),
-                child: GestureDetector(
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.share,
-                        color: Colors.grey,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        "Share",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      )
-                    ],
-                  ),
-                  onTap: () {},
-                ),
-              )
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                  padding: EdgeInsets.only(
-                      left: paddingLeft, top: paddingTop, bottom: paddingBot),
-                  child: GestureDetector(
-                    child: Row(
-                      children: [
-                        Icon(
-                          myFile.isAddStarted ? Icons.star : Icons.star_border,
-                          color:
-                              myFile.isAddStarted ? Colors.yellow : Colors.grey,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          myFile.isAddStarted
-                              ? "Remove from Starred"
-                              : "Add to starred",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        )
-                      ],
-                    ),
-                    onTap: () => addStarred(),
-                  ))
-            ],
-          ),
-          Divider(
-            color: Colors.black,
-            thickness: 0.5,
-            indent: 0.1 * size.width,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                  padding: EdgeInsets.only(
-                      left: paddingLeft, top: paddingTop, bottom: paddingBot),
-                  child: GestureDetector(
-                    child: Row(
-                      children: [
-                        Icon(
-                          myFile.isSharing ? Icons.link : Icons.link_off,
-                          color: myFile.isSharing ? Colors.green : Colors.grey,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          myFile.isSharing
-                              ? "Link sharing on"
-                              : "Link sharing off",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        )
-                      ],
-                    ),
-                    onTap: () => sharing(),
-                  ))
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                padding: EdgeInsets.only(
-                    left: paddingLeft, top: paddingTop, bottom: paddingBot),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.content_copy,
-                      color: Colors.grey,
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      "Copy link",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
-          Divider(
-            color: Colors.black,
-            thickness: 0.5,
-            indent: 0.1 * size.width,
-          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -253,7 +98,7 @@ class _FolderBottomActionsSheet extends State<FolderBottomActionsSheet> {
                           width: 10,
                         ),
                         Text(
-                          "Rename",
+                          "Đổi tên",
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.black,
@@ -268,71 +113,13 @@ class _FolderBottomActionsSheet extends State<FolderBottomActionsSheet> {
                       showDialog(
                           context: context,
                           builder: (_) => PopupInput(
-                                title: "Rename Folder",
-                                hintText: "Untitled folder",
+                                title: "Nhập tên mới",
+                                hintText: "...",
                                 text: myFile.fileName,
                                 action: ACTION_TYPE.CANCEL_RENAME,
                                 callback: rename,
                               ));
                     }),
-              )
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                padding: EdgeInsets.only(
-                    left: paddingLeft, top: paddingTop, bottom: paddingBot),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.color_lens,
-                      color: Colors.grey,
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      "Change color",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                padding: EdgeInsets.only(
-                    left: paddingLeft, top: paddingTop, bottom: paddingBot),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.details,
-                      color: Colors.grey,
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      "Details & activity",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    )
-                  ],
-                ),
               )
             ],
           ),
@@ -353,7 +140,7 @@ class _FolderBottomActionsSheet extends State<FolderBottomActionsSheet> {
                         width: 10,
                       ),
                       Text(
-                        "Remove",
+                        "Xóa",
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.black,

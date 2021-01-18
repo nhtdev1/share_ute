@@ -1,35 +1,40 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:share_ute/blocs/folder_bloc.dart';
+import 'package:share_ute/models/folder.dart';
 import 'package:share_ute/search/search.dart';
 import 'package:share_ute/widgets/folder_bottom_actions_sheet.dart';
 import 'package:share_ute/widgets/folder_sortby_bottom_sheet.dart';
-import 'package:share_ute/models/file.dart';
 
 class MyFolderPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    List<File> data = new List<File>();
-    File file = File(
+  getRoot() {
+    final data = List<Folder>();
+    data.add(
+      Folder(
         id: '100',
-        isFolder: true,
+        hasChild: true,
         fileName: "Hệ CLC",
         fileType: "folder",
-        dateCreated: DateTime.now());
-    data.add(file);
+        dateCreated: DateTime.now(),
+        children: Folder.folderList,
+      ),
+    );
 
-    file = File(
+    data.add(
+      Folder(
         id: '200',
-        isFolder: true,
+        hasChild: true,
         fileName: "Hệ Đại Trà",
         fileType: "folder",
-        dateCreated: DateTime.now());
-    data.add(file);
-
-    return FolderPage(
-      isChild: false,
-      data: data,
+        dateCreated: DateTime.now(),
+        children: Folder.folderList,
+      ),
     );
+    return data;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FolderPage(isChild: false, data: getRoot());
   }
 }
 
@@ -40,7 +45,7 @@ class FolderPage extends StatefulWidget {
   /// Nếu là folder con (isChild = true)
   final String folderTitle;
 
-  final List<File> data;
+  final List<Folder> data;
   final bool isListView;
 
   const FolderPage(
@@ -56,7 +61,7 @@ class FolderPage extends StatefulWidget {
 }
 
 class _FolderPageState extends State<FolderPage> {
-  FolderBloc _bloc = new FolderBloc();
+  FolderBloc _bloc = FolderBloc();
 
   bool isListView = true;
   Widget viewMode;
@@ -80,13 +85,11 @@ class _FolderPageState extends State<FolderPage> {
     return Scaffold(
         appBar: widget.isChild
             ? AppBar(
-                backgroundColor: CupertinoColors.white,
-                leading: CupertinoButton(
-                  child: Icon(
-                    const IconData(0xf4fd,
-                        fontFamily: CupertinoIcons.iconFont,
-                        fontPackage: CupertinoIcons.iconFontPackage),
-                    color: CupertinoColors.systemGrey,
+                backgroundColor: Colors.white,
+                leading: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: Colors.grey,
                   ),
                   onPressed: () {
                     Navigator.pop(context, isListView);
@@ -94,32 +97,18 @@ class _FolderPageState extends State<FolderPage> {
                 ),
                 title: Text(
                   widget.folderTitle,
-                  style: TextStyle(
-                      color: CupertinoColors.systemGrey, fontSize: 16),
+                  style: TextStyle(color: Colors.grey, fontSize: 16),
                 ),
                 actions: [
-                  CupertinoButton(
-                    child: Icon(
-                      const IconData(0xf4a5,
-                          fontFamily: CupertinoIcons.iconFont,
-                          fontPackage: CupertinoIcons.iconFontPackage),
-                      color: CupertinoColors.systemGrey,
+                  IconButton(
+                    icon: Icon(
+                      Icons.search,
+                      color: Colors.grey,
                     ),
-                    onPressed: ()  {
+                    onPressed: () {
                       showSearch(context: context, delegate: SearchPage());
                     },
                   ),
-                  CupertinoButton(
-                    child: Icon(
-                      const IconData(0xf8da,
-                          fontFamily: CupertinoIcons.iconFont,
-                          fontPackage: CupertinoIcons.iconFontPackage),
-                      color: CupertinoColors.systemGrey,
-                    ),
-                    onPressed: () {
-                      print("more");
-                    },
-                  )
                 ],
               )
             : null,
@@ -137,10 +126,7 @@ class _FolderPageState extends State<FolderPage> {
                           stream: _bloc.sortTypeStream,
                           builder: (context, snapshot) => Row(
                             children: [
-                              Text(
-                                _bloc.curSortType.convertToString,
-                                style: TextStyle(fontSize: 14),
-                              ),
+                              const SizedBox(width: 10),
                               Icon(
                                 _bloc.isIncrement
                                     ? Icons.arrow_upward
@@ -153,13 +139,15 @@ class _FolderPageState extends State<FolderPage> {
                         ),
                         onTap: () {
                           showModalBottomSheet(
+                            context: context,
+                            builder: (builderContext) =>
+                                FolderSortByBottomSheet(
                               context: context,
-                              builder: (builderContext) =>
-                                  FolderSortByBottomSheet(
-                                      context: context,
-                                      bloc: _bloc,
-                                      curSortSelection: _bloc.curSortType,
-                                      isIncrement: _bloc.isIncrement));
+                              bloc: _bloc,
+                              curSortSelection: _bloc.curSortType,
+                              isIncrement: _bloc.isIncrement,
+                            ),
+                          );
                         },
                       ),
                     ],
@@ -167,14 +155,12 @@ class _FolderPageState extends State<FolderPage> {
                   GestureDetector(
                     child: isListView
                         ? Icon(
-                            const IconData(0xf5ed,
-                                fontFamily: CupertinoIcons.iconFont,
-                                fontPackage: CupertinoIcons.iconFontPackage),
+                            Icons.view_module,
+                            color: Colors.grey,
                           )
                         : Icon(
-                            const IconData(0xf6e8,
-                                fontFamily: CupertinoIcons.iconFont,
-                                fontPackage: CupertinoIcons.iconFontPackage),
+                            Icons.view_list,
+                            color: Colors.grey,
                           ),
                     onTap: () {
                       setState(() {
@@ -188,7 +174,6 @@ class _FolderPageState extends State<FolderPage> {
             Padding(
               padding: const EdgeInsets.only(top: 5),
             ),
-            //isListView?_listViewMode():_gridViewMode()
             Expanded(
               child: viewMode,
             )
@@ -207,26 +192,24 @@ class _FolderPageState extends State<FolderPage> {
                   itemCount: _bloc.getLength,
                   itemBuilder: (context, index) {
                     return _mediaListItem(
-                        _bloc.getData[index].id,
-                        _bloc.getData[index].fileName,
-                        _bloc.getData[index].isFolder
-                            ? CupertinoColors.systemGrey
-                            : CupertinoColors.activeBlue,
-                        Colors.transparent,
-                        _bloc.getData[index].dateCreated
-                            .toString()
-                            .split(' ')[0],
-                        _bloc.getData[index].isFolder
-                            ? const IconData(0xf435,
-                                fontFamily: CupertinoIcons.iconFont,
-                                fontPackage: CupertinoIcons.iconFontPackage)
-                            : Icons.insert_drive_file,
-                        isFolder: _bloc.getData[index].isFolder,
-                        isChoose: _bloc.indexItemChose
-                            .contains(_bloc.getData[index].id));
+                      _bloc.getData[index].id,
+                      _bloc.getData[index].fileName,
+                      _bloc.getData[index].hasChild
+                          ? Colors.lightBlueAccent
+                          : Colors.grey,
+                      Colors.transparent,
+                      _bloc.getData[index].dateCreated.toString().split(' ')[0],
+                      _bloc.getData[index].hasChild
+                          ? Icons.folder
+                          : Icons.insert_drive_file,
+                      _bloc.getData[index].children,
+                      hasChild: _bloc.getData[index].hasChild,
+                      isChoose: _bloc.indexItemChose
+                          .contains(_bloc.getData[index].id),
+                    );
                   })
               : Center(
-                  child: Text("NO ITEMS"),
+                  child: Text("Thư mục trống"),
                 )),
     );
   }
@@ -246,30 +229,29 @@ class _FolderPageState extends State<FolderPage> {
                   return _mediaGridItem(
                       _bloc.getData[index].id,
                       _bloc.getData[index].fileName,
-                      _bloc.getData[index].isFolder
-                          ? CupertinoColors.systemGrey
-                          : CupertinoColors.activeBlue,
+                      _bloc.getData[index].hasChild
+                          ? Colors.lightBlueAccent
+                          : Colors.grey,
                       Colors.transparent,
                       _bloc.getData[index].dateCreated.toString(),
-                      _bloc.getData[index].isFolder
-                          ? const IconData(0xf435,
-                              fontFamily: CupertinoIcons.iconFont,
-                              fontPackage: CupertinoIcons.iconFontPackage)
+                      _bloc.getData[index].hasChild
+                          ? Icons.folder
                           : Icons.insert_drive_file,
-                      isFolder: _bloc.getData[index].isFolder,
+                      _bloc.getData[index].children,
+                      hasChild: _bloc.getData[index].hasChild,
                       isChoose: _bloc.indexItemChose
                           .contains(_bloc.getData[index].id));
                 })
             : Center(
-                child: Text("NO ITEMS"),
+                child: Text("Thư mục trống"),
               ),
       ),
     );
   }
 
   Widget _mediaListItem(String itemId, String title, Color iconColor,
-      Color accent, String meta, IconData mediaIcon,
-      {bool isFolder = false, bool isChoose = false}) {
+      Color accent, String meta, IconData mediaIcon, List<Folder> children,
+      {bool hasChild = false, bool isChoose = false}) {
     final size = MediaQuery.of(context).size;
     return Container(
       padding: EdgeInsets.only(
@@ -304,9 +286,7 @@ class _FolderPageState extends State<FolderPage> {
                     color: iconColor,
                   ),
                   onTap: () {
-                    if (isFolder)
-                      _goToChild(
-                          title, _bloc.getChildOf(folderId: '0'), isListView);
+                    if (hasChild) _goToChild(title, children, isListView);
                   },
                   onLongPress: () {
                     _bloc.selected(itemId);
@@ -334,21 +314,21 @@ class _FolderPageState extends State<FolderPage> {
                   SizedBox(
                     height: 0.005 * size.height,
                   ),
-                  Text(
-                    meta,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 12,
-                      color: Colors.grey[500],
+                  if (!hasChild)
+                    Text(
+                      meta,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 12,
+                        color: Colors.grey[500],
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),
             onTap: () {
-              isFolder
-                  ? _goToChild(
-                      title, _bloc.getChildOf(folderId: '1'), isListView)
+              hasChild
+                  ? _goToChild(title, children, isListView)
                   : print("Click File");
             },
             onLongPress: () {
@@ -365,13 +345,14 @@ class _FolderPageState extends State<FolderPage> {
                   child: Icon(Icons.more_vert),
                   onTap: () {
                     showModalBottomSheet(
-                        context: context,
-                        builder: (builderContext) => FolderBottomActionsSheet(
-                              bloc: _bloc,
-                              iconData: mediaIcon,
-                              iconColor: iconColor,
-                              itemId: itemId,
-                            ));
+                      context: context,
+                      builder: (builderContext) => FolderBottomActionsSheet(
+                        bloc: _bloc,
+                        iconData: mediaIcon,
+                        iconColor: iconColor,
+                        itemId: itemId,
+                      ),
+                    );
                   },
                 ),
               ),
@@ -383,8 +364,8 @@ class _FolderPageState extends State<FolderPage> {
   }
 
   Widget _mediaGridItem(String itemId, String title, Color iconColor,
-      Color accent, String meta, IconData mediaIcon,
-      {bool isFolder = false, bool isChoose = false}) {
+      Color accent, String meta, IconData mediaIcon, List<Folder> children,
+      {bool hasChild = false, bool isChoose = false}) {
     var size = MediaQuery.of(context).size;
     return Padding(
         padding: EdgeInsets.only(
@@ -414,45 +395,40 @@ class _FolderPageState extends State<FolderPage> {
                       color: iconColor,
                     ),
                     onTap: () {
-                      if (isFolder)
-                        _goToChild(
-                            title, _bloc.getChildOf(folderId: '1'), isListView);
+                      if (hasChild) _goToChild(title, children, isListView);
                     },
                     onLongPress: () {
                       _bloc.selected(itemId);
                     },
                   )),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                      padding: EdgeInsets.only(left: 0.06 * size.width),
-                      width: 0.4 * size.width,
-                      child: GestureDetector(
-                        child: Text(
-                          title,
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                          ),
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
+                  Expanded(
+                    child: Container(
+                        child: GestureDetector(
+                      child: Text(
+                        title,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
                         ),
-                        onTap: () {
-                          isFolder
-                              ? _goToChild(title,
-                                  _bloc.getChildOf(folderId: '1'), isListView)
-                              : print("Click File");
-                        },
-                        onLongPress: () {
-                          _bloc.selected(itemId);
-                        },
-                      )),
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                      ),
+                      onTap: () {
+                        hasChild
+                            ? _goToChild(title, children, isListView)
+                            : print("Click File");
+                      },
+                      onLongPress: () {
+                        _bloc.selected(itemId);
+                      },
+                    )),
+                  ),
                   GestureDetector(
-                    child: Icon(const IconData(0xf8da,
-                        fontFamily: CupertinoIcons.iconFont,
-                        fontPackage: CupertinoIcons.iconFontPackage)),
+                    child: Icon(Icons.more_vert),
                     onTap: () {
                       showModalBottomSheet(
                           context: context,

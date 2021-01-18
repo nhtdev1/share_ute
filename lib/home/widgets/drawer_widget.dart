@@ -6,10 +6,10 @@ import 'package:share_ute/authentication/authentication.dart';
 import 'package:share_ute/firestore_user/firestore_user.dart';
 import 'package:share_ute/profile_screen/profile_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:share_ute/upgrade/upgrade.dart';
 
 // Phần dành cho drawer
 class DrawerWidget extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<FirestoreUserBloc, FirestoreUserState>(
@@ -27,13 +27,12 @@ class DrawerWidget extends StatelessWidget {
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       accountEmail: Text(
-                        state.user.email,
+                        state.user.email == null ? 'unknown' : state.user.email,
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       currentAccountPicture: CircleAvatar(
                         radius: 30.0,
-                        backgroundImage: NetworkImage(
-                            state.user.photo),
+                        backgroundImage: NetworkImage(state.user.photo),
                       ),
                       decoration: BoxDecoration(
                           image: DecorationImage(
@@ -42,9 +41,13 @@ class DrawerWidget extends StatelessWidget {
                     ),
                     ListTile(
                       title: Text('Thông tin'),
-                      leading: Icon(const IconData(0xf746,
+                      leading: Icon(
+                        const IconData(
+                          0xf746,
                           fontFamily: CupertinoIcons.iconFont,
-                          fontPackage: CupertinoIcons.iconFontPackage)),
+                          fontPackage: CupertinoIcons.iconFontPackage,
+                        ),
+                      ),
                       onTap: () {
                         Navigator.push(
                           context,
@@ -54,24 +57,70 @@ class DrawerWidget extends StatelessWidget {
                     ),
                     ListTile(
                       title: Text('Cài đặt'),
-                      leading: Icon(const IconData(0xf43c,
+                      leading: Icon(
+                        const IconData(
+                          0xf43c,
                           fontFamily: CupertinoIcons.iconFont,
-                          fontPackage: CupertinoIcons.iconFontPackage)),
+                          fontPackage: CupertinoIcons.iconFontPackage,
+                        ),
+                      ),
                       onTap: () {},
                     ),
                     ListTile(
-                      title: Text('Phản hồi'),
-                      leading: Icon(const IconData(0xf78f,
+                      title: Text('Về ứng dụng'),
+                      leading: Icon(
+                        const IconData(
+                          0xf44c,
                           fontFamily: CupertinoIcons.iconFont,
-                          fontPackage: CupertinoIcons.iconFontPackage)),
-                      onTap: () {},
+                          fontPackage: CupertinoIcons.iconFontPackage,
+                        ),
+                      ),
+                      onTap: () {
+                        showAboutDialog(
+                          context: context,
+                          applicationVersion: 'Phiên bản 0.1',
+                          applicationIcon: Container(
+                            width: 70,
+                            height: 70,
+                            child: Image.asset('assets/images/logo_utes.png'),
+                          ),
+                          children: [
+                            Text('Tiểu luận chuyên ngành 2020'),
+                            const SizedBox(height: 10),
+                            Text('Sinh viên thực hiện:'),
+                            ListTile(
+                              leading: Icon(Icons.person),
+                              title: Text('Nguyễn Hoàng Thịnh  17110372'),
+                            ),
+                            ListTile(
+                              leading: Icon(Icons.person),
+                              title: Text('Lưu Văn Quận  17110355:'),
+                            ),
+                            const SizedBox(height: 10),
+                            Text('Giảng viên hướng dẫn:'),
+                            ListTile(
+                              leading: Icon(Icons.integration_instructions),
+                              title: Text('TS. Nguyễn Thiên Bảo'),
+                            )
+                          ],
+                        );
+                      },
                     ),
                     ListTile(
-                      title: Text('Về chúng tôi'),
-                      leading: Icon(const IconData(0xf44c,
+                      title: Text('Nâng cấp'),
+                      leading: Icon(
+                        const IconData(
+                          0xf526,
                           fontFamily: CupertinoIcons.iconFont,
-                          fontPackage: CupertinoIcons.iconFontPackage)),
-                      onTap: () {},
+                          fontPackage: CupertinoIcons.iconFontPackage,
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          UpgradePage.route(),
+                        );
+                      },
                     ),
                   ],
                 ),

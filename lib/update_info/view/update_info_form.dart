@@ -60,7 +60,10 @@ class UpdateInfoForm extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Text(
-                      context.watch<FirestoreUserBloc>().state.user.email,
+                      context.watch<FirestoreUserBloc>().state.user.email ==
+                              null
+                          ? 'Không rõ'
+                          : context.watch<FirestoreUserBloc>().state.user.email,
                       style: TextStyle(
                         fontSize: 16,
                       ),

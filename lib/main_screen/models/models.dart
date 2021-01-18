@@ -1,2 +1,2 @@
-export 'suggestion.dart';
+export 'filter.dart';
 export 'document.dart';

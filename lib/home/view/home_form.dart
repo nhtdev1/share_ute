@@ -1,14 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_ute/document/view/document_page.dart';
 import 'package:share_ute/home/widgets/widgets.dart';
-import 'package:share_ute/main_screen/main_screen.dart';
 import 'package:share_ute/notification/notification.dart';
+import 'package:share_ute/post/post.dart';
+import 'package:share_ute/post_notification/post_notification.dart';
+import 'package:share_ute/recent_post/recent_post.dart';
 import 'package:share_ute/search/search.dart';
 import 'package:share_ute/theme.dart';
+import 'package:share_ute/upgrade/upgrade.dart';
 import 'package:share_ute/views/folder_page.dart';
-import 'package:share_ute/views/recent_page.dart';
 
 class HomeForm extends StatefulWidget {
   const HomeForm({Key key}) : super(key: key);
@@ -57,26 +58,73 @@ class _HomeFormState extends State<HomeForm>
                 ..hideCurrentSnackBar()
                 ..showSnackBar(
                   SnackBar(
-                    backgroundColor: Colors.lightBlue,
+                    backgroundColor: Colors.blue,
                     behavior: SnackBarBehavior.fixed,
-                    content: Text(
-                      'Tạo bài đăng thành công',
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
+                    elevation: 10.0,
+                    content: Text('Tạo bài đăng thành công'),
                     action: SnackBarAction(
                       label: 'Xem',
                       textColor: Colors.white,
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          DocumentPage.route(),
-                        );
+                        Navigator.push(context, DocumentPage.route());
                       },
                     ),
                   ),
                 );
+            }
+
+            if (state.status == NotificationStatus.premiumRequested) {
+              Scaffold.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    backgroundColor: Colors.blue,
+                    behavior: SnackBarBehavior.fixed,
+                    elevation: 10.0,
+                    content: Text('Chỉ dành cho tài khoản premium'),
+                    action: SnackBarAction(
+                      label: 'Nâng cấp',
+                      textColor: Colors.white,
+                      onPressed: () {
+                        Navigator.push(context, UpgradePage.route());
+                      },
+                    ),
+                  ),
+                );
+            }
+
+            if (state.status == NotificationStatus.newReportCreated) {
+              Scaffold.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  const SnackBar(
+                    elevation: 10.0,
+                    backgroundColor: Colors.blue,
+                    behavior: SnackBarBehavior.fixed,
+                    content: Text(
+                      'Báo cáo của bạn đã được ghi lại',
+                    ),
+                  ),
+                );
+            }
+
+            if (state.status == NotificationStatus.recentPostAdded) {
+              Scaffold.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  const SnackBar(
+                    elevation: 10.0,
+                    backgroundColor: Colors.blue,
+                    behavior: SnackBarBehavior.fixed,
+                    content: Text(
+                      'Đã thêm bài viết vào thư mục gần đây',
+                    ),
+                  ),
+                );
+            }
+
+            if (state.status == NotificationStatus.currentPostChanged) {
+              Navigator.push(context, DocumentPage.route());
             }
           },
           child: NestedScrollView(
@@ -85,12 +133,11 @@ class _HomeFormState extends State<HomeForm>
               return <Widget>[
                 // SliverAppBar custom SearchBar
                 SliverAppBar(
-                  iconTheme:
-                      new IconThemeData(color: CupertinoColors.systemGrey),
+                  iconTheme: IconThemeData(color: Colors.grey),
                   toolbarHeight: 80,
                   pinned: innerBoxIsScrolled == true ? false : true,
                   floating: true,
-                  backgroundColor: CupertinoColors.white,
+                  backgroundColor: Colors.white,
                   title: Container(
                     child: Material(
                       elevation: 8,
@@ -108,15 +155,25 @@ class _HomeFormState extends State<HomeForm>
                                   enabled: false,
                                   textAlign: TextAlign.start,
                                   style: TextStyle(
-                                      fontSize: 16, fontFamily: 'WorkSans'),
+                                    fontSize: 16,
+                                    fontFamily: 'WorkSans',
+                                  ),
                                   decoration: InputDecoration(
                                     hintText: "Tìm kiếm tài liệu của bạn",
                                     border: InputBorder.none,
                                   ),
                                 ),
                                 onTap: () {
+                                  final posts = context
+                                      .read<PostNotificationCubit>()
+                                      .state
+                                      .posts;
                                   showSearch(
-                                      context: context, delegate: SearchPage());
+                                    context: context,
+                                    delegate: SearchPage(
+                                        searchCubit: context.read<SearchCubit>()
+                                          ..fetchedPosts(posts)),
+                                  );
                                 },
                               ),
                             )
@@ -132,8 +189,8 @@ class _HomeFormState extends State<HomeForm>
               child: PageView(
                 controller: _pageController,
                 children: [
-                  ListPost(),
-                  RecentPage(),
+                  PostPage(),
+                  RecentPostPage(),
                   MyFolderPage(),
                 ],
                 onPageChanged: (index) {
@@ -148,32 +205,20 @@ class _HomeFormState extends State<HomeForm>
         bottomNavigationBar: BottomNavigationBar(
           backgroundColor: AppTheme.notWhite,
           type: BottomNavigationBarType.fixed,
-          selectedItemColor: CupertinoColors.activeBlue,
+          selectedItemColor: Colors.blueAccent,
           currentIndex: currentIndex,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               label: 'Trang chủ',
-              icon: Icon(
-                const IconData(63715,
-                    fontFamily: CupertinoIcons.iconFont,
-                    fontPackage: CupertinoIcons.iconFontPackage),
-              ),
+              icon: Icon(Icons.home_outlined),
             ),
             BottomNavigationBarItem(
               label: 'Gần đây',
-              icon: Icon(
-                const IconData(0xf4be,
-                    fontFamily: CupertinoIcons.iconFont,
-                    fontPackage: CupertinoIcons.iconFontPackage),
-              ),
+              icon: Icon(Icons.history_outlined),
             ),
             BottomNavigationBarItem(
               label: 'Thư mục',
-              icon: Icon(
-                const IconData(0xf434,
-                    fontFamily: CupertinoIcons.iconFont,
-                    fontPackage: CupertinoIcons.iconFontPackage),
-              ),
+              icon: Icon(Icons.folder_outlined),
             ),
           ],
           onTap: (index) {

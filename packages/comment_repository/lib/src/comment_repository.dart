@@ -26,7 +26,9 @@ class CommentRepository {
           commentId: doc.id,
           uid: doc['uid'],
           photoURL: doc['photoURL'],
+          username: doc['username'],
           title: doc['title'],
+          gifURL: doc['gifURL'],
           dateCreated: doc['dateCreated'],
         ));
       });
@@ -45,6 +47,8 @@ class CommentRepository {
         'uid': _firebaseAuth.currentUser.uid,
         'photoURL': comment.photoURL,
         'title': comment.title,
+        'username': comment.username,
+        'gifURL': comment.gifURL,
         'dateCreated': comment.dateCreated,
       });
       return result.id;
@@ -53,7 +57,7 @@ class CommentRepository {
     }
   }
 
-  Future<void> setSolution(
+  Future<void> setComment(
     Comment comment,
   ) {
     WriteBatch batch = FirebaseFirestore.instance.batch();

@@ -17,7 +17,7 @@ class CreateFolderAndPostPage extends StatelessWidget {
                 "Tạo mới",
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.black,
+                  color: Colors.grey,
                 ),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
@@ -39,19 +39,19 @@ class CreateFolderAndPostPage extends StatelessWidget {
                             color: Colors.white,
                             border: Border.all(
                               width: 1,
-                              color: Colors.black54,
+                              color: Colors.grey,
                             ),
                           ),
                           child: Icon(
                             Icons.create_new_folder_outlined,
-                            color: Colors.black54,
+                            color: Colors.grey,
                           ),
                         ),
                         Text(
                           "Thư mục",
                           style: TextStyle(
                             fontSize: 12,
-                            color: Colors.black,
+                            color: Colors.grey,
                           ),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
@@ -71,19 +71,19 @@ class CreateFolderAndPostPage extends StatelessWidget {
                             color: Colors.white,
                             border: Border.all(
                               width: 1,
-                              color: Colors.black54,
+                              color: Colors.grey,
                             ),
                           ),
                           child: Icon(
                             Icons.cloud_upload_outlined,
-                            color: Colors.black54,
+                            color: Colors.grey,
                           ),
                         ),
                         Text(
                           "Tải lên",
                           style: TextStyle(
                             fontSize: 12,
-                            color: Colors.black,
+                            color: Colors.grey,
                           ),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,

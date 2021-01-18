@@ -90,8 +90,9 @@ class EmotionButton extends StatelessWidget {
         color: Colors.transparent,
         child: Row(
           children: <Widget>[
-            Image.asset(path, height: 20),
-            const SizedBox(width: 5),
+            Image.asset(path, height: 17.0),
+            const SizedBox(width: 3),
+            text,
           ],
         ),
       );
