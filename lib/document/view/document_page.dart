@@ -22,14 +22,6 @@ class DocumentPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        // BlocProvider(
-        //   lazy: false,
-        //   create: (context) => EmotionBloc(
-        //     postRepository: context.read<PostRepository>(),
-        //     notificationCubit: context.read<NotificationCubit>(),
-        //     authenticationBloc: context.read<AuthenticationBloc>(),
-        //   ),
-        // ),
         BlocProvider(
           lazy: false,
           create: (context) => ReactPostBloc(

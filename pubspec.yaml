@@ -72,8 +72,9 @@ dependencies:
   #Download file
   flutter_downloader: ^1.5.2
   path_provider: ^2.0.1
-  flutter_svg: ^0.19.1
+  flutter_svg: ^0.19.3
   tiengviet: ^0.4.1
+  video_player: ^2.0.2
 
 
 

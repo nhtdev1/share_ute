@@ -209,7 +209,10 @@ class PostWidget extends StatelessWidget {
                               ? 'assets/images/thumbnail_xls.svg'
                               : post.originalFile.fileExtension.contains('ppt')
                                   ? 'assets/images/thumbnail_ppt.svg'
-                                  : 'assets/images/thumbnail_pdf.svg',
+                                  : post.originalFile.fileExtension
+                                          .contains('pdf')
+                                      ? 'assets/images/thumbnail_pdf.svg'
+                                      : 'assets/images/thumbnail_mp4.svg',
                       fit: BoxFit.contain,
                     ),
                   ),

@@ -70,6 +70,7 @@ class FilePickerRepository {
         'xls',
         'ppt',
         'pptx',
+        'mp4',
       ],
     );
     if (result != null) {
