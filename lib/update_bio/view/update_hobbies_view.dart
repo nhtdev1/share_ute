@@ -24,7 +24,7 @@ class UpdateHobbiesView extends StatelessWidget {
       buildWhen: (previous, current) =>
           previous.user.hobbies != current.user.hobbies,
       builder: (context, state) {
-        List<Widget> tiles = List();
+        List<Widget> tiles = [];
         data.forEach((element) {
           tiles.add(Container(
             padding: const EdgeInsets.all(2.0),

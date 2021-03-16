@@ -5,7 +5,7 @@ class FacultyPickerPage extends StatefulWidget {
 
   final String faculty;
 
-  final List<String> data =  const [
+  final List<String> data = const [
     'Hệ chất lượng cao',
     'Hệ đại trà',
   ];
@@ -30,14 +30,14 @@ class _FacultyPickerPageState extends State<FacultyPickerPage> {
         actions: [
           currentValue != ""
               ? IconButton(
-            icon: Icon(
-              Icons.check,
-              color: Colors.white,
-            ),
-            onPressed: (){
-              Navigator.pop(context,currentValue);
-            },
-          )
+                  icon: Icon(
+                    Icons.check,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context, currentValue);
+                  },
+                )
               : Container(),
         ],
       ),
@@ -48,24 +48,22 @@ class _FacultyPickerPageState extends State<FacultyPickerPage> {
     );
   }
 
-  _buildFaculties(){
-    List<Widget> faculties = List();
+  _buildFaculties() {
+    List<Widget> faculties = [];
     widget.data.forEach((element) {
       faculties.add(Card(
         child: Center(
           child: ListTile(
             trailing: currentValue == element
                 ? Icon(
-              Icons.check_circle_rounded,
-              color: Colors.lightGreenAccent,
-            )
+                    Icons.check_circle_rounded,
+                    color: Colors.lightGreenAccent,
+                  )
                 : null,
             title: Text(
               element,
               style: TextStyle(
-                fontWeight: currentValue == element
-                    ? FontWeight.bold
-                    : null,
+                fontWeight: currentValue == element ? FontWeight.bold : null,
               ),
             ),
             onTap: () {

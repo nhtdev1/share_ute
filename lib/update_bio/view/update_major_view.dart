@@ -52,7 +52,7 @@ class UpdateMajorView extends StatelessWidget {
       buildWhen: (previous, current) =>
           previous.user.major != current.user.major,
       builder: (context, state) {
-        List<Widget> tiles = List();
+        List<Widget> tiles = [];
         data.forEach((element) {
           tiles.add(
             Material(

@@ -26,7 +26,7 @@ class UploadYearView extends StatelessWidget {
       buildWhen: (previous, current) =>
           previous.post.postYear != current.post.postYear,
       builder: (context, state) {
-        List<Widget> tiles = List();
+        List<Widget> tiles = [];
         data.forEach((element) {
           tiles.add(
             Material(

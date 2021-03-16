@@ -1,6 +1,6 @@
 class IntroRepository {
-  List<String> getMajors(){
-    List<String> result = new List<String>();
+  List<String> getMajors() {
+    List<String> result = [];
     result.add("Bán Kem Trộn");
     result.add("Game Thủ");
     result.add("Fuck Boy");
@@ -18,8 +18,8 @@ class IntroRepository {
     return result;
   }
 
-  List<String> getSubject(){
-    List<String> result = new List<String>();
+  List<String> getSubject() {
+    List<String> result = [];
     result.add("Toán 1");
     result.add("Toán 2");
     result.add("Toán 3");
@@ -36,5 +36,4 @@ class IntroRepository {
     result.add("Vật Lí 2");
     return result;
   }
-
 }

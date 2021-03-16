@@ -40,10 +40,12 @@ class LockUserForm extends StatelessWidget {
               const SizedBox(
                 height: 10.0,
               ),
-              RaisedButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0)),
-                color: Colors.blueAccent,
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0)),
+                  primary: Colors.blueAccent,
+                ),
                 onPressed: () {
                   context.read<AuthenticationBloc>().logOut();
                 },

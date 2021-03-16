@@ -37,10 +37,11 @@ class _HobbiesPickerPageState extends State<HobbiesPickerPage> {
             child: _buildHobbies(),
           ),
           Center(
-            child: RaisedButton(
-                color: Colors.blue.withOpacity(0.8),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
+            child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.blue.withOpacity(0.8),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0)),
                 ),
                 child: Text(
                   'Đồng ý',
@@ -58,7 +59,7 @@ class _HobbiesPickerPageState extends State<HobbiesPickerPage> {
   }
 
   _buildHobbies() {
-    List<Widget> choices = List();
+    List<Widget> choices = [];
     widget.data.forEach((element) {
       choices.add(Container(
         padding: const EdgeInsets.all(2.0),

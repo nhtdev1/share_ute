@@ -21,7 +21,7 @@ PageViewModel _buildHobbiesPageModel(
       buildWhen: (previous, current) =>
           previous.user.hobbies != current.user.hobbies,
       builder: (context, state) {
-        List<Widget> choices = List();
+        List<Widget> choices = [];
         hobbyList.forEach((element) {
           choices.add(Container(
             padding: const EdgeInsets.all(2.0),

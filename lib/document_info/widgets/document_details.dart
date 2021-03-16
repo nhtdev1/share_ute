@@ -201,7 +201,7 @@ class DocumentDetails extends StatelessWidget {
   }
 
   _buildHobbies(Post post) {
-    List<Widget> chips = List();
+    List<Widget> chips = [];
     post.postTags.forEach((element) {
       chips.add(
         Container(

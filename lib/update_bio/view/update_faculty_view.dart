@@ -20,7 +20,7 @@ class UpdateFacultyView extends StatelessWidget {
       buildWhen: (previous, current) =>
           previous.user.faculty != current.user.faculty,
       builder: (context, state) {
-        List<Widget> tiles = List();
+        List<Widget> tiles = [];
         data.forEach((element) {
           tiles.add(
             Material(

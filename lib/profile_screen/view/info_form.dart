@@ -164,10 +164,11 @@ class _InFormState extends State<InfoForm> {
                 child: Divider(),
               ),
               Center(
-                child: RaisedButton(
-                    color: Colors.blue.withOpacity(0.8),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.blue.withOpacity(0.8),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0)),
                     ),
                     child: Text(
                       'UPDATE INFO',

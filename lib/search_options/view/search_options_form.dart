@@ -47,7 +47,7 @@ class _OptinalTags extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SearchOptionsCubit, SearchOptionsState>(
       builder: (context, state) {
-        List<Widget> chips = List();
+        List<Widget> chips = [];
         state.options.forEach((element) {
           chips.add(
             GestureDetector(

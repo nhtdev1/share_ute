@@ -13,7 +13,7 @@ class LoginForm extends StatelessWidget {
     return BlocListener<LoginCubit, LoginState>(
       listener: (context, state) {
         if (state.status.isSubmissionFailure) {
-          Scaffold.of(context)
+          ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
               const SnackBar(content: Text('Authentication Failure')),
@@ -181,10 +181,13 @@ class _LoginButton extends StatelessWidget {
             ? const CircularProgressIndicator(
                 strokeWidth: 2,
               )
-            : RaisedButton(
-                highlightElevation: 0.0,
-                elevation: 0.0,
-                color: Colors.blueAccent,
+            : ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0)),
+                  elevation: 0.0,
+                  primary: Colors.blueAccent,
+                ),
                 key: const Key('loginForm_continue_raisedButton'),
                 child: const Text(
                   'Đăng nhập',
@@ -193,8 +196,6 @@ class _LoginButton extends StatelessWidget {
                     fontSize: 16,
                   ),
                 ),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0)),
                 onPressed: state.status.isValidated
                     ? () => context.watch<LoginCubit>().logInWithCredentials()
                     : null,
@@ -209,9 +210,13 @@ class _GoogleLoginButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 3 / 5,
-      child: RaisedButton.icon(
-        padding: const EdgeInsets.all(8.0),
-        color: Colors.blueAccent,
+      child: ElevatedButton.icon(
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.all(8.0),
+          primary: Colors.blueAccent,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+        ),
         key: const Key('loginForm_googleLogin_raisedButton'),
         onPressed: () => context.read<LoginCubit>().logInWithGoogle(),
         icon: const Icon(
@@ -225,9 +230,6 @@ class _GoogleLoginButton extends StatelessWidget {
             fontSize: 16,
           ),
         ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5.0),
-        ),
       ),
     );
   }
@@ -238,9 +240,14 @@ class _FacebookLoginButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 3 / 5,
-      child: RaisedButton.icon(
-        padding: const EdgeInsets.all(8.0),
-        color: Colors.blueAccent,
+      child: ElevatedButton.icon(
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.all(8.0),
+          primary: Colors.blueAccent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+        ),
         key: const Key('loginForm_facebookLogin_raisedButton'),
         onPressed: () => context.read<LoginCubit>().logInWithFacebook(),
         icon: const Icon(
@@ -254,9 +261,6 @@ class _FacebookLoginButton extends StatelessWidget {
             fontSize: 16,
           ),
         ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5.0),
-        ),
       ),
     );
   }
@@ -265,7 +269,7 @@ class _FacebookLoginButton extends StatelessWidget {
 class _SignUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return FlatButton(
+    return TextButton(
       key: const Key('loginForm_createAccount_flatButton'),
       child: Text(
         'Tạo tài khoản',

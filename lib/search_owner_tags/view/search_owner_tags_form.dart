@@ -63,7 +63,7 @@ class _OwnTags extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SearchOwnerTagsCubit, SearchOwnerTagsState>(
       builder: (context, state) {
-        List<Widget> chips = List();
+        List<Widget> chips = [];
         state.query.forEach((element) {
           chips.add(
             Container(

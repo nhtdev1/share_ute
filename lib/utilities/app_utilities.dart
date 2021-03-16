@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppUtilities {
   static showSnackBar({BuildContext context, String title, String action}) {
-    Scaffold.of(context)
+    ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
         SnackBar(

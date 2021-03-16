@@ -12,7 +12,7 @@ class SignUpForm extends StatelessWidget {
     return BlocListener<SignUpCubit, SignUpState>(
       listener: (context, state) {
         if (state.status.isSubmissionFailure) {
-          Scaffold.of(context)
+          ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
               const SnackBar(content: Text('Sign Up Failure')),
@@ -120,7 +120,8 @@ class _PasswordInput extends StatelessWidget {
                   color: Theme.of(context).primaryColor,
                 ),
                 hintText: 'Mật khẩu',
-                errorText: state.password.invalid ? 'mật khẩu không hợp lệ' : null,
+                errorText:
+                    state.password.invalid ? 'mật khẩu không hợp lệ' : null,
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                   borderSide: BorderSide(
@@ -215,8 +216,13 @@ class _SignUpButton extends StatelessWidget {
             ? const CircularProgressIndicator(
                 strokeWidth: 2,
               )
-            : RaisedButton(
+            : ElevatedButton(
                 key: const Key('signUpForm_continue_raisedButton'),
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0)),
+                  primary: Colors.orangeAccent,
+                ),
                 child: const Text(
                   'Đăng ký',
                   style: TextStyle(
@@ -224,10 +230,6 @@ class _SignUpButton extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                color: Colors.orangeAccent,
                 onPressed: state.status.isValidated
                     ? () => context.watch<SignUpCubit>().signUpFormSubmitted()
                     : null,

@@ -40,12 +40,13 @@ class _YearPickerPageState extends State<YearPickerPage> {
             child: _buildYear(),
           ),
           Center(
-            child: RaisedButton(
-                color: Colors.blue.withOpacity(0.8),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
+            child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.blue.withOpacity(0.8),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0)),
+                  padding: const EdgeInsets.all(10.0),
                 ),
-                padding: const EdgeInsets.all(10.0),
                 child: Text(
                   'Đồng ý',
                   style: TextStyle(
@@ -63,7 +64,7 @@ class _YearPickerPageState extends State<YearPickerPage> {
   }
 
   _buildYear() {
-    List<Widget> chips = List();
+    List<Widget> chips = [];
     widget.data.forEach((element) {
       chips.add(Container(
         padding: const EdgeInsets.all(5.0),

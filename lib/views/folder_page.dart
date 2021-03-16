@@ -7,7 +7,7 @@ import 'package:share_ute/widgets/folder_sortby_bottom_sheet.dart';
 
 class MyFolderPage extends StatelessWidget {
   getRoot() {
-    final data = List<Folder>();
+    final data = [];
     data.add(
       Folder(
         id: '100',

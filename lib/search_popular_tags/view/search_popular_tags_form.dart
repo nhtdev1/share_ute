@@ -62,7 +62,7 @@ class _TopTags extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SearchPopularTagsCubit, SearchPopularTagsState>(
       builder: (context, state) {
-        List<Widget> chips = List();
+        List<Widget> chips = [];
         state.topTags.forEach((element) {
           chips.add(
             GestureDetector(

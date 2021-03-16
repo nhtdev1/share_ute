@@ -10,7 +10,7 @@ class UploadPostForm extends StatelessWidget {
     return BlocListener<UploadPostCubit, UploadPostState>(
       listener: (context, state) {
         if (state.uploadPostProgress == UploadPostProgress.submissionFailure) {
-          Scaffold.of(context)
+          ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
               const SnackBar(
@@ -26,7 +26,7 @@ class UploadPostForm extends StatelessWidget {
             UploadPostProgress.submissionSuccess) {
           Navigator.pop(context);
         } else if (state.originalFileStatus == FileStatus.pickedWithOverSize) {
-          Scaffold.of(context)
+          ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
               SnackBar(
@@ -318,7 +318,7 @@ class _TagsRow extends StatelessWidget {
   }
 
   _buildTags(UploadPostState state, BuildContext context) {
-    List<Widget> chips = List();
+    List<Widget> chips = [];
     state.post.postTags.forEach((element) {
       chips.add(
         Container(

@@ -44,7 +44,7 @@ class EmotionIcons extends StatelessWidget {
       return 1;
     });
 
-    List<Widget> temps = List();
+    List<Widget> temps = [];
     for (int i = 0; i < emoList.length; i++) {
       if (i == 3) break;
       temps.add(

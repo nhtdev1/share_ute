@@ -11,7 +11,7 @@ class UpdateInfoForm extends StatelessWidget {
     return BlocListener<UpdateInfoCubit, UpdateInfoState>(
       listener: (context, state) {
         if (state.status.isSubmissionFailure) {
-          Scaffold.of(context)
+          ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
               const SnackBar(
@@ -22,7 +22,7 @@ class UpdateInfoForm extends StatelessWidget {
               ),
             );
         } else if (state.status.isSubmissionSuccess) {
-          Scaffold.of(context)
+          ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
               const SnackBar(
@@ -273,11 +273,12 @@ class _UpdateButton extends StatelessWidget {
         if (state.status.isValidated &&
             state.infoStatus == InfoStatus.changed) {
           return Center(
-            child: RaisedButton(
+            child: ElevatedButton(
               key: const Key('updateForm_continue_raisedButton'),
-              color: Colors.blue.withOpacity(0.8),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.blue.withOpacity(0.8),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0)),
               ),
               child: Text(
                 'Cập nhật',

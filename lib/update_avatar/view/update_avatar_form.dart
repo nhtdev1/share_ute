@@ -30,7 +30,7 @@ class UpdateAvatarForm extends StatelessWidget {
         listener: (context, state) {
           if (state.updateAvatarProgress ==
               UpdateAvatarProgress.submissionFailure) {
-            Scaffold.of(context)
+            ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
                 const SnackBar(
@@ -42,7 +42,7 @@ class UpdateAvatarForm extends StatelessWidget {
               );
           } else if (state.updateAvatarProgress ==
               UpdateAvatarProgress.submissionSuccess) {
-            Scaffold.of(context)
+            ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
                 const SnackBar(
@@ -53,7 +53,7 @@ class UpdateAvatarForm extends StatelessWidget {
                 ),
               );
           } else if (state.avatarStatus == AvatarStatus.pickedOverSize) {
-            Scaffold.of(context)
+            ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
                 const SnackBar(
@@ -117,12 +117,12 @@ class _ImageTool extends StatelessWidget {
               : Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    FlatButton(
+                    TextButton(
                       onPressed: () =>
                           context.read<UpdateAvatarCubit>().cropImage(),
                       child: Icon(Icons.crop),
                     ),
-                    FlatButton(
+                    TextButton(
                       onPressed: () =>
                           context.read<UpdateAvatarCubit>().clearImage(),
                       child: Icon(Icons.clear),
@@ -146,10 +146,13 @@ class _UploadButton extends StatelessWidget {
         } else {
           return state.avatarStatus == AvatarStatus.pickedAcceptableSize ||
                   state.avatarStatus == AvatarStatus.cropped
-              ? RaisedButton(
-                  highlightElevation: 0.0,
-                  elevation: 0.0,
-                  color: Colors.blueAccent,
+              ? ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0)),
+                    elevation: 0.0,
+                    primary: Colors.blueAccent,
+                  ),
                   child: const Text(
                     'Cập nhật',
                     style: TextStyle(
@@ -157,8 +160,6 @@ class _UploadButton extends StatelessWidget {
                       fontSize: 16,
                     ),
                   ),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0)),
                   onPressed: state.file.path.isNotEmpty
                       ? () => context.read<UpdateAvatarCubit>().uploadImage()
                       : null,

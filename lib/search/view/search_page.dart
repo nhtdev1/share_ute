@@ -217,8 +217,11 @@ class _TrackFilterResult extends StatelessWidget {
                     ),
                   ),
                   Spacer(),
-                  RaisedButton(
-                    color: e.result.length > 0 ? Colors.lightBlueAccent : null,
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary:
+                          e.result.length > 0 ? Colors.lightBlueAccent : null,
+                    ),
                     child: Text(
                       e.result.length.toString() + ' bài viết',
                       style: TextStyle(

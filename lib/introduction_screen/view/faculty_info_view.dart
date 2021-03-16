@@ -13,7 +13,7 @@ PageViewModel _buildFacultyPageModel(
       buildWhen: (previous, current) =>
           previous.user.faculty != current.user.faculty,
       builder: (context, state) {
-        List<Widget> faculties = List();
+        List<Widget> faculties = [];
         facultyList.forEach((element) {
           faculties.add(Card(
             child: Center(

@@ -9,7 +9,7 @@ class UpdateBioForm extends StatelessWidget {
     return BlocListener<UpdateBioCubit, UpdateBioState>(
         listener: (context, state) {
           if (state.updateProgress == UpdateBioProgress.submissionSuccess) {
-            Scaffold.of(context)
+            ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
                 const SnackBar(
@@ -21,7 +21,7 @@ class UpdateBioForm extends StatelessWidget {
               );
           } else if (state.updateProgress ==
               UpdateBioProgress.submissionFailure) {
-            Scaffold.of(context)
+            ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
                 const SnackBar(
@@ -280,7 +280,7 @@ class _HobbiesRow extends StatelessWidget {
   }
 
   _buildHobbies(UpdateBioState state, BuildContext context) {
-    List<Widget> chips = List();
+    List<Widget> chips = [];
     state.user.hobbies.forEach((element) {
       chips.add(
         Container(
@@ -329,10 +329,11 @@ class _UpdateButton extends StatelessWidget {
       if (state.bioStatus != BioStatus.unknown &&
           state.bioStatus != BioStatus.unchanged) {
         return Center(
-          child: RaisedButton(
-            color: Colors.blue.withOpacity(0.8),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: Colors.blue.withOpacity(0.8),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0)),
             ),
             child: Text(
               'Cập nhật',

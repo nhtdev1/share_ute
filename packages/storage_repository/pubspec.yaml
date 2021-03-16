@@ -1,14 +1,14 @@
 name: storage_repository
 version: 1.0.0
-
+publish_to: none
 environment:
   sdk: ">=2.7.0 <3.0.0"
   
 dependencies:
   flutter:
     sdk: flutter
-  firebase_storage: ^5.0.1
-  firebase_auth: ^0.18.1+2
+  firebase_storage: ^8.0.0
+  firebase_auth: ^1.0.1
   post_repository:
     path: ../post_repository
   solution_repository:

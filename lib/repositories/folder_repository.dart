@@ -198,7 +198,7 @@ class FolderRepository {
 
   List<Folder> getFileData() {
     var id = 0;
-    List<Folder> myFiles = List<Folder>();
+    List<Folder> myFiles = [];
     for (var item in folderList) {
       item.id = id.toString();
       item.isAddStarted = false;

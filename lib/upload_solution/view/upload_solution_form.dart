@@ -9,7 +9,7 @@ class UploadSolutionForm extends StatelessWidget {
       listener: (context, state) {
         if (state.uploadSolutionProgress ==
             UploadSolutionProgress.submissionFailure) {
-          Scaffold.of(context)
+          ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
               const SnackBar(
@@ -25,7 +25,7 @@ class UploadSolutionForm extends StatelessWidget {
             UploadSolutionProgress.submissionSuccess) {
           Navigator.pop(context);
         } else if (state.fileStatus == FileStatus.pickedWithOverSize) {
-          Scaffold.of(context)
+          ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
               const SnackBar(

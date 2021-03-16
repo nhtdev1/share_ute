@@ -11,16 +11,16 @@ final List<String> yearList = const [
   '2013',
 ];
 
-PageViewModel _buildYearPageModel({Widget image, PageDecoration pageDecoration}) {
+PageViewModel _buildYearPageModel(
+    {Widget image, PageDecoration pageDecoration}) {
   return PageViewModel(
     title: "Bạn là sinh viên khóa?",
     image: image,
     decoration: pageDecoration,
     bodyWidget: BlocBuilder<IntroductionCubit, IntroductionState>(
-      buildWhen: (previous, current) =>
-          previous.user.year != current.user.year,
+      buildWhen: (previous, current) => previous.user.year != current.user.year,
       builder: (context, state) {
-        List<Widget> choices = List();
+        List<Widget> choices = [];
         yearList.forEach((element) {
           choices.add(Container(
             padding: const EdgeInsets.all(2.0),

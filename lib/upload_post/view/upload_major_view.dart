@@ -52,7 +52,7 @@ class UploadMajorView extends StatelessWidget {
       buildWhen: (previous, current) =>
           previous.post.major != current.post.major,
       builder: (context, state) {
-        List<Widget> tiles = List();
+        List<Widget> tiles = [];
         data.forEach((element) {
           tiles.add(
             Material(

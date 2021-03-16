@@ -18,7 +18,7 @@ class _PremiumActiveWidgetState extends State<PremiumActiveWidget> {
           children: <Widget>[
             Stack(
               alignment: Alignment.topCenter,
-              overflow: Overflow.visible,
+              clipBehavior: Clip.none,
               children: <Widget>[
                 upperCurvedContainer(context),
                 circularButtonWidget(context, screenWidth),

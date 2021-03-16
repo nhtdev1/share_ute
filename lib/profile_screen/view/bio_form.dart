@@ -4,7 +4,7 @@ import 'package:share_ute/profile_screen/view/faculty_picker_page.dart';
 import 'package:share_ute/profile_screen/view/major_picker_page.dart';
 
 class BioForm extends StatefulWidget {
-  const BioForm({Key key}):super(key: key);
+  const BioForm({Key key}) : super(key: key);
 
   static Route route() {
     return MaterialPageRoute<void>(builder: (_) => const BioForm());
@@ -104,7 +104,9 @@ class _BioFormState extends State<BioForm> {
                   final result = await Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => FacultyPickerPage(faculty: faculty,)));
+                          builder: (context) => FacultyPickerPage(
+                                faculty: faculty,
+                              )));
                   if (result != null) {
                     setState(() {
                       faculty = result;
@@ -218,10 +220,11 @@ class _BioFormState extends State<BioForm> {
             child: Divider(),
           ),
           Center(
-            child: RaisedButton(
-                color: Colors.blue.withOpacity(0.8),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
+            child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.blue.withOpacity(0.8),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0)),
                 ),
                 child: Text(
                   'CẬP NHẬT',
@@ -237,7 +240,7 @@ class _BioFormState extends State<BioForm> {
   }
 
   _buildHobbies() {
-    List<Widget> chips = List();
+    List<Widget> chips = [];
     hobbies.forEach((element) {
       chips.add(
         Container(

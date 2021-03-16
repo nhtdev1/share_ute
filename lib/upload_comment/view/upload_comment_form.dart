@@ -33,7 +33,7 @@ class _EmojiKeyboard extends StatelessWidget {
   }
 
   _buidEmoji(BuildContext context) {
-    var tableRowList = List<TableRow>();
+    final List<TableRow> tableRowList = [];
     final row = <String>[];
     for (int i = 1; i <= Emoji.smileys.length; i++) {
       row.add(Emoji.smileys[i - 1]);

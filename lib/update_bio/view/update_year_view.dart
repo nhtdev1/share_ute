@@ -25,7 +25,7 @@ class UpdateYearView extends StatelessWidget {
     return BlocBuilder<UpdateBioCubit, UpdateBioState>(
       buildWhen: (previous, current) => previous.user.year != current.user.year,
       builder: (context, state) {
-        List<Widget> tiles = List();
+        List<Widget> tiles = [];
         data.forEach((element) {
           tiles.add(
             Material(

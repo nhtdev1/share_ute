@@ -55,7 +55,7 @@ class _MajorPickerPageState extends State<MajorPickerPage> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> majors = List();
+    List<Widget> majors = [];
     data.forEach((element) {
       majors.add(Card(
         child: Center(
@@ -96,8 +96,8 @@ class _MajorPickerPageState extends State<MajorPickerPage> {
                     Icons.check,
                     color: Colors.white,
                   ),
-                  onPressed: (){
-                    Navigator.pop(context,selectedValue);
+                  onPressed: () {
+                    Navigator.pop(context, selectedValue);
                   },
                 )
               : Container(),

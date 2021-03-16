@@ -54,7 +54,7 @@ class _HomeFormState extends State<HomeForm>
             // When a new post is created, NotificationState will notify this
             // to home_dart and it redirect to DocumentPage
             if (state.status == NotificationStatus.newPostCreated) {
-              Scaffold.of(context)
+              ScaffoldMessenger.of(context)
                 ..hideCurrentSnackBar()
                 ..showSnackBar(
                   SnackBar(
@@ -74,7 +74,7 @@ class _HomeFormState extends State<HomeForm>
             }
 
             if (state.status == NotificationStatus.premiumRequested) {
-              Scaffold.of(context)
+              ScaffoldMessenger.of(context)
                 ..hideCurrentSnackBar()
                 ..showSnackBar(
                   SnackBar(
@@ -94,7 +94,7 @@ class _HomeFormState extends State<HomeForm>
             }
 
             if (state.status == NotificationStatus.newReportCreated) {
-              Scaffold.of(context)
+              ScaffoldMessenger.of(context)
                 ..hideCurrentSnackBar()
                 ..showSnackBar(
                   const SnackBar(
@@ -109,7 +109,7 @@ class _HomeFormState extends State<HomeForm>
             }
 
             if (state.status == NotificationStatus.recentPostAdded) {
-              Scaffold.of(context)
+              ScaffoldMessenger.of(context)
                 ..hideCurrentSnackBar()
                 ..showSnackBar(
                   const SnackBar(

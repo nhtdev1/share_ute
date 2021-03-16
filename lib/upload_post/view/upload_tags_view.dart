@@ -29,7 +29,7 @@ class UploadTagsView extends StatelessWidget {
       buildWhen: (previous, current) =>
           previous.post.postTags != current.post.postTags,
       builder: (context, state) {
-        List<Widget> tiles = List();
+        List<Widget> tiles = [];
         data.forEach((element) {
           tiles.add(Container(
             padding: const EdgeInsets.all(2.0),

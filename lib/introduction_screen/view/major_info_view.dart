@@ -47,7 +47,7 @@ PageViewModel _buildMajorPageModel(
     title: "Bạn học ngành?",
     bodyWidget: BlocBuilder<IntroductionCubit, IntroductionState>(
       builder: (context, state) {
-        List<Widget> majors = List();
+        List<Widget> majors = [];
         majorList.forEach((element) {
           majors.add(Card(
             child: Center(

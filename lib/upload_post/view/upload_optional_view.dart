@@ -19,7 +19,7 @@ class UploadOptionalView extends StatelessWidget {
       body: BlocListener<UploadPostCubit, UploadPostState>(
         listener: (context, state) {
           if (state.solutionFileStatus == FileStatus.pickedWithOverSize) {
-            Scaffold.of(context)
+            ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
                 SnackBar(
@@ -234,7 +234,7 @@ class _SemesterRow extends StatelessWidget {
   }
 
   _buildSemester(BuildContext context, UploadPostState state) {
-    List<Widget> tiles = List();
+    List<Widget> tiles = [];
     data.forEach((element) {
       tiles.add(
         GestureDetector(
@@ -307,7 +307,7 @@ class _CreditsRow extends StatelessWidget {
   }
 
   _buildCredits(BuildContext context, UploadPostState state) {
-    List<Widget> tiles = List();
+    List<Widget> tiles = [];
     data.forEach((element) {
       tiles.add(
         GestureDetector(

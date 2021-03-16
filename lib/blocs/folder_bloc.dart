@@ -9,7 +9,7 @@ class FolderBloc {
   StreamController _listDataController = new StreamController();
   StreamController _sortTypeController = new StreamController();
 
-  List<Folder> _data = List<Folder>();
+  List<Folder> _data = [];
   FolderRepository _repository = FolderRepository();
 
   SORT_BY _curSortType;
@@ -98,7 +98,7 @@ class FolderBloc {
     return false;
   }
 
-  List<String> indexItemChose = new List<String>();
+  List<String> indexItemChose = [];
   void selected(String id) {
     if (indexItemChose.contains(id)) {
       indexItemChose.remove(id);

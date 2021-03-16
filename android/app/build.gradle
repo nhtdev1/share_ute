@@ -44,7 +44,8 @@ android {
         applicationId "com.example.share_ute"
         //minSdkVersion 16
         //minSdkVersion 21 - 29
-        minSdkVersion 19
+        //minSdkVersion 19 last change
+        minSdkVersion 21
         //targetSdkVersion 28
         //targetSdkVersion 29
         targetSdkVersion 30
