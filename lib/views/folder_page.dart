@@ -6,8 +6,8 @@ import 'package:share_ute/widgets/folder_bottom_actions_sheet.dart';
 import 'package:share_ute/widgets/folder_sortby_bottom_sheet.dart';
 
 class MyFolderPage extends StatelessWidget {
-  getRoot() {
-    final data = [];
+  List<Folder> getRoot() {
+    final List<Folder> data = [];
     data.add(
       Folder(
         id: '100',
@@ -34,7 +34,10 @@ class MyFolderPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FolderPage(isChild: false, data: getRoot());
+    return FolderPage(
+      isChild: false,
+      data: getRoot(),
+    );
   }
 }
 
@@ -48,13 +51,13 @@ class FolderPage extends StatefulWidget {
   final List<Folder> data;
   final bool isListView;
 
-  const FolderPage(
-      {Key key,
-      this.isChild = false,
-      this.folderTitle,
-      this.data,
-      this.isListView = true})
-      : super(key: key);
+  const FolderPage({
+    Key key,
+    this.isChild = false,
+    this.folderTitle,
+    this.data,
+    this.isListView = true,
+  }) : super(key: key);
 
   @override
   _FolderPageState createState() => _FolderPageState();

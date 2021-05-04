@@ -163,4 +163,29 @@ class FirestoreUserRepository {
       return firestore_user.User.empty;
     }
   }
+
+  Future<List<firestore_user.User>> getAllUsers() async {
+    final snapshot = await _firebaseFirestore.collection('users').get();
+    return snapshot.docs
+        .map(
+          (data) => firestore_user.User(
+            id: data.id,
+            name: data.data()['displayName'],
+            email: data.data()['email'],
+            birthday: data.data()['birthday'],
+            phone: data.data()['phone'],
+            photo: data.data()['photoURL'],
+            year: data.data()['year'],
+            faculty: data.data()['faculty'],
+            major: data.data()['major'],
+            hobbies: List<String>.from(data.data()['hobbies']),
+            postTotal: data.data()['postTotal'],
+            pointTotal: data.data()['pointTotal'],
+            dateCreated: data.data()['dateCreated'],
+            disabled: data.data()['disabled'],
+            premium: data.data()['premium'],
+          ),
+        )
+        .toList();
+  }
 }

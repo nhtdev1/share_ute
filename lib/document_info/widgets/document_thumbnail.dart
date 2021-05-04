@@ -11,7 +11,7 @@ class DocumentThumbnail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (post.originalFile.fileExtension.contains('mp4')) {
-      return PlayVideoPage(post);
+      return PlayVideoPage();
     }
     return GestureDetector(
       child: AspectRatio(

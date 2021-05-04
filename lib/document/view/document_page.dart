@@ -5,6 +5,7 @@ import 'package:share_ute/authentication/authentication.dart';
 import 'package:share_ute/comment_notification/comment_notification.dart';
 import 'package:share_ute/document/document.dart';
 import 'package:share_ute/notification/notification.dart';
+import 'package:share_ute/play_video/play_video.dart';
 import 'package:share_ute/react_post/react_post.dart';
 import 'package:share_ute/solution_notification/cubit/solution_notification_cubit.dart';
 import 'package:share_ute/system_notification/system_notification.dart';
@@ -44,6 +45,13 @@ class DocumentPage extends StatelessWidget {
             notificationCubit: context.read<NotificationCubit>(),
           ),
         ),
+        //
+        BlocProvider(
+          create: (_) => PlayVideoCubit(
+            notificationCubit: context.read<NotificationCubit>(),
+          )..initialized(),
+          child: PlayVideoForm(),
+        )
       ],
       child: WillPopScope(
         child: DocumentForm(),

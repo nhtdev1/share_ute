@@ -9,6 +9,13 @@ class PlayVideoForm extends StatelessWidget {
     final controller = context.watch<PlayVideoCubit>().controller;
     return BlocBuilder<PlayVideoCubit, PlayVideoState>(
       builder: (context, state) {
+        if (state.status == VideoStatus.unknown) {
+          return AspectRatio(
+              aspectRatio: controller.value.aspectRatio,
+              child: Center(
+                child: CircularProgressIndicator(strokeWidth: 1),
+              ));
+        }
         return AspectRatio(
           aspectRatio: controller.value.aspectRatio,
           child: Stack(
@@ -29,7 +36,6 @@ class _ControlsOverlap extends StatelessWidget {
   const _ControlsOverlap(this.controller);
 
   final VideoPlayerController controller;
-
   static const _playbackRates = [
     0.25,
     0.5,
@@ -57,6 +63,7 @@ class _ControlsOverlap extends StatelessWidget {
                       child: Icon(
                         Icons.play_arrow,
                         color: Colors.white,
+                        size: 60,
                       ),
                     ),
                   ),
@@ -69,9 +76,9 @@ class _ControlsOverlap extends StatelessWidget {
           Align(
             alignment: Alignment.topRight,
             child: PopupMenuButton<double>(
-              initialValue: controller.value.playbackSpeed,
+              initialValue: state.playbackSpeed,
               onSelected: (speed) {
-                controller.setPlaybackSpeed(speed);
+                context.read<PlayVideoCubit>().playbackSpeedChanged(speed);
               },
               itemBuilder: (context) {
                 return [
@@ -87,7 +94,7 @@ class _ControlsOverlap extends StatelessWidget {
                   vertical: 12,
                   horizontal: 16,
                 ),
-                child: Text('${controller.value.playbackSpeed}x'),
+                child: Text('${state.playbackSpeed}x'),
               ),
             ),
           )

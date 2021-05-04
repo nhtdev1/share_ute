@@ -28,7 +28,7 @@ dependencies:
   formz: ^0.3.2
   equatable: ^1.2.5
   rxdart: ^0.23.1
-  http: ^0.13.0
+  http: ^0.13.2
   firebase_messaging: ^9.0.0
   cloud_firestore: ^1.0.1
   pull_to_refresh: ^1.6.4
@@ -58,6 +58,10 @@ dependencies:
     path: packages/payment_repository
   search_repository:
     path: packages/search_repository
+  room_repository:
+    path: packages/room_repository
+  messages_repository:
+    path: packages/messages_repository
   introduction_screen: ^1.0.9
   flutter_picker: ^1.1.5
   flutter_datetime_picker: ^1.4.0
@@ -67,7 +71,7 @@ dependencies:
   permission_handler: ^6.1.0
   flutter_reaction_button: ^1.0.6+1
   intl: ^0.17.0
-  dio: ^4.0.0-beta7
+  dio: ^4.0.0
   webview_flutter: ^1.0.7
   #Download file
   flutter_downloader: ^1.5.2
@@ -75,6 +79,10 @@ dependencies:
   flutter_svg: ^0.19.3
   tiengviet: ^0.4.1
   video_player: ^2.0.2
+  cached_network_image: ^2.5.1
+  image_picker: ^0.7.3
+  firebase_storage: ^8.0.0
+  photo_view: ^0.11.1
 
 
 

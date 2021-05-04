@@ -13,7 +13,9 @@ class CommentInputWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          // For preview gif on top of keyboard if it exists.
           _GifHolder(),
+          //
           Row(
             children: <Widget>[
               _KeyboardSelectButton(),

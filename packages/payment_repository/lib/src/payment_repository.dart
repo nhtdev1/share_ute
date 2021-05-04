@@ -28,6 +28,7 @@ class PaymentRepository {
       );
       return result.data['id'];
     } on DioError catch (e, s) {
+      print('vai lozzzzzzzzzzzzzzzzzzzzzzzzzzz');
       print(e.response.toString() + s.toString());
       throw e;
     }

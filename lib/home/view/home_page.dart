@@ -66,6 +66,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       navigatorKey: _navigatorKey,
       builder: (context, child) {
         return BlocListener<FirestoreUserBloc, FirestoreUserState>(

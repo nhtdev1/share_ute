@@ -1,26 +1,30 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:file_picker_repository/file_picker_repository.dart';
-import 'package:post_repository/post_repository.dart';
+import 'package:meta/meta.dart';
+import 'package:share_ute/notification/notification.dart';
 import 'package:video_player/video_player.dart';
 
 part 'play_video_state.dart';
 
 class PlayVideoCubit extends Cubit<PlayVideoState> {
-  PlayVideoCubit() : super(const PlayVideoState());
+  PlayVideoCubit({@required NotificationCubit notificationCubit})
+      : super(PlayVideoState(
+            file: notificationCubit.state.currentPost.originalFile));
 
   VideoPlayerController controller;
 
-  void initialized(Post post) {
-    controller = VideoPlayerController.network(post.originalFile.path)
+  @override
+  Future<void> close() {
+    controller.dispose();
+    return super.close();
+  }
+
+  void initialized() {
+    controller = VideoPlayerController.network(state.file.path)
       ..setLooping(true)
       ..initialize().then(
-        (value) => {
-          emit(state.copyWith(
-            file: post.originalFile,
-            status: VideoStatus.initialized,
-          ))
-        },
+        (value) => {emit(state.copyWith(status: VideoStatus.initialized))},
       );
   }
 
@@ -34,9 +38,8 @@ class PlayVideoCubit extends Cubit<PlayVideoState> {
     }
   }
 
-  @override
-  Future<void> close() {
-    controller.dispose();
-    return super.close();
+  void playbackSpeedChanged(double speed) {
+    controller.setPlaybackSpeed(speed);
+    emit(state.copyWith(playbackSpeed: speed));
   }
 }

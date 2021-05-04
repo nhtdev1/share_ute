@@ -7,5 +7,5 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  dio: ^4.0.0-beta7
+  dio: ^4.0.0
   webview_flutter: ^1.0.7

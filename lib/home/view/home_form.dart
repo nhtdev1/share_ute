@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_ute/document/view/document_page.dart';
 import 'package:share_ute/home/widgets/widgets.dart';
+import 'package:share_ute/messenger/messenger.dart';
 import 'package:share_ute/notification/notification.dart';
 import 'package:share_ute/post/post.dart';
 import 'package:share_ute/post_notification/post_notification.dart';
@@ -191,6 +192,8 @@ class _HomeFormState extends State<HomeForm>
                 children: [
                   PostPage(),
                   RecentPostPage(),
+                  Container(),
+                  //MessengerPage(),
                   MyFolderPage(),
                 ],
                 onPageChanged: (index) {
@@ -217,15 +220,25 @@ class _HomeFormState extends State<HomeForm>
               icon: Icon(Icons.history_outlined),
             ),
             BottomNavigationBarItem(
+              label: 'Tin nhắn',
+              icon: Icon(Icons.message_outlined),
+            ),
+            BottomNavigationBarItem(
               label: 'Thư mục',
               icon: Icon(Icons.folder_outlined),
             ),
           ],
           onTap: (index) {
-            setState(() {
-              currentIndex = index;
-            });
-            _pageController.jumpToPage(index);
+            if (index != 2) {
+              setState(() {
+                currentIndex = index;
+              });
+            }
+            if (index == 2) {
+              Navigator.push(context, MessengerPage.route());
+            } else {
+              _pageController.jumpToPage(index);
+            }
           },
         ),
         drawer: DrawerWidget(),
