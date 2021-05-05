@@ -30,31 +30,18 @@ class RoomRepository {
     });
   }
 
-  Future<bool> createRoom({Room room}) async {
+  Future<String> createRoom({Room room}) async {
+    final String roomId = "${_firebaseAuth.currentUser.uid}-${room.friendId}";
     try {
-      await _firebaseFirestore
-          .collection('rooms')
-          .doc("${_firebaseAuth.currentUser.uid}-${room.friendId}")
-          .set({
-        "roomId": _firebaseAuth.currentUser.uid + room.friendId,
+      await _firebaseFirestore.collection('rooms').doc(roomId).set({
+        "roomId": roomId,
         "friendId": room.friendId,
         "friendPhotoUrl": room.friendPhotoUrl,
         "friendName": room.friendName,
       });
-      return true;
+      return roomId;
     } on Exception {
-      return false;
-    }
-  }
-
-  Future<bool> checkRoomById(String friendId) async {
-    String roomId = "${_firebaseAuth.currentUser.uid}-$friendId";
-    final snapshot =
-        await _firebaseFirestore.collection('rooms').doc(roomId).get();
-    if (snapshot.exists) {
-      return true;
-    } else {
-      return false;
+      return "";
     }
   }
 

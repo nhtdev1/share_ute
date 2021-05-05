@@ -28,33 +28,35 @@ class MessengerCubit extends Cubit<MessengerState> {
     return super.close();
   }
 
-  Future<void> getAllUsers() async {
+  Future<void> init() async {
     final List<User> users = await userRepository.getAllUsers();
     emit(state.copyWith(users: users));
   }
 
-  Future<void> joinRoomWith(User user) async {
-    bool isExistRoom = state.rooms
-        .where((room) => room.roomId.contains(user.id))
-        .toList()
-        .isNotEmpty;
-    if (!isExistRoom) {
+  Future<Room> findRoomWith(User user) async {
+    final rooms =
+        state.rooms.where((room) => room.roomId.contains(user.id)).toList();
+    if (rooms.isEmpty) {
       final Room room = Room(
         friendId: user.id,
         friendPhotoUrl: user.photo,
         friendName: user.name,
       );
-      await roomRepository.createRoom(room: room);
+      final String roomId = await roomRepository.createRoom(room: room);
+      return room.copyWith(roomId: roomId);
     }
+    return rooms[0];
   }
 
   void queryChanged(String value) {
-    final query = value.trim().toLowerCase();
-    final filter = state.users
+    emit(state.copyWith(query: value.trim().toLowerCase()));
+  }
+
+  List<User> getUsersByQuery() {
+    return state.users
         .where((u) =>
-            u.name.toLowerCase().contains(query) ||
-            u.email.toLowerCase().contains(query))
+            u.name.toLowerCase().contains(state.query) ||
+            u.email.toLowerCase().contains(state.query))
         .toList();
-    emit(state.copyWith(query: value, filter: filter));
   }
 }

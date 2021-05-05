@@ -17,23 +17,47 @@ class MessagesRepository {
   Stream<List<Message>> message(String roomId) {
     return _firebaseFirestore
         .collection('rooms/$roomId/messages')
-        .orderBy('dateCreated', descending: false)
+        .orderBy('timestamp', descending: false)
         .snapshots()
         .map((snapshot) {
       final List<Message> messages = [];
       snapshot.docs.forEach((doc) {
-        messages.add(Message(
-          roomId: roomId,
-          messageId: doc.id,
-          uid: doc['uid'],
-          photoURL: doc['photoURL'],
-          username: doc['username'],
-          title: doc['title'],
-          gifURL: doc['gifURL'],
-          timestamp: doc['timestamp'],
-        ));
+        messages.add(
+          Message(
+            roomId: roomId,
+            messageId: doc.id,
+            uid: doc['uid'],
+            photoURL: doc['photoURL'],
+            username: doc['username'],
+            title: doc['title'],
+            gifURL: doc['gifURL'],
+            timestamp: doc['timestamp'],
+          ),
+        );
       });
       return messages;
     });
+  }
+
+  Future<String> createMessage(String roomId) async {
+    final String messageId = DateTime.now().millisecondsSinceEpoch.toString();
+    try {
+      await _firebaseFirestore
+          .collection('rooms/$roomId/messages')
+          .doc(messageId)
+          .set({
+        "uid": _firebaseAuth.currentUser.uid,
+        "photoURL": "",
+        "username": "",
+        "messageId": "",
+        "roomId": "",
+        "title": "",
+        "gifURL": "",
+        "timestamp": messageId,
+      });
+      return messageId;
+    } on Exception {
+      return "";
+    }
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:share_ute/chat/chat.dart';
 import 'package:share_ute/messenger/messenger.dart';
-import 'package:share_ute/send_message/send_message.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -10,7 +10,8 @@ class MessengerForm extends StatelessWidget {
     return BlocBuilder<MessengerCubit, MessengerState>(
       builder: (context, state) {
         if (state.query.isNotEmpty) {
-          return _QueryResult(users: state.filter);
+          return _QueryResult(
+              users: context.watch<MessengerCubit>().getUsersByQuery());
         }
         return ListView.builder(
           padding: const EdgeInsets.all(5),
@@ -20,66 +21,12 @@ class MessengerForm extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => MessengerScreen(),
-                  ),
+                  ChatPage.route(room: state.rooms[index]),
                 );
               },
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Stack(
-                        children: [
-                          Container(
-                            width: 50,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.red,
-                            ),
-                            child: ClipRRect(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(60)),
-                              child: Image.network(
-                                  state.rooms[index].friendPhotoUrl),
-                            ),
-                          ),
-                          Positioned.fill(
-                            bottom: 2,
-                            right: 2,
-                            child: Align(
-                              alignment: Alignment.bottomRight,
-                              child: Container(
-                                width: 12,
-                                height: 12,
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.green,
-                                    border: Border.all(
-                                      color: Colors.white,
-                                      width: 2,
-                                    )),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(width: 15),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(state.rooms[index].friendName),
-                          const SizedBox(height: 3),
-                          Text('You: Tài liệu hay'),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
+              child: _ConversationWidget(
+                friendPhotoUrl: state.rooms[index].friendPhotoUrl,
+                friendName: state.rooms[index].friendName,
               ),
             );
           },
@@ -113,14 +60,12 @@ class _QueryResult extends StatelessWidget {
                   children: [
                     GestureDetector(
                       onTap: () async {
-                        // await context
-                        //     .read<MessengerCubit>()
-                        //     .joinRoomWith(users[index]);
+                        final room = await context
+                            .read<MessengerCubit>()
+                            .findRoomWith(users[index]);
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => MessengerScreen(),
-                          ),
+                          ChatPage.route(room: room),
                         );
                       },
                       child: Container(
@@ -168,6 +113,72 @@ class _QueryResult extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _ConversationWidget extends StatelessWidget {
+  _ConversationWidget({
+    this.friendPhotoUrl,
+    this.friendName,
+  });
+  final String friendPhotoUrl;
+  final String friendName;
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.red,
+                  ),
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(60)),
+                    child: Image.network(friendPhotoUrl),
+                  ),
+                ),
+                Positioned.fill(
+                  bottom: 2,
+                  right: 2,
+                  child: Align(
+                    alignment: Alignment.bottomRight,
+                    child: Container(
+                      width: 12,
+                      height: 12,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.green,
+                          border: Border.all(
+                            color: Colors.white,
+                            width: 2,
+                          )),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(width: 15),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(friendName),
+                const SizedBox(height: 3),
+                Text('You: Tài liệu hay'),
+              ],
+            )
+          ],
+        ),
+      ),
     );
   }
 }

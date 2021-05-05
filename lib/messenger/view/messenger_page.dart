@@ -16,7 +16,7 @@ class MessengerPage extends StatelessWidget {
       create: (_) => MessengerCubit(
         userRepository: context.read<FirestoreUserRepository>(),
         roomRepository: RoomRepository(),
-      )..getAllUsers(),
+      )..init(),
       child: Scaffold(
         appBar: AppBar(
           title: AppBarWidget(),
